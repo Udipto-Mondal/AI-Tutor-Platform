@@ -14,10 +14,82 @@ import {
   Award
 } from 'lucide-react';
 
+const DEFAULT_FALLBACK_PLAN = {
+  plan_id: 'plan_default_01',
+  student_id: 'default_student',
+  weak_topics: ['Backpropagation & Gradients', 'Activation Functions'],
+  encouragement_note: 'You are making steady progress! Focusing 20-30 minutes daily on Backpropagation & Gradients will bring your mastery above 85%.',
+  daily_schedule: [
+    {
+      id: 'task_01',
+      day_number: 1,
+      topic: 'Backpropagation & Gradients',
+      task_type: 'concept_review',
+      title: 'Master Core Concept: Backpropagation & Gradients',
+      description: 'Read course notes on Backpropagation. Review the calculus Chain Rule and intermediate delta equations.',
+      duration_minutes: 25,
+      completed: false
+    },
+    {
+      id: 'task_02',
+      day_number: 2,
+      topic: 'Backpropagation & Gradients',
+      task_type: 'handwritten_practice',
+      title: 'Handwritten Derivation Practice: Backpropagation',
+      description: 'Write out the complete step-by-step partial derivative dL/dw_ij by hand on the canvas.',
+      duration_minutes: 20,
+      completed: false
+    },
+    {
+      id: 'task_03',
+      day_number: 3,
+      topic: 'Activation Functions',
+      task_type: 'quiz',
+      title: 'Targeted Retention Assessment: Activation Functions',
+      description: 'Take a 4-question adaptive quiz to verify your understanding of Sigmoid and ReLU derivatives.',
+      duration_minutes: 15,
+      completed: false
+    },
+    {
+      id: 'task_04',
+      day_number: 4,
+      topic: 'Convolutional Neural Networks',
+      task_type: 'concept_review',
+      title: 'Spatial Dimension Calculations: CNNs',
+      description: 'Practice calculating output spatial sizes O = ((W - K + 2P)/S) + 1 for various kernel configurations.',
+      duration_minutes: 20,
+      completed: false
+    }
+  ],
+  recommended_flashcards: [
+    {
+      id: 'fc_01',
+      topic: 'Backpropagation & Gradients',
+      front_prompt: 'What is the Chain Rule formula used to compute dL/dw_ij?',
+      back_solution: 'dL/dw_ij = (dL/dz_j) * (dz_j/dw_ij) = delta_j * a_i^(l-1)',
+      difficulty: 'Medium'
+    },
+    {
+      id: 'fc_02',
+      topic: 'Convolutional Neural Networks',
+      front_prompt: 'What is the spatial output size formula for a convolutional layer?',
+      back_solution: 'O = floor((W - K + 2P)/S) + 1, where W=input size, K=kernel, P=padding, S=stride.',
+      difficulty: 'Medium'
+    },
+    {
+      id: 'fc_03',
+      topic: 'Activation Functions',
+      front_prompt: 'Why does Sigmoid suffer from the vanishing gradient problem?',
+      back_solution: "Its derivative sigma'(z) = sigma(z)(1 - sigma(z)) has a max value of 0.25, dampening gradients in deep networks.",
+      difficulty: 'Hard'
+    }
+  ]
+};
+
 export default function StudyPlanView({ onStartQuizWithTopic, onOpenHandwritingLab }) {
-  const [studyPlan, setStudyPlan] = useState(null);
+  const [studyPlan, setStudyPlan] = useState(DEFAULT_FALLBACK_PLAN);
   const [loading, setLoading] = useState(false);
-  const [activeFlippedCards, setActiveFlippedCards] = useState({}); // { cardId: boolean }
+  const [activeFlippedCards, setActiveFlippedCards] = useState({});
 
   const fetchStudyPlan = async () => {
     setLoading(true);
@@ -25,10 +97,12 @@ export default function StudyPlanView({ onStartQuizWithTopic, onOpenHandwritingL
       const res = await fetch('/api/study-plan/default_student');
       if (res.ok) {
         const data = await res.json();
-        setStudyPlan(data);
+        if (data && data.daily_schedule && data.daily_schedule.length > 0) {
+          setStudyPlan(data);
+        }
       }
     } catch (e) {
-      console.error('Error loading study plan:', e);
+      console.warn('Backend connecting, using baseline study plan:', e);
     } finally {
       setLoading(false);
     }
@@ -39,8 +113,19 @@ export default function StudyPlanView({ onStartQuizWithTopic, onOpenHandwritingL
   }, []);
 
   const handleToggleTask = async (taskId, currentStatus) => {
+    // Optimistic UI update
+    setStudyPlan((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        daily_schedule: prev.daily_schedule.map((t) => 
+          t.id === taskId ? { ...t, completed: !currentStatus } : t
+        )
+      };
+    });
+
     try {
-      const res = await fetch('/api/study-plan/task/toggle', {
+      await fetch('/api/study-plan/task/toggle', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -49,20 +134,8 @@ export default function StudyPlanView({ onStartQuizWithTopic, onOpenHandwritingL
           completed: !currentStatus
         })
       });
-      if (res.ok) {
-        // Update local state
-        setStudyPlan((prev) => {
-          if (!prev) return prev;
-          return {
-            ...prev,
-            daily_schedule: prev.daily_schedule.map((t) => 
-              t.id === taskId ? { ...t, completed: !currentStatus } : t
-            )
-          };
-        });
-      }
     } catch (e) {
-      console.error('Task toggle error:', e);
+      console.warn('Failed to sync task toggle to backend:', e);
     }
   };
 
@@ -88,17 +161,9 @@ export default function StudyPlanView({ onStartQuizWithTopic, onOpenHandwritingL
     }));
   };
 
-  if (loading || !studyPlan) {
-    return (
-      <div className="glass-panel p-16 text-center space-y-4">
-        <Sparkles className="h-8 w-8 mx-auto text-indigo-400 animate-spin" />
-        <p className="text-xs text-slate-400">Generating personalized remediation schedule & flashcards...</p>
-      </div>
-    );
-  }
-
-  const completedTasks = studyPlan.daily_schedule.filter(t => t.completed).length;
-  const totalTasks = studyPlan.daily_schedule.length;
+  const schedule = studyPlan.daily_schedule || DEFAULT_FALLBACK_PLAN.daily_schedule;
+  const completedTasks = schedule.filter(t => t.completed).length;
+  const totalTasks = schedule.length;
   const progressPct = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   return (
@@ -115,7 +180,7 @@ export default function StudyPlanView({ onStartQuizWithTopic, onOpenHandwritingL
               Personalized <span className="gradient-text-emerald">Study Plan</span>
             </h1>
             <p className="text-slate-300 text-sm leading-relaxed">
-              Tailored specifically to your weak concepts ({studyPlan.weak_topics.join(', ') || 'All Core Topics'}). Follow daily micro-sessions to reach concept mastery.
+              Tailored specifically to your weak concepts ({(studyPlan.weak_topics || []).join(', ') || 'All Core Topics'}). Follow daily micro-sessions to reach concept mastery.
             </p>
           </div>
 
@@ -132,7 +197,7 @@ export default function StudyPlanView({ onStartQuizWithTopic, onOpenHandwritingL
               onClick={handleRegeneratePlan}
               className="btn-secondary text-xs py-2 px-3"
             >
-              <RotateCw className="h-4 w-4 text-indigo-400" />
+              <RotateCw className={`h-4 w-4 text-indigo-400 ${loading ? 'animate-spin' : ''}`} />
               <span>Re-optimize Plan</span>
             </button>
           </div>
@@ -155,7 +220,7 @@ export default function StudyPlanView({ onStartQuizWithTopic, onOpenHandwritingL
           </div>
 
           <div className="space-y-3">
-            {studyPlan.daily_schedule.map((task) => (
+            {schedule.map((task) => (
               <div 
                 key={task.id}
                 onClick={() => handleToggleTask(task.id, task.completed)}
@@ -214,49 +279,43 @@ export default function StudyPlanView({ onStartQuizWithTopic, onOpenHandwritingL
           </div>
 
           <div className="space-y-4">
-            {studyPlan.recommended_flashcards && studyPlan.recommended_flashcards.length > 0 ? (
-              studyPlan.recommended_flashcards.map((fc) => {
-                const isFlipped = !!activeFlippedCards[fc.id];
-                return (
-                  <div
-                    key={fc.id}
-                    onClick={() => toggleCardFlip(fc.id)}
-                    className="glass-panel p-5 min-h-48 flex flex-col justify-between cursor-pointer border-indigo-500/20 hover:border-indigo-500/60 transition-all group"
-                  >
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-950 text-indigo-300 font-mono">
-                        {fc.topic}
-                      </span>
-                      <span className="text-[10px] text-slate-400 flex items-center gap-1 font-mono">
-                        <RotateCw className="h-3 w-3 group-hover:rotate-180 transition-transform duration-300 text-indigo-400" />
-                        <span>{isFlipped ? 'Answer View' : 'Prompt View'}</span>
-                      </span>
-                    </div>
-
-                    {/* Card Content */}
-                    <div className="py-4 text-center">
-                      {!isFlipped ? (
-                        <p className="text-xs sm:text-sm font-bold text-slate-100 leading-relaxed">
-                          {fc.front_prompt}
-                        </p>
-                      ) : (
-                        <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800 text-xs font-mono text-cyan-300 leading-relaxed">
-                          {fc.back_solution}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="pt-2 text-center text-[10px] text-slate-500">
-                      {isFlipped ? 'Click again to return to question' : 'Click card to reveal proof & solution'}
-                    </div>
+            {(studyPlan.recommended_flashcards || DEFAULT_FALLBACK_PLAN.recommended_flashcards).map((fc) => {
+              const isFlipped = !!activeFlippedCards[fc.id];
+              return (
+                <div
+                  key={fc.id}
+                  onClick={() => toggleCardFlip(fc.id)}
+                  className="glass-panel p-5 min-h-48 flex flex-col justify-between cursor-pointer border-indigo-500/20 hover:border-indigo-500/60 transition-all group"
+                >
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-950 text-indigo-300 font-mono">
+                      {fc.topic}
+                    </span>
+                    <span className="text-[10px] text-slate-400 flex items-center gap-1 font-mono">
+                      <RotateCw className="h-3 w-3 group-hover:rotate-180 transition-transform duration-300 text-indigo-400" />
+                      <span>{isFlipped ? 'Answer View' : 'Prompt View'}</span>
+                    </span>
                   </div>
-                );
-              })
-            ) : (
-              <div className="glass-panel p-8 text-center text-xs text-slate-400">
-                No flashcards needed — all monitored concepts are in healthy status!
-              </div>
-            )}
+
+                  {/* Card Content */}
+                  <div className="py-4 text-center">
+                    {!isFlipped ? (
+                      <p className="text-xs sm:text-sm font-bold text-slate-100 leading-relaxed">
+                        {fc.front_prompt}
+                      </p>
+                    ) : (
+                      <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800 text-xs font-mono text-cyan-300 leading-relaxed">
+                        {fc.back_solution}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="pt-2 text-center text-[10px] text-slate-500">
+                    {isFlipped ? 'Click again to return to question' : 'Click card to reveal proof & solution'}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 

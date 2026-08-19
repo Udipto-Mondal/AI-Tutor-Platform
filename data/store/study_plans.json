@@ -1,0 +1,97 @@
+{
+  "default_student": {
+    "plan_id": "plan_32cb0ca0",
+    "student_id": "default_student",
+    "generated_at": "2026-08-19T04:55:50.139285Z",
+    "weak_topics": [
+      "Neural Network Architecture",
+      "Backpropagation & Gradients"
+    ],
+    "daily_schedule": [
+      {
+        "id": "task_e1a456",
+        "day_number": 1,
+        "topic": "Neural Network Architecture",
+        "task_type": "concept_review",
+        "title": "Master Core Concept: Neural Network Architecture",
+        "description": "Read course notes on Neural Network Architecture. Pay special attention to definitions, assumptions, and derivation steps.",
+        "duration_minutes": 25,
+        "completed": false
+      },
+      {
+        "id": "task_345224",
+        "day_number": 2,
+        "topic": "Neural Network Architecture",
+        "task_type": "handwritten_practice",
+        "title": "Handwritten Derivation Practice: Neural Network Architecture",
+        "description": "Write out complete step-by-step mathematical proofs or architecture diagrams by hand on the canvas.",
+        "duration_minutes": 20,
+        "completed": false
+      },
+      {
+        "id": "task_ff5d7b",
+        "day_number": 3,
+        "topic": "Neural Network Architecture",
+        "task_type": "quiz",
+        "title": "Targeted Retention Assessment: Neural Network Architecture",
+        "description": "Take a 5-question adaptive quiz to verify your mastery score improvement.",
+        "duration_minutes": 15,
+        "completed": false
+      },
+      {
+        "id": "task_e9f9d4",
+        "day_number": 4,
+        "topic": "Backpropagation & Gradients",
+        "task_type": "concept_review",
+        "title": "Master Core Concept: Backpropagation & Gradients",
+        "description": "Read course notes on Backpropagation & Gradients. Pay special attention to definitions, assumptions, and derivation steps.",
+        "duration_minutes": 25,
+        "completed": false
+      },
+      {
+        "id": "task_59efa6",
+        "day_number": 5,
+        "topic": "Backpropagation & Gradients",
+        "task_type": "handwritten_practice",
+        "title": "Handwritten Derivation Practice: Backpropagation & Gradients",
+        "description": "Write out complete step-by-step mathematical proofs or architecture diagrams by hand on the canvas.",
+        "duration_minutes": 20,
+        "completed": false
+      },
+      {
+        "id": "task_0e60f2",
+        "day_number": 6,
+        "topic": "Backpropagation & Gradients",
+        "task_type": "quiz",
+        "title": "Targeted Retention Assessment: Backpropagation & Gradients",
+        "description": "Take a 5-question adaptive quiz to verify your mastery score improvement.",
+        "duration_minutes": 15,
+        "completed": false
+      }
+    ],
+    "recommended_flashcards": [
+      {
+        "id": "fc_4989a6",
+        "topic": "Neural Network Architecture",
+        "front_prompt": "Key definition & theorem review for: Neural Network Architecture",
+        "back_solution": "Review foundational formulas, assumptions, and edge cases for Neural Network Architecture.",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "fc_f446f3",
+        "topic": "Backpropagation & Gradients",
+        "front_prompt": "What is the Chain Rule formula used to compute $\\frac{\\partial \\mathcal{L}}{\\partial w_{ij}}$?",
+        "back_solution": "$\\frac{\\partial \\mathcal{L}}{\\partial w_{ij}} = \\frac{\\partial \\mathcal{L}}{\\partial z_j} \\cdot \\frac{\\partial z_j}{\\partial w_{ij}} = \\delta_j \\cdot a_i^{(l-1)}$",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "fc_68cb70",
+        "topic": "Backpropagation & Gradients",
+        "front_prompt": "Define the error term $\\delta_j^{(l)}$ in backpropagation.",
+        "back_solution": "$\\delta_j^{(l)} = \\frac{\\partial \\mathcal{L}}{\\partial z_j^{(l)}} = \\left(\\sum_k \\delta_k^{(l+1)} w_{jk}^{(l+1)}\\right) \\sigma'(z_j^{(l)})$",
+        "difficulty": "Hard"
+      }
+    ],
+    "encouragement_note": "You are making steady progress! Focusing 20-30 minutes daily on Neural Network Architecture will bring your mastery above 85%."
+  }
+}
