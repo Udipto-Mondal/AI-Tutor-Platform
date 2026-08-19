@@ -1,46 +1,16 @@
 {
   "default_student": {
-    "plan_id": "plan_32cb0ca0",
+    "plan_id": "plan_79e76561",
     "student_id": "default_student",
-    "generated_at": "2026-08-19T04:55:50.139285Z",
+    "generated_at": "2026-08-19T05:12:09.577999Z",
     "weak_topics": [
-      "Neural Network Architecture",
-      "Backpropagation & Gradients"
+      "Backpropagation & Gradients",
+      "Activation Functions"
     ],
     "daily_schedule": [
       {
-        "id": "task_e1a456",
+        "id": "task_26c5d6",
         "day_number": 1,
-        "topic": "Neural Network Architecture",
-        "task_type": "concept_review",
-        "title": "Master Core Concept: Neural Network Architecture",
-        "description": "Read course notes on Neural Network Architecture. Pay special attention to definitions, assumptions, and derivation steps.",
-        "duration_minutes": 25,
-        "completed": false
-      },
-      {
-        "id": "task_345224",
-        "day_number": 2,
-        "topic": "Neural Network Architecture",
-        "task_type": "handwritten_practice",
-        "title": "Handwritten Derivation Practice: Neural Network Architecture",
-        "description": "Write out complete step-by-step mathematical proofs or architecture diagrams by hand on the canvas.",
-        "duration_minutes": 20,
-        "completed": false
-      },
-      {
-        "id": "task_ff5d7b",
-        "day_number": 3,
-        "topic": "Neural Network Architecture",
-        "task_type": "quiz",
-        "title": "Targeted Retention Assessment: Neural Network Architecture",
-        "description": "Take a 5-question adaptive quiz to verify your mastery score improvement.",
-        "duration_minutes": 15,
-        "completed": false
-      },
-      {
-        "id": "task_e9f9d4",
-        "day_number": 4,
         "topic": "Backpropagation & Gradients",
         "task_type": "concept_review",
         "title": "Master Core Concept: Backpropagation & Gradients",
@@ -49,8 +19,8 @@
         "completed": false
       },
       {
-        "id": "task_59efa6",
-        "day_number": 5,
+        "id": "task_8d030a",
+        "day_number": 2,
         "topic": "Backpropagation & Gradients",
         "task_type": "handwritten_practice",
         "title": "Handwritten Derivation Practice: Backpropagation & Gradients",
@@ -59,11 +29,41 @@
         "completed": false
       },
       {
-        "id": "task_0e60f2",
-        "day_number": 6,
+        "id": "task_9aa804",
+        "day_number": 3,
         "topic": "Backpropagation & Gradients",
         "task_type": "quiz",
         "title": "Targeted Retention Assessment: Backpropagation & Gradients",
+        "description": "Take a 5-question adaptive quiz to verify your mastery score improvement.",
+        "duration_minutes": 15,
+        "completed": false
+      },
+      {
+        "id": "task_622983",
+        "day_number": 4,
+        "topic": "Activation Functions",
+        "task_type": "concept_review",
+        "title": "Master Core Concept: Activation Functions",
+        "description": "Read course notes on Activation Functions. Pay special attention to definitions, assumptions, and derivation steps.",
+        "duration_minutes": 25,
+        "completed": false
+      },
+      {
+        "id": "task_856bd1",
+        "day_number": 5,
+        "topic": "Activation Functions",
+        "task_type": "handwritten_practice",
+        "title": "Handwritten Derivation Practice: Activation Functions",
+        "description": "Write out complete step-by-step mathematical proofs or architecture diagrams by hand on the canvas.",
+        "duration_minutes": 20,
+        "completed": false
+      },
+      {
+        "id": "task_6d0b3b",
+        "day_number": 6,
+        "topic": "Activation Functions",
+        "task_type": "quiz",
+        "title": "Targeted Retention Assessment: Activation Functions",
         "description": "Take a 5-question adaptive quiz to verify your mastery score improvement.",
         "duration_minutes": 15,
         "completed": false
@@ -71,27 +71,34 @@
     ],
     "recommended_flashcards": [
       {
-        "id": "fc_4989a6",
-        "topic": "Neural Network Architecture",
-        "front_prompt": "Key definition & theorem review for: Neural Network Architecture",
-        "back_solution": "Review foundational formulas, assumptions, and edge cases for Neural Network Architecture.",
-        "difficulty": "Medium"
-      },
-      {
-        "id": "fc_f446f3",
+        "id": "fc_41ad5e",
         "topic": "Backpropagation & Gradients",
         "front_prompt": "What is the Chain Rule formula used to compute $\\frac{\\partial \\mathcal{L}}{\\partial w_{ij}}$?",
         "back_solution": "$\\frac{\\partial \\mathcal{L}}{\\partial w_{ij}} = \\frac{\\partial \\mathcal{L}}{\\partial z_j} \\cdot \\frac{\\partial z_j}{\\partial w_{ij}} = \\delta_j \\cdot a_i^{(l-1)}$",
         "difficulty": "Medium"
       },
       {
-        "id": "fc_68cb70",
+        "id": "fc_8564da",
         "topic": "Backpropagation & Gradients",
         "front_prompt": "Define the error term $\\delta_j^{(l)}$ in backpropagation.",
         "back_solution": "$\\delta_j^{(l)} = \\frac{\\partial \\mathcal{L}}{\\partial z_j^{(l)}} = \\left(\\sum_k \\delta_k^{(l+1)} w_{jk}^{(l+1)}\\right) \\sigma'(z_j^{(l)})$",
         "difficulty": "Hard"
+      },
+      {
+        "id": "fc_839a70",
+        "topic": "Activation Functions",
+        "front_prompt": "Why does the Sigmoid activation suffer from the vanishing gradient problem?",
+        "back_solution": "Because its derivative $\\sigma'(z) = \\sigma(z)(1-\\sigma(z))$ has a maximum value of 0.25, and approaches 0 as $|z| \\to \\infty$, causing backpropagated gradients to vanish in deep networks.",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "fc_60127e",
+        "topic": "Activation Functions",
+        "front_prompt": "How does Leaky ReLU resolve the 'Dying ReLU' problem?",
+        "back_solution": "By allowing a small, non-zero gradient $\\alpha z$ (with $\\alpha \\approx 0.01$) when $z < 0$, keeping the neuron active.",
+        "difficulty": "Easy"
       }
     ],
-    "encouragement_note": "You are making steady progress! Focusing 20-30 minutes daily on Neural Network Architecture will bring your mastery above 85%."
+    "encouragement_note": "You are making steady progress! Focusing 20-30 minutes daily on Backpropagation & Gradients will bring your mastery above 85%."
   }
 }

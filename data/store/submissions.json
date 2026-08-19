@@ -1,0 +1,68 @@
+{
+  "sub_a1335155": {
+    "submission_id": "sub_a1335155",
+    "quiz_id": "quiz_f4ad6d01",
+    "student_id": "default_student",
+    "graded_at": "2026-08-19T05:12:06.028183Z",
+    "overall_score": 4.0,
+    "max_score": 4.0,
+    "percentage": 100.0,
+    "total_time_seconds": 120.0,
+    "question_results": [
+      {
+        "question_id": "q_74f72e",
+        "question_type": "handwritten_derivation",
+        "topic": "Backpropagation & Gradients",
+        "is_correct": true,
+        "score": 1.0,
+        "max_score": 1.0,
+        "extracted_text": "Step 1: By chain rule, dL/dw_ij^(l) = (dL/dz_j^(l)) * (dz_j^(l)/dw_ij^(l)). Step 2: Since z_j^(l) = sum(w_jk a_k) + b, dz_j/dw_ij = a_i^(l-1). Step 3: Let error term delta_j^(l) = dL/dz_j^(l). Then dL/dw_ij = delta_j^(l) * a_i^(l-1).",
+        "feedback": "Strong answer addressing key concepts.",
+        "rubric_breakdown": null,
+        "misconceptions_detected": [],
+        "remedial_tip": null
+      },
+      {
+        "question_id": "q_c527d1",
+        "question_type": "mcq",
+        "topic": "Activation Functions",
+        "is_correct": true,
+        "score": 1.0,
+        "max_score": 1.0,
+        "extracted_text": "Selected Option: B",
+        "feedback": "Correct! The derivative of the Sigmoid function is sigma(z)*(1 - sigma(z)), which approaches 0 for large positive or negative values of z, causing gradients to vanish during backpropagation.",
+        "rubric_breakdown": null,
+        "misconceptions_detected": [],
+        "remedial_tip": null
+      },
+      {
+        "question_id": "q_5538f3",
+        "question_type": "handwritten_derivation",
+        "topic": "Convolutional Neural Networks",
+        "is_correct": true,
+        "score": 1.0,
+        "max_score": 1.0,
+        "extracted_text": "Formula: O = ((W - K + 2P) / S) + 1. Calculation: O = ((32 - 5 + 2*2) / 1) + 1 = ((32 - 5 + 4) / 1) + 1 = 31 + 1 = 32. Output dimension is 32x32.",
+        "feedback": "Strong answer addressing key concepts.",
+        "rubric_breakdown": null,
+        "misconceptions_detected": [],
+        "remedial_tip": null
+      },
+      {
+        "question_id": "q_0d9f6a",
+        "question_type": "short_answer",
+        "topic": "Loss Functions & Optimization",
+        "is_correct": true,
+        "score": 1.0,
+        "max_score": 1.0,
+        "extracted_text": "Adam combines Momentum by computing an exponentially decaying average of past gradients (first moment, estimating mean) with RMSprop by computing an exponentially decaying average of past squared gradients (second moment, estimating uncentered variance), along with bias correction terms.",
+        "feedback": "Strong answer addressing key concepts.",
+        "rubric_breakdown": null,
+        "misconceptions_detected": [],
+        "remedial_tip": null
+      }
+    ],
+    "weak_topics_flagged": [],
+    "summary_feedback": "Scored 4.0/4 (100.0%). Strong performance across concepts!"
+  }
+}

@@ -125,5 +125,132 @@
       }
     ],
     "time_limit_minutes": 12
+  },
+  "quiz_f4ad6d01": {
+    "id": "quiz_f4ad6d01",
+    "title": "Adaptive AI Assessment: Activation Functions",
+    "created_at": "2026-08-19T05:12:05.999693Z",
+    "doc_ids": [],
+    "topics": [
+      "Activation Functions",
+      "Convolutional Neural Networks",
+      "Loss Functions & Optimization",
+      "Backpropagation & Gradients"
+    ],
+    "questions": [
+      {
+        "id": "q_74f72e",
+        "question_type": "handwritten_derivation",
+        "topic": "Backpropagation & Gradients",
+        "difficulty": "medium",
+        "question_text": "Derive the gradient of the loss $\\mathcal{L}$ with respect to the weight $w_{ij}^{(l)}$ in layer $l$ using the chain rule. Write down the step-by-step equations for $\\frac{\\partial \\mathcal{L}}{\\partial z_j^{(l)}}$ and the weight update.",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Step 1: By chain rule, dL/dw_ij^(l) = (dL/dz_j^(l)) * (dz_j^(l)/dw_ij^(l)). Step 2: Since z_j^(l) = sum(w_jk a_k) + b, dz_j/dw_ij = a_i^(l-1). Step 3: Let error term delta_j^(l) = dL/dz_j^(l). Then dL/dw_ij = delta_j^(l) * a_i^(l-1).",
+        "explanation": "The chain rule decomposes the loss derivative into the error term delta of the current neuron multiplied by the activation output of the previous layer.",
+        "rubric": [
+          {
+            "criterion": "Application of Chain Rule",
+            "points": 0.35,
+            "description": "Correctly states dL/dw = (dL/dz) * (dz/dw)"
+          },
+          {
+            "criterion": "Identification of dz/dw = a^(l-1)",
+            "points": 0.35,
+            "description": "Correctly computes partial derivative with respect to weight"
+          },
+          {
+            "criterion": "Final Error Propagation Formula",
+            "points": 0.3,
+            "description": "Accurately defines delta term and final gradient product"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_c527d1",
+        "question_type": "mcq",
+        "topic": "Activation Functions",
+        "difficulty": "medium",
+        "question_text": "Which activation function is most susceptible to the 'Vanishing Gradient' problem when neuron activations become very large in magnitude?",
+        "options": [
+          {
+            "key": "A",
+            "text": "ReLU (Rectified Linear Unit)"
+          },
+          {
+            "key": "B",
+            "text": "Sigmoid / Logistic"
+          },
+          {
+            "key": "C",
+            "text": "Leaky ReLU"
+          },
+          {
+            "key": "D",
+            "text": "Linear Activation"
+          }
+        ],
+        "correct_option": "B",
+        "expected_answer": "B: Sigmoid / Logistic",
+        "explanation": "The derivative of the Sigmoid function is sigma(z)*(1 - sigma(z)), which approaches 0 for large positive or negative values of z, causing gradients to vanish during backpropagation.",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_5538f3",
+        "question_type": "handwritten_derivation",
+        "topic": "Convolutional Neural Networks",
+        "difficulty": "medium",
+        "question_text": "Given an input image of size $32 \\times 32$, a filter/kernel of size $5 \\times 5$, padding $P = 2$, and stride $S = 1$, calculate the output spatial dimension $O$. Show your formula and calculation.",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Formula: O = ((W - K + 2P) / S) + 1. Calculation: O = ((32 - 5 + 2*2) / 1) + 1 = ((32 - 5 + 4) / 1) + 1 = 31 + 1 = 32. Output dimension is 32x32.",
+        "explanation": "The formula O = ((W - K + 2P)/S) + 1 gives exactly 32, preserving the spatial dimensions because 'same' padding (P = (K-1)/2 = 2) was applied.",
+        "rubric": [
+          {
+            "criterion": "Formula Recall",
+            "points": 0.3,
+            "description": "Correctly states O = (W - K + 2P)/S + 1"
+          },
+          {
+            "criterion": "Substitution of Values",
+            "points": 0.4,
+            "description": "Substitutes W=32, K=5, P=2, S=1 accurately"
+          },
+          {
+            "criterion": "Final Correct Dimension",
+            "points": 0.3,
+            "description": "Arrives at 32x32"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_0d9f6a",
+        "question_type": "short_answer",
+        "topic": "Loss Functions & Optimization",
+        "difficulty": "medium",
+        "question_text": "How does the Adam optimizer combine the principles of Momentum and RMSprop?",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Adam combines Momentum by computing an exponentially decaying average of past gradients (first moment, estimating mean) with RMSprop by computing an exponentially decaying average of past squared gradients (second moment, estimating uncentered variance), along with bias correction terms.",
+        "explanation": "Adam tracks both the directional velocity (first moment) and the per-parameter scale (second moment) to achieve adaptive learning rates.",
+        "rubric": [
+          {
+            "criterion": "Momentum Explanation",
+            "points": 0.5,
+            "description": "Mentions first moment / exponentially weighted moving average of gradients"
+          },
+          {
+            "criterion": "RMSprop Explanation",
+            "points": 0.5,
+            "description": "Mentions second moment / squared gradients for adaptive scaling"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 12
   }
 }
