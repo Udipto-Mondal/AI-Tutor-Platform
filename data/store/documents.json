@@ -1,0 +1,38 @@
+{
+  "doc_e4c2f9aa": {
+    "id": "doc_e4c2f9aa",
+    "filename": "data_structures_algorithms.md",
+    "filepath": "E:\\AI Tutor Platform\\data\\sample_materials\\data_structures_algorithms.md",
+    "file_type": "md",
+    "size_bytes": 1711,
+    "uploaded_at": "2026-08-19T04:18:17.558513Z",
+    "num_chunks": 1,
+    "topics_covered": [
+      "Data Structures and Algorithms Essential Guide",
+      "Asymptotic Complexity and Big-O Notation",
+      "Trees and Graphs",
+      "Binary Search Trees (BST)",
+      "Graph Traversal Algorithms",
+      "Dynamic Programming (DP)"
+    ]
+  },
+  "doc_c3560445": {
+    "id": "doc_c3560445",
+    "filename": "deep_learning_neural_networks.md",
+    "filepath": "E:\\AI Tutor Platform\\data\\sample_materials\\deep_learning_neural_networks.md",
+    "file_type": "md",
+    "size_bytes": 4238,
+    "uploaded_at": "2026-08-19T04:18:17.659531Z",
+    "num_chunks": 2,
+    "topics_covered": [
+      "Deep Learning & Neural Networks Comprehensive Study Notes",
+      "Fundamentals of Artificial Neural Networks (ANNs)",
+      "Forward Propagation",
+      "Common Activation Functions",
+      "Loss Functions and Optimization",
+      "Loss Functions",
+      "Gradient Descent and Optimizers",
+      "Backpropagation Algorithm"
+    ]
+  }
+}

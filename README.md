@@ -154,7 +154,11 @@ python mlops/train_knowledge_model.py
 
 ### 4. Start the FastAPI Backend Server
 ```bash
-uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
+# Using uvicorn with app-dir
+uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port 8000 --reload
+
+# Or directly with Python
+python backend/app/main.py
 ```
 API Documentation will be available at: `http://localhost:8000/docs`
 
