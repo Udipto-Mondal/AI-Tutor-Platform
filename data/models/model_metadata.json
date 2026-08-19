@@ -1,0 +1,45 @@
+{
+  "best_model_name": "Hist_Gradient_Boosting",
+  "best_f1_score": 0.9270435446906035,
+  "features": {
+    "numeric": [
+      "question_difficulty",
+      "prior_attempts_count",
+      "historical_accuracy",
+      "consecutive_errors",
+      "days_since_last_review",
+      "response_time_sec",
+      "handwritten_score",
+      "is_correct"
+    ],
+    "categorical": [
+      "topic"
+    ]
+  },
+  "all_results": [
+    {
+      "model_name": "Logistic_Regression",
+      "accuracy": 0.8633333333333333,
+      "precision": 0.888685463200293,
+      "recall": 0.9281070745697897,
+      "f1_score": 0.9079685746352413,
+      "roc_auc": 0.9304287059234599
+    },
+    {
+      "model_name": "Random_Forest",
+      "accuracy": 0.8827777777777778,
+      "precision": 0.9080759211016003,
+      "recall": 0.9330783938814532,
+      "f1_score": 0.9204073934364391,
+      "roc_auc": 0.9511168483272026
+    },
+    {
+      "model_name": "Hist_Gradient_Boosting",
+      "accuracy": 0.8938888888888888,
+      "precision": 0.925982449446776,
+      "recall": 0.9281070745697897,
+      "f1_score": 0.9270435446906035,
+      "roc_auc": 0.9596826197940426
+    }
+  ]
+}
