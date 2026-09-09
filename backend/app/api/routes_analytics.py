@@ -12,6 +12,10 @@ router = APIRouter(prefix="/analytics", tags=["Learning Analytics & Knowledge Tr
 async def get_student_mastery_report(student_id: str = "default_student"):
     return storage.get_student_mastery(student_id)
 
+@router.get("/mastery-radar", response_model=StudentMasteryReport)
+async def get_mastery_radar(student_id: str = "default_student"):
+    return storage.get_student_mastery(student_id)
+
 @router.get("/weak-topics")
 async def get_weak_topics(student_id: str = "default_student"):
     report = storage.get_student_mastery(student_id)

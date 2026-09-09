@@ -62,6 +62,15 @@ app.include_router(study_plan_router, prefix=settings.API_V1_PREFIX)
 app.include_router(tutor_router, prefix=settings.API_V1_PREFIX)
 app.include_router(mlops_router, prefix=settings.API_V1_PREFIX)
 
+@app.get("/", include_in_schema=False)
+async def root():
+    return {
+        "message": "AI Tutor Platform — Backend API",
+        "frontend_ui": "http://localhost:5173",
+        "api_docs": "http://127.0.0.1:8000/docs",
+        "health": "http://127.0.0.1:8000/health"
+    }
+
 @app.get("/health")
 async def health_check():
     return {

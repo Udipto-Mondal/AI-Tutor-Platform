@@ -64,5 +64,49 @@
     ],
     "weak_topics_flagged": [],
     "summary_feedback": "Scored 4.0/4 (100.0%). Strong performance across concepts!"
+  },
+  "sub_240bdf50": {
+    "submission_id": "sub_240bdf50",
+    "quiz_id": "quiz_demo_01",
+    "student_id": "default_student",
+    "graded_at": "2026-09-09T04:51:40.030881Z",
+    "overall_score": 1.6,
+    "max_score": 4.0,
+    "percentage": 40.0,
+    "total_time_seconds": 50.0,
+    "question_results": [
+      {
+        "question_id": "q_01",
+        "question_type": "handwritten_derivation",
+        "topic": "Backpropagation & Gradients",
+        "is_correct": false,
+        "score": 0.6,
+        "max_score": 1.0,
+        "extracted_text": "dL/dw_ij = delta_j * a_i^(l-1)",
+        "feedback": "Your answer missed some key terminology. Expected concepts: Step 1: dL/dw_ij^(l) = (dL/dz_j^(l)) * (dz_j^(l)/dw_ij^(l)). Step 2: dz_j/dw_ij = a_i^(l-1). Step 3: Let delta_j = dL/dz_j. Then dL/dw_ij = delta_j * a_i^(l-1).",
+        "rubric_breakdown": null,
+        "misconceptions_detected": [
+          "Missing critical conceptual definitions"
+        ],
+        "remedial_tip": "The chain rule decomposes the loss derivative into the error term delta multiplied by the previous layer activation."
+      },
+      {
+        "question_id": "q_02",
+        "question_type": "mcq",
+        "topic": "Activation Functions",
+        "is_correct": true,
+        "score": 1.0,
+        "max_score": 1.0,
+        "extracted_text": "Selected Option: B",
+        "feedback": "Correct! The derivative of Sigmoid is sigma(z)*(1 - sigma(z)), which approaches 0 for large magnitude values of z.",
+        "rubric_breakdown": null,
+        "misconceptions_detected": [],
+        "remedial_tip": null
+      }
+    ],
+    "weak_topics_flagged": [
+      "Backpropagation & Gradients"
+    ],
+    "summary_feedback": "Scored 1.6/4 (40.0%). Focus revision on flagged concepts: Backpropagation & Gradients."
   }
 }

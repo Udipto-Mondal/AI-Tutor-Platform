@@ -62,37 +62,39 @@ Respond with:
     # Heuristic Socratic responses based on intent detection
     msg_lower = request.message.lower()
     
-    if "how" in msg_lower or "explain" in msg_lower or "what is" in msg_lower:
+    if any(k in msg_lower for k in ["how", "explain", "what", "কী", "কি", "কীভাবে", "কেমন", "বল", "কার", "বই"]):
         reply = (
             f"Great question! Let's break down this concept step-by-step using your uploaded notes.\n\n"
-            f"When we look at this problem, remember that complex algorithms and neural layers operate through sequential transformations. "
-            f"First, consider what the input represents before any transformation is applied.\n\n"
-            f"💡 **Key Concept Grounding:** {retrieved_chunks[0].content[:220]}..." if retrieved_chunks else
-            "Let's look at the foundational definition first."
+            f"When we look at this, remember that ideas and structures operate through sequential steps. "
+            f"First, consider what the core context represents.\n\n"
+            + (f"💡 **Key Context Grounding (from your notes):**\n\"{retrieved_chunks[0].content[:240]}...\"\n\n" if retrieved_chunks else "")
+            + "How would you connect this idea to your question?"
         )
         hints = [
-            "Hint 1: Identify the main formula from your study notes.",
-            "Hint 2: Break down the operation into forward pass and backward feedback."
+            "Hint 1: Check the introductory sections from your uploaded material.",
+            "Hint 2: Focus on the main characters, definitions, or equations."
         ]
-        follow_up = "What do you think happens to the output when we increase the parameter values?"
-    elif "hint" in msg_lower or "help" in msg_lower or "stuck" in msg_lower:
+        follow_up = "What do you think is the central message or outcome here?"
+    elif any(k in msg_lower for k in ["hint", "help", "stuck", "সাহায্য", "বুঝিনি", "হিন্ট"]):
         reply = (
             "No problem at all—getting stuck is a natural part of mastering difficult topics! 🚀\n\n"
-            "Let's take a small step: Recall how the Chain Rule works in calculus. If $y = f(u)$ and $u = g(x)$, then $\\frac{dy}{dx} = \\frac{dy}{du} \\cdot \\frac{du}{dx}$."
+            + (f"Here is a key reference passage from your indexed document:\n> *\"{retrieved_chunks[0].content[:220]}...\"*\n\n" if retrieved_chunks else "")
+            + "Take it step-by-step. What stands out to you in this section?"
         )
         hints = [
-            "Write down the intermediate variable $z = W^T X + b$",
-            "Compute $\\frac{\\partial \\mathcal{L}}{\\partial z}$ first before differentiating with respect to $W$."
+            "Look for key relationships and stated facts.",
+            "Try summarizing the first main point before moving to the next."
         ]
-        follow_up = "Does the error term $\\delta$ depend on subsequent layers?"
+        follow_up = "Does this hint help clarify the concept?"
     else:
+        chunk_quote = f"*\"{retrieved_chunks[0].content[:180]}...\"*" if retrieved_chunks else "your indexed notes"
         reply = (
-            f"I see what you mean! You're on the right track exploring {request.current_topic or 'this concept'}.\n\n"
-            f"Notice how this directly connects to the notes we indexed: *\"{retrieved_chunks[0].content[:180]}...\"*\n\n"
+            f"I see what you mean! You're on the right track exploring {request.current_topic or 'this subject'}.\n\n"
+            f"Notice how this connects to the material we indexed: {chunk_quote}\n\n"
             f"How would you express this relationship in your own words?"
         )
-        hints = ["Check the properties of the activation and loss function."]
-        follow_up = "Would you like to try a quick 1-question practice check on this?"
+        hints = ["Look closely at the context and themes from your reading."]
+        follow_up = "Would you like to try a quick practice question on this?"
 
     return SocraticTutorResponse(
         reply=reply,

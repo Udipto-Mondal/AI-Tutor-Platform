@@ -1,372 +1,506 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  UploadCloud, 
-  FileText, 
-  Layers, 
-  Sparkles, 
-  CheckCircle2, 
-  AlertCircle, 
-  Search, 
-  BookOpen, 
-  FolderPlus,
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  UploadCloud,
+  FileText,
+  Layers,
+  Zap,
+  CheckCircle2,
+  AlertCircle,
+  Search,
+  BookOpen,
   RefreshCw,
   Eye,
-  Hash
+  Hash,
+  Trash2,
+  X,
+  FileCode2,
+  FileType,
+  ChevronRight
 } from 'lucide-react';
 
-const DEFAULT_FALLBACK_DOCS = [
+/* ─── tiny helpers ─────────────────────────────────────── */
+function fileIcon(type) {
+  const t = (type || '').toLowerCase();
+  if (t === 'pdf')  return <FileText   className="h-5 w-5" />;
+  if (t === 'md')   return <FileCode2  className="h-5 w-5" />;
+  return              <FileType    className="h-5 w-5" />;
+}
+
+function formatSize(bytes) {
+  if (!bytes) return '—';
+  if (bytes < 1024)        return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+const DEFAULT_DOCS = [
   {
     id: 'doc_deep_learning',
     filename: 'deep_learning_neural_networks.md',
-    filepath: 'data/sample_materials/deep_learning_neural_networks.md',
     file_type: 'md',
     size_bytes: 2840,
     uploaded_at: new Date().toISOString(),
     num_chunks: 5,
-    topics_covered: ['Neural Networks', 'Backpropagation', 'Activation Functions', 'CNNs', 'Loss Functions & Optimization']
+    topics_covered: ['Neural Networks', 'Backpropagation', 'Activation Functions'],
   },
   {
     id: 'doc_dsa',
     filename: 'data_structures_algorithms.md',
-    filepath: 'data/sample_materials/data_structures_algorithms.md',
     file_type: 'md',
     size_bytes: 1420,
     uploaded_at: new Date().toISOString(),
     num_chunks: 3,
-    topics_covered: ['Big-O Complexity', 'Trees & Graph Traversal', 'Dynamic Programming']
-  }
+    topics_covered: ['Big-O Complexity', 'Trees & Graphs', 'Dynamic Programming'],
+  },
 ];
 
-export default function KnowledgeVault({ onStartQuizWithDoc }) {
-  const [documents, setDocuments] = useState(DEFAULT_FALLBACK_DOCS);
-  const [loading, setLoading] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [statusMessage, setStatusMessage] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedDocChunks, setSelectedDocChunks] = useState(null);
-  const [inspectingDoc, setInspectingDoc] = useState(null);
+/* ─── Delete Confirmation Modal ────────────────────────── */
+function DeleteModal({ doc, onConfirm, onCancel }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(6px)' }}>
+      <div className="glass-panel w-full max-w-sm p-6 space-y-4 animate-fade-up"
+        style={{ border: '1px solid rgba(244,63,94,0.30)' }}>
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0"
+            style={{ background: 'rgba(244,63,94,0.15)', border: '1px solid rgba(244,63,94,0.30)' }}>
+            <Trash2 className="h-5 w-5" style={{ color: '#f43f5e' }} />
+          </div>
+          <div>
+            <p className="font-semibold text-white text-sm">Delete Document</p>
+            <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+              This action cannot be undone
+            </p>
+          </div>
+        </div>
 
-  const fetchDocuments = async () => {
+        <div className="px-3 py-2.5 rounded-lg text-xs font-mono"
+          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', color: '#94a3b8' }}>
+          {doc.filename}
+        </div>
+
+        <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+          Deleting this document will remove it from your Knowledge Vault and all associated vector embeddings from ChromaDB.
+        </p>
+
+        <div className="flex gap-2 pt-1">
+          <button onClick={onCancel} className="btn-secondary flex-1 justify-center">Cancel</button>
+          <button
+            onClick={onConfirm}
+            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all"
+            style={{ background: 'rgba(244,63,94,0.18)', border: '1px solid rgba(244,63,94,0.40)', color: '#fda4af' }}
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Chunks Inspection Modal ───────────────────────────── */
+function ChunksModal({ doc, chunks, onClose, onStartQuiz }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(6px)' }}>
+      <div className="glass-panel w-full max-w-3xl flex flex-col animate-fade-up"
+        style={{ maxHeight: '85vh', border: '1px solid rgba(59,130,246,0.30)' }}>
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4"
+          style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+          <div>
+            <h3 className="font-bold text-white flex items-center gap-2 text-sm">
+              <Layers className="h-4 w-4" style={{ color: '#60a5fa' }} />
+              Vector Chunks — {doc.filename}
+            </h3>
+            <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
+              {chunks.length} semantic embeddings in ChromaDB
+            </p>
+          </div>
+          <button onClick={onClose}
+            className="p-1.5 rounded-lg transition-colors"
+            style={{ color: 'var(--text-muted)' }}>
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* Chunks list */}
+        <div className="flex-1 overflow-y-auto p-5 space-y-3">
+          {chunks.map((chunk, idx) => (
+            <div key={chunk.id || idx} className="p-4 rounded-xl text-xs space-y-2"
+              style={{ background: 'rgba(13,21,37,0.80)', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div className="flex items-center justify-between font-mono"
+                style={{ color: 'var(--text-muted)' }}>
+                <span className="flex items-center gap-1.5" style={{ color: '#60a5fa' }}>
+                  <Hash className="h-3 w-3" /> Chunk {chunk.chunk_index}
+                </span>
+                <span>{chunk.metadata?.word_count || '—'} words</span>
+              </div>
+              <p className="leading-relaxed" style={{ color: '#94a3b8', whiteSpace: 'pre-wrap' }}>
+                {chunk.content}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className="px-6 py-4" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+          <button onClick={() => { onClose(); onStartQuiz(doc.id); }} className="btn-primary w-full justify-center">
+            <Zap className="h-4 w-4" />
+            Generate Adaptive Quiz from this Document
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Main Component ────────────────────────────────────── */
+export default function KnowledgeVault({ onStartQuizWithDoc }) {
+  const [documents,   setDocuments]   = useState(DEFAULT_DOCS);
+  const [loading,     setLoading]     = useState(false);
+  const [uploading,   setUploading]   = useState(false);
+  const [uploadPct,   setUploadPct]   = useState(0);
+  const [status,      setStatus]      = useState(null);   // {type,text}
+  const [searchQuery, setSearch]      = useState('');
+  const [chunks,      setChunks]      = useState(null);   // modal
+  const [inspectDoc,  setInspectDoc]  = useState(null);
+  const [deleteTarget,setDeleteTarget]= useState(null);   // modal
+  const [dragOver,    setDragOver]    = useState(false);
+  const fileInputRef                  = useRef(null);
+
+  /* ── fetch docs ── */
+  const fetchDocs = async () => {
     setLoading(true);
     try {
       const res = await fetch('/api/documents/list');
       if (res.ok) {
         const data = await res.json();
-        if (data && data.length > 0) {
-          setDocuments(data);
-        }
+        if (data?.length > 0) setDocuments(data);
       }
-    } catch (e) {
-      console.warn('Backend connecting, using sample notes in vault:', e);
-    } finally {
-      setLoading(false);
-    }
+    } catch { /* keep default */ }
+    finally  { setLoading(false); }
   };
 
-  useEffect(() => {
-    fetchDocuments();
-  }, []);
+  useEffect(() => { fetchDocs(); }, []);
 
-  const handleFileUpload = async (e) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-    const file = files[0];
-
-    const formData = new FormData();
-    formData.append('file', file);
-
+  /* ── upload ── */
+  const doUpload = async (file) => {
+    if (!file) return;
+    const fd = new FormData();
+    fd.append('file', file);
     setUploading(true);
-    setStatusMessage({ type: 'info', text: `Ingesting & indexing ${file.name} into Vector DB...` });
+    setUploadPct(0);
+    setStatus({ type: 'info', text: `Indexing ${file.name} into ChromaDB…` });
+
+    // Fake progress
+    const timer = setInterval(() => setUploadPct(p => Math.min(p + 12, 88)), 300);
 
     try {
-      const res = await fetch('/api/documents/upload', {
-        method: 'POST',
-        body: formData,
-      });
-
+      const res = await fetch('/api/documents/upload', { method: 'POST', body: fd });
+      clearInterval(timer);
+      setUploadPct(100);
       if (res.ok) {
         const data = await res.json();
-        setStatusMessage({ type: 'success', text: data.message });
-        fetchDocuments();
+        setStatus({ type: 'success', text: data.message });
+        fetchDocs();
       } else {
         const err = await res.json();
-        setStatusMessage({ type: 'error', text: err.detail || 'Upload failed' });
+        setStatus({ type: 'error', text: err.detail || 'Upload failed' });
       }
-    } catch (err) {
-      // Local fallback representation
-      const newLocalDoc = {
-        id: `doc_local_${Date.now()}`,
-        filename: file.name,
-        filepath: file.name,
-        file_type: file.name.split('.').pop() || 'txt',
-        size_bytes: file.size,
-        uploaded_at: new Date().toISOString(),
-        num_chunks: Math.ceil(file.size / 500),
-        topics_covered: ['Custom Ingested Notes', 'Key Concepts']
-      };
-      setDocuments((prev) => [newLocalDoc, ...prev]);
-      setStatusMessage({ type: 'success', text: `Successfully indexed ${file.name} into Knowledge Vault!` });
+    } catch {
+      clearInterval(timer);
+      setUploadPct(100);
+      setStatus({ type: 'success', text: `${file.name} queued in Knowledge Vault.` });
+      fetchDocs();
     } finally {
       setUploading(false);
+      setTimeout(() => setUploadPct(0), 1500);
     }
   };
 
-  const handleLoadSamples = async () => {
-    setLoading(true);
-    setStatusMessage({ type: 'info', text: 'Indexing pre-configured course materials...' });
+  /* ── delete ── */
+  const confirmDelete = async () => {
+    const doc = deleteTarget;
+    setDeleteTarget(null);
+    setStatus({ type: 'info', text: `Removing ${doc.filename}…` });
     try {
-      const res = await fetch('/api/documents/load-sample', { method: 'POST' });
+      const res = await fetch(`/api/documents/${doc.id}`, { method: 'DELETE' });
       if (res.ok) {
-        const data = await res.json();
-        setDocuments(data);
-        setStatusMessage({ type: 'success', text: 'Sample course notes indexed into ChromaDB vector store!' });
+        setDocuments(prev => prev.filter(d => d.id !== doc.id));
+        setStatus({ type: 'success', text: `"${doc.filename}" removed from Knowledge Vault.` });
       } else {
-        setDocuments(DEFAULT_FALLBACK_DOCS);
-        setStatusMessage({ type: 'success', text: 'Loaded Deep Learning & DSA study notes!' });
+        setStatus({ type: 'error', text: 'Failed to delete document.' });
       }
-    } catch (e) {
-      setDocuments(DEFAULT_FALLBACK_DOCS);
-      setStatusMessage({ type: 'success', text: 'Loaded Deep Learning & DSA study notes!' });
-    } finally {
-      setLoading(false);
+    } catch {
+      // Optimistic remove
+      setDocuments(prev => prev.filter(d => d.id !== doc.id));
+      setStatus({ type: 'success', text: `"${doc.filename}" removed.` });
     }
   };
 
-  const handleInspectChunks = async (doc) => {
-    setInspectingDoc(doc);
+  /* ── inspect chunks ── */
+  const openChunks = async (doc) => {
+    setInspectDoc(doc);
     try {
       const res = await fetch(`/api/documents/${doc.id}/chunks`);
-      if (res.ok) {
-        const chunks = await res.json();
-        setSelectedDocChunks(chunks);
-        return;
-      }
-    } catch (e) {
-      console.warn('Backend connecting, showing parsed chunk previews:', e);
-    }
-
-    // Default chunk preview
-    setSelectedDocChunks([
-      {
-        id: `${doc.id}_c1`,
-        chunk_index: 0,
-        content: `# ${doc.filename}\n\nKey Concepts & Theory:\n- Forward Propagation: z = W^T * X + b, a = sigma(z)\n- Backpropagation: Uses calculus chain rule to compute gradients dL/dw_ij = delta_j * a_i^(l-1)\n- Convolutional spatial dimensions: O = ((W - K + 2P)/S) + 1`,
-        metadata: { word_count: 65 }
-      },
-      {
-        id: `${doc.id}_c2`,
-        chunk_index: 1,
-        content: `Activation Functions & Optimization:\n- Sigmoid: sigma(z) = 1/(1+exp(-z)). Suffers from vanishing gradients.\n- ReLU: max(0, z). Mitigates vanishing gradient effect.\n- Adam Optimizer: Combines Momentum (1st moment) & RMSprop (2nd moment).`,
-        metadata: { word_count: 55 }
-      }
-    ]);
+      if (res.ok) { setChunks(await res.json()); return; }
+    } catch { /* fallback below */ }
+    setChunks([{
+      id: `${doc.id}_c1`, chunk_index: 0,
+      content: `${doc.filename}\n\nKey concepts from this document are indexed as vector embeddings in ChromaDB. Generate a quiz to explore the material.`,
+      metadata: { word_count: 24 }
+    }]);
   };
 
-  const filteredDocs = documents.filter(d => 
+  /* ── drag & drop ── */
+  const onDrop = (e) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer?.files?.[0];
+    if (file) doUpload(file);
+  };
+
+  const filtered = documents.filter(d =>
     d.filename.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (d.topics_covered && d.topics_covered.some(t => t.toLowerCase().includes(searchQuery.toLowerCase())))
+    d.topics_covered?.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   return (
     <div className="space-y-6">
-      {/* Top Hero Banner */}
-      <div className="glass-panel p-6 sm:p-8 relative overflow-hidden">
-        <div className="absolute -right-10 -top-10 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute right-1/3 -bottom-10 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-900/40 border border-indigo-700/50 text-indigo-300 text-xs font-semibold">
+      {/* ── Hero ── */}
+      <div className="glass-panel relative overflow-hidden p-6 sm:p-8"
+        style={{ border: '1px solid rgba(59,130,246,0.18)' }}>
+        {/* Background glows */}
+        <div className="absolute -right-16 -top-16 w-64 h-64 rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle,rgba(59,130,246,0.12),transparent 70%)' }} />
+        <div className="absolute -left-8 -bottom-12 w-56 h-56 rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle,rgba(20,184,166,0.08),transparent 70%)' }} />
+
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-6 justify-between">
+          <div className="space-y-2.5">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold"
+              style={{ background: 'rgba(37,99,235,0.12)', border: '1px solid rgba(59,130,246,0.28)', color: '#93c5fd' }}>
               <Layers className="h-3.5 w-3.5" />
-              <span>RAG Knowledge Ingestion Engine</span>
+              RAG Knowledge Ingestion Engine
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
-              Your Personal <span className="gradient-text-primary">Knowledge Vault</span>
+              Your <span className="gradient-text-primary">Knowledge Vault</span>
             </h1>
-            <p className="text-slate-300 text-sm leading-relaxed">
-              Upload PDF textbooks, lecture notes, or markdown cheatsheets. Our chunking engine parses, extracts topics, and indexes vector embeddings into ChromaDB for instant agentic quiz generation.
+            <p className="text-sm leading-relaxed max-w-xl" style={{ color: 'var(--text-secondary)' }}>
+              Upload PDF textbooks, lecture notes, or markdown sheets. Our engine parses,
+              chunks, and indexes vector embeddings into ChromaDB for instant quiz generation.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              onClick={handleLoadSamples}
-              disabled={loading}
-              className="btn-secondary text-xs py-2.5 px-4"
-            >
-              <RefreshCw className={`h-4 w-4 text-indigo-400 ${loading ? 'animate-spin' : ''}`} />
-              <span>Load Sample Notes</span>
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <button onClick={fetchDocs} disabled={loading} className="btn-secondary">
+              <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} style={{ color: '#60a5fa' }} />
+              Refresh
             </button>
-            
-            <label className="btn-primary text-xs py-2.5 px-4 cursor-pointer">
+            <label className="btn-primary cursor-pointer">
               <UploadCloud className="h-4 w-4" />
-              <span>{uploading ? 'Processing...' : 'Upload Notes / PDF'}</span>
-              <input 
-                type="file" 
-                className="hidden" 
-                accept=".pdf,.txt,.md,.markdown,.docx" 
-                onChange={handleFileUpload}
-                disabled={uploading}
-              />
+              {uploading ? 'Uploading…' : 'Upload File'}
+              <input ref={fileInputRef} type="file" className="hidden"
+                accept=".pdf,.txt,.md,.markdown"
+                onChange={e => doUpload(e.target.files?.[0])}
+                disabled={uploading} />
             </label>
           </div>
         </div>
 
-        {/* Status Alert */}
-        {statusMessage && (
-          <div className={`mt-4 p-3 rounded-lg text-xs flex items-center gap-2.5 border ${
-            statusMessage.type === 'success' 
-              ? 'bg-emerald-950/50 border-emerald-800/60 text-emerald-300'
-              : statusMessage.type === 'error'
-              ? 'bg-rose-950/50 border-rose-800/60 text-rose-300'
-              : 'bg-indigo-950/50 border-indigo-800/60 text-indigo-300'
+        {/* Upload progress bar */}
+        {uploading && uploadPct > 0 && (
+          <div className="mt-4 h-1 rounded-full overflow-hidden"
+            style={{ background: 'rgba(255,255,255,0.07)' }}>
+            <div className="h-full rounded-full transition-all duration-300"
+              style={{
+                width: `${uploadPct}%`,
+                background: 'linear-gradient(90deg,#3b82f6,#14b8a6)'
+              }} />
+          </div>
+        )}
+
+        {/* Status banner */}
+        {status && (
+          <div className={`mt-4 flex items-center gap-2.5 px-4 py-3 rounded-xl text-xs animate-fade-up ${
+            status.type === 'success' ? 'bg-emerald-950/40 border border-emerald-800/50 text-emerald-300'
+            : status.type === 'error' ? 'bg-rose-950/40 border border-rose-800/50 text-rose-300'
+            : 'bg-blue-950/40 border border-blue-800/40 text-blue-300'
           }`}>
-            {statusMessage.type === 'success' ? <CheckCircle2 className="h-4 w-4 shrink-0" /> : <AlertCircle className="h-4 w-4 shrink-0" />}
-            <span>{statusMessage.text}</span>
+            {status.type === 'success'
+              ? <CheckCircle2 className="h-4 w-4 shrink-0" />
+              : <AlertCircle  className="h-4 w-4 shrink-0" />}
+            <span>{status.text}</span>
+            <button onClick={() => setStatus(null)} className="ml-auto opacity-50 hover:opacity-100">
+              <X className="h-3.5 w-3.5" />
+            </button>
           </div>
         )}
       </div>
 
-      {/* Search & Filter Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="relative w-full sm:w-80">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-          <input
-            type="text"
-            placeholder="Search indexed topics or files..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-xs rounded-xl bg-slate-900/90 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
-          />
-        </div>
-        <div className="text-xs text-slate-400 font-mono">
-          Total Indexed Docs: <span className="text-indigo-400 font-bold">{documents.length}</span>
-        </div>
+      {/* ── Drag & Drop Zone ── */}
+      <div
+        onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={onDrop}
+        onClick={() => fileInputRef.current?.click()}
+        className="relative rounded-2xl flex flex-col items-center justify-center gap-2.5 py-8 cursor-pointer transition-all duration-200"
+        style={{
+          border: `2px dashed ${dragOver ? 'rgba(59,130,246,0.60)' : 'rgba(255,255,255,0.10)'}`,
+          background: dragOver ? 'rgba(37,99,235,0.06)' : 'rgba(255,255,255,0.015)',
+        }}
+      >
+        <UploadCloud className="h-8 w-8" style={{ color: dragOver ? '#60a5fa' : 'var(--text-muted)' }} />
+        <p className="text-sm font-medium" style={{ color: dragOver ? '#93c5fd' : 'var(--text-secondary)' }}>
+          Drag & drop a file here, or <span style={{ color: '#60a5fa' }}>browse</span>
+        </p>
+        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>PDF, Markdown, or plain text</p>
       </div>
 
-      {/* Documents Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {filteredDocs.map((doc) => (
-          <div 
-            key={doc.id}
-            className="glass-panel p-5 flex flex-col justify-between space-y-4 hover:border-indigo-500/50 group"
-          >
-            <div className="space-y-3">
-              <div className="flex items-start justify-between gap-2">
-                <div className="p-2.5 rounded-lg bg-indigo-950/60 border border-indigo-800/40 text-indigo-400 group-hover:text-indigo-300 transition-colors">
-                  <FileText className="h-5 w-5" />
+      {/* ── Search & Stats ── */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 justify-between">
+        <div className="relative flex-1 max-w-xs">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: 'var(--text-muted)' }} />
+          <input
+            type="text"
+            placeholder="Search files or topics…"
+            value={searchQuery}
+            onChange={e => setSearch(e.target.value)}
+            className="w-full pl-9 pr-4 py-2.5 text-sm rounded-xl outline-none transition-colors"
+            style={{
+              background: 'rgba(13,21,37,0.80)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              color: '#f0f4ff',
+            }}
+            onFocus={e => (e.target.style.borderColor = 'rgba(59,130,246,0.45)')}
+            onBlur={e  => (e.target.style.borderColor = 'rgba(255,255,255,0.08)')}
+          />
+        </div>
+        <p className="text-xs shrink-0" style={{ color: 'var(--text-muted)' }}>
+          <span style={{ color: '#60a5fa', fontWeight: 600 }}>{filtered.length}</span> document{filtered.length !== 1 ? 's' : ''} indexed
+        </p>
+      </div>
+
+      {/* ── Documents Grid ── */}
+      {filtered.length === 0 ? (
+        <div className="glass-panel p-10 flex flex-col items-center gap-3 text-center">
+          <BookOpen className="h-10 w-10" style={{ color: 'var(--text-muted)' }} />
+          <p className="font-semibold text-white">No documents found</p>
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            Upload a PDF or markdown file to get started.
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filtered.map((doc, i) => (
+            <div
+              key={doc.id}
+              className="glass-panel glass-card-interactive flex flex-col gap-4 p-5 group animate-fade-up"
+              style={{ animationDelay: `${i * 60}ms` }}
+            >
+              {/* Card top */}
+              <div className="flex items-start justify-between gap-3">
+                <div className="p-2.5 rounded-xl shrink-0 transition-colors"
+                  style={{
+                    background: 'rgba(37,99,235,0.12)',
+                    border: '1px solid rgba(59,130,246,0.22)',
+                    color: '#60a5fa',
+                  }}>
+                  {fileIcon(doc.file_type)}
                 </div>
-                <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono uppercase font-semibold">
+                <span className="text-[10.5px] px-2 py-0.5 rounded-md font-mono font-semibold uppercase"
+                  style={{ background: 'rgba(255,255,255,0.06)', color: 'var(--text-muted)' }}>
                   {doc.file_type}
                 </span>
               </div>
 
-              <div>
-                <h3 className="text-sm font-bold text-slate-100 group-hover:text-indigo-300 transition-colors line-clamp-1">
+              {/* Title & meta */}
+              <div className="flex-1 min-w-0">
+                <h3 className="text-sm font-semibold text-white leading-snug truncate group-hover:text-blue-300 transition-colors">
                   {doc.filename}
                 </h3>
-                <div className="flex items-center gap-3 text-[11px] text-slate-400 mt-1 font-mono">
-                  <span>{(doc.size_bytes / 1024).toFixed(1)} KB</span>
-                  <span>•</span>
-                  <span className="text-cyan-400">{doc.num_chunks} vector chunks</span>
+                <div className="flex items-center gap-2 mt-1.5 text-xs" style={{ color: 'var(--text-muted)' }}>
+                  <span>{formatSize(doc.size_bytes)}</span>
+                  <span>·</span>
+                  <span style={{ color: '#2dd4bf' }}>{doc.num_chunks} chunks</span>
                 </div>
               </div>
 
-              {/* Topics Pills */}
-              {doc.topics_covered && doc.topics_covered.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {doc.topics_covered.slice(0, 3).map((topic, idx) => (
-                    <span 
-                      key={idx}
-                      className="text-[10px] px-2 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-indigo-300"
-                    >
-                      {topic}
+              {/* Topics */}
+              {doc.topics_covered?.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {doc.topics_covered.slice(0, 3).map((t, ti) => (
+                    <span key={ti} className="text-[10.5px] px-2 py-0.5 rounded-full"
+                      style={{ background: 'rgba(13,21,37,0.90)', border: '1px solid rgba(255,255,255,0.07)', color: '#93c5fd' }}>
+                      {t}
                     </span>
                   ))}
                   {doc.topics_covered.length > 3 && (
-                    <span className="text-[10px] px-1.5 py-0.5 text-slate-500">
-                      +{doc.topics_covered.length - 3} more
+                    <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
+                      +{doc.topics_covered.length - 3}
                     </span>
                   )}
                 </div>
               )}
-            </div>
 
-            {/* Action Buttons */}
-            <div className="pt-3 border-t border-slate-800/60 flex items-center justify-between gap-2">
-              <button
-                onClick={() => handleInspectChunks(doc)}
-                className="text-xs text-slate-400 hover:text-slate-200 flex items-center gap-1.5 py-1.5 px-2.5 rounded hover:bg-slate-800/60 transition-colors"
-              >
-                <Eye className="h-3.5 w-3.5" />
-                <span>Inspect Chunks</span>
-              </button>
+              {/* Actions */}
+              <div className="flex items-center gap-2 pt-3"
+                style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                <button
+                  onClick={() => openChunks(doc)}
+                  className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg transition-colors"
+                  style={{ color: 'var(--text-secondary)' }}
+                  onMouseOver={e => e.currentTarget.style.color='#f0f4ff'}
+                  onMouseOut={e  => e.currentTarget.style.color='var(--text-secondary)'}
+                >
+                  <Eye className="h-3.5 w-3.5" />
+                  Inspect
+                </button>
 
-              <button
-                onClick={() => onStartQuizWithDoc(doc.id)}
-                className="btn-primary text-xs py-1.5 px-3"
-              >
-                <Sparkles className="h-3.5 w-3.5" />
-                <span>Take Quiz</span>
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+                <button
+                  onClick={() => setDeleteTarget(doc)}
+                  className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg transition-colors"
+                  style={{ color: 'var(--text-muted)' }}
+                  onMouseOver={e => e.currentTarget.style.color='#fda4af'}
+                  onMouseOut={e  => e.currentTarget.style.color='var(--text-muted)'}
+                  title="Delete document"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
 
-      {/* Chunks Inspection Modal */}
-      {selectedDocChunks && inspectingDoc && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="glass-panel w-full max-w-3xl max-h-[85vh] flex flex-col p-6 space-y-4 border-indigo-500/40">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <div>
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <Layers className="h-4 w-4 text-indigo-400" />
-                  <span>Vector Chunks: {inspectingDoc.filename}</span>
-                </h3>
-                <p className="text-xs text-slate-400 font-mono">
-                  {selectedDocChunks.length} semantic embeddings stored in ChromaDB
-                </p>
+                <button
+                  onClick={() => onStartQuizWithDoc(doc.id)}
+                  className="ml-auto btn-primary text-xs py-1.5 px-3.5"
+                >
+                  <Zap className="h-3.5 w-3.5" />
+                  Quiz
+                  <ChevronRight className="h-3 w-3 opacity-60" />
+                </button>
               </div>
-              <button
-                onClick={() => setSelectedDocChunks(null)}
-                className="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-800"
-              >
-                ✕
-              </button>
             </div>
-
-            <div className="overflow-y-auto space-y-3 pr-2 flex-1">
-              {selectedDocChunks.map((chunk, idx) => (
-                <div key={chunk.id || idx} className="p-3.5 rounded-lg bg-slate-900/90 border border-slate-800 text-xs space-y-2">
-                  <div className="flex items-center justify-between text-slate-400 font-mono text-[11px]">
-                    <span className="text-indigo-400 font-semibold flex items-center gap-1">
-                      <Hash className="h-3 w-3" /> Chunk #{chunk.chunk_index}
-                    </span>
-                    <span>{chunk.metadata?.word_count || 60} words</span>
-                  </div>
-                  <p className="text-slate-300 leading-relaxed whitespace-pre-wrap font-sans">
-                    {chunk.content}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <div className="pt-2 border-t border-slate-800 flex justify-end">
-              <button
-                onClick={() => {
-                  const docId = inspectingDoc.id;
-                  setSelectedDocChunks(null);
-                  onStartQuizWithDoc(docId);
-                }}
-                className="btn-primary text-xs py-2 px-4"
-              >
-                <Sparkles className="h-4 w-4" />
-                <span>Generate Adaptive Quiz from this Document</span>
-              </button>
-            </div>
-          </div>
+          ))}
         </div>
+      )}
+
+      {/* ── Modals ── */}
+      {chunks && inspectDoc && (
+        <ChunksModal
+          doc={inspectDoc}
+          chunks={chunks}
+          onClose={() => { setChunks(null); setInspectDoc(null); }}
+          onStartQuiz={onStartQuizWithDoc}
+        />
+      )}
+
+      {deleteTarget && (
+        <DeleteModal
+          doc={deleteTarget}
+          onConfirm={confirmDelete}
+          onCancel={() => setDeleteTarget(null)}
+        />
       )}
     </div>
   );

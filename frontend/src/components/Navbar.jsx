@@ -1,107 +1,231 @@
-import React from 'react';
-import { 
-  BookOpen, 
-  Sparkles, 
-  PenTool, 
-  BarChart3, 
-  Calendar, 
-  Activity, 
-  Bot,
-  BrainCircuit,
-  GraduationCap
+import React, { useState } from 'react';
+import {
+  BookOpen,
+  Zap,
+  PenLine,
+  BarChart3,
+  CalendarCheck,
+  Gauge,
+  Menu,
+  X,
+  MessageSquare
 } from 'lucide-react';
 
+const NAV_ITEMS = [
+  { id: 'vault',      label: 'Knowledge Vault', icon: BookOpen,      tag: 'RAG' },
+  { id: 'quiz',       label: 'Quiz Studio',      icon: Zap,           tag: 'Agent' },
+  { id: 'canvas',     label: 'Handwriting Lab',  icon: PenLine,       tag: 'Vision' },
+  { id: 'radar',      label: 'Mastery Radar',    icon: BarChart3,     tag: 'ML' },
+  { id: 'study_plan', label: 'Study Plan',        icon: CalendarCheck, tag: 'Adaptive' },
+  { id: 'mlops',      label: 'MLOps Hub',         icon: Gauge,         tag: 'MLflow' },
+];
+
 export default function Navbar({ activeTab, setActiveTab, onOpenTutor }) {
-  const navItems = [
-    { id: 'vault', label: 'Knowledge Vault', icon: BookOpen, tag: 'RAG' },
-    { id: 'quiz', label: 'Quiz Studio', icon: Sparkles, tag: 'Agent' },
-    { id: 'canvas', label: 'Handwriting Lab', icon: PenTool, tag: 'Vision/CNN' },
-    { id: 'radar', label: 'Mastery Radar', icon: BarChart3, tag: 'ML Knowledge Tracing' },
-    { id: 'study_plan', label: 'Adaptive Study Plan', icon: Calendar, tag: 'Recommender' },
-    { id: 'mlops', label: 'MLOps Hub', icon: Activity, tag: 'MLflow' },
-  ];
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleTab = (id) => {
+    setActiveTab(id);
+    setMobileOpen(false);
+  };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          
-          {/* Logo & Title */}
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab('vault')}>
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/25">
-              <BrainCircuit className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold text-lg text-white tracking-tight font-heading">
-                  AI Tutor <span className="gradient-text-primary">Platform</span>
+    <>
+      <header
+        className="sticky top-0 z-40 w-full"
+        style={{
+          background: 'rgba(6,11,20,0.92)',
+          backdropFilter: 'blur(20px) saturate(160%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(160%)',
+          borderBottom: '1px solid rgba(255,255,255,0.06)',
+        }}
+      >
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 gap-4">
+
+            {/* ── Brand Logo (Humanized Black Circle Icon) ── */}
+            <button
+              onClick={() => handleTab('vault')}
+              className="flex items-center gap-2.5 sm:gap-3 shrink-0 group focus:outline-none transition-transform duration-200 active:scale-95"
+              aria-label="AI Tutor — Go to Knowledge Vault"
+            >
+              <div
+                className="relative rounded-full transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.45)]"
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '9999px',
+                  border: '1.5px solid rgba(255, 255, 255, 0.14)',
+                  boxShadow: '0 0 16px rgba(59,130,246,0.30), 0 2px 8px rgba(0,0,0,0.5)',
+                  flexShrink: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  overflow: 'hidden',
+                  background: '#0a0f1d',
+                }}
+              >
+                <img
+                  src="/ai-tutor-circle.png"
+                  alt="AI Tutor"
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '9999px',
+                    objectFit: 'cover',
+                    display: 'block',
+                  }}
+                />
+              </div>
+
+              {/* Clean professional wordmark — visible on all viewports */}
+              <div className="flex items-center gap-1.5 font-heading">
+                <span className="text-[15px] sm:text-[17px] font-extrabold text-white tracking-tight">
+                  AI Tutor
                 </span>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-950 text-indigo-400 border border-indigo-800/60 font-semibold font-mono">
-                  v1.0
+                <span className="hidden sm:inline-flex text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-500/10 text-cyan-400 border border-cyan-500/25 tracking-wide font-mono">
+                  Platform
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 font-medium">
-                End-to-End Multimodal AI Learning & Knowledge Tracing
-              </p>
+            </button>
+
+            {/* ── Desktop Nav ── */}
+            <nav className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
+              {NAV_ITEMS.map(({ id, label, icon: Icon }) => {
+                const active = activeTab === id;
+                return (
+                  <button
+                    key={id}
+                    onClick={() => handleTab(id)}
+                    style={{
+                      position: 'relative',
+                      padding: '7px 14px',
+                      borderRadius: '8px',
+                      fontSize: '13px',
+                      fontWeight: 500,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '7px',
+                      transition: 'all 0.18s ease',
+                      color: active ? '#93c5fd' : '#94a3b8',
+                      background: active ? 'rgba(37,99,235,0.12)' : 'transparent',
+                      border: active ? '1px solid rgba(59,130,246,0.28)' : '1px solid transparent',
+                    }}
+                  >
+                    <Icon style={{ width: '13px', height: '13px', flexShrink: 0 }} />
+                    <span>{label}</span>
+                    {active && (
+                      <span style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        height: '2px',
+                        width: '28px',
+                        borderRadius: '99px',
+                        background: 'linear-gradient(90deg,#3b82f6,#14b8a6)',
+                      }} />
+                    )}
+                  </button>
+                );
+              })}
+            </nav>
+
+            {/* ── Right Actions ── */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+              <button
+                onClick={onOpenTutor}
+                className="btn-primary hidden sm:inline-flex"
+                aria-label="Open AI Tutor"
+              >
+                <MessageSquare style={{ width: '15px', height: '15px' }} />
+                <span className="hidden md:inline">Ask Leo</span>
+              </button>
+
+              {/* Mobile hamburger */}
+              <button
+                onClick={() => setMobileOpen(v => !v)}
+                className="lg:hidden"
+                aria-label="Toggle menu"
+                style={{
+                  padding: '8px',
+                  borderRadius: '8px',
+                  color: '#94a3b8',
+                  background: mobileOpen ? 'rgba(255,255,255,0.07)' : 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                {mobileOpen
+                  ? <X style={{ width: '20px', height: '20px' }} />
+                  : <Menu style={{ width: '20px', height: '20px' }} />
+                }
+              </button>
             </div>
           </div>
+        </div>
 
-          {/* Desktop Nav Items */}
-          <nav className="hidden lg:flex items-center gap-1">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = activeTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`relative px-3.5 py-2 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-2 ${
-                    isActive 
-                      ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 shadow-sm shadow-indigo-500/10' 
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
-                  }`}
-                >
-                  <Icon className={`h-4 w-4 ${isActive ? 'text-indigo-400' : 'text-slate-400'}`} />
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Action Right */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={onOpenTutor}
-              className="btn-primary text-xs py-2 px-3.5"
+        {/* ── Mobile Drawer ── */}
+        {mobileOpen && (
+          <div
+            className="lg:hidden animate-fade-up"
+            style={{
+              borderTop: '1px solid rgba(255,255,255,0.06)',
+              background: 'rgba(8,14,26,0.98)',
+            }}
+          >
+            <div
+              className="max-w-screen-xl mx-auto px-4 py-3"
+              style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}
             >
-              <Bot className="h-4 w-4 text-cyan-300 animate-pulse" />
-              <span>Ask Leo Tutor</span>
-            </button>
-          </div>
-        </div>
+              {NAV_ITEMS.map(({ id, label, icon: Icon, tag }) => {
+                const active = activeTab === id;
+                return (
+                  <button
+                    key={id}
+                    onClick={() => handleTab(id)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      padding: '12px 14px',
+                      borderRadius: '12px',
+                      textAlign: 'left',
+                      transition: 'all 0.15s ease',
+                      background: active ? 'rgba(37,99,235,0.15)' : 'rgba(255,255,255,0.03)',
+                      border: active
+                        ? '1px solid rgba(59,130,246,0.32)'
+                        : '1px solid rgba(255,255,255,0.06)',
+                      color: active ? '#93c5fd' : '#94a3b8',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <Icon style={{ width: '15px', height: '15px', flexShrink: 0 }} />
+                    <div style={{ minWidth: 0 }}>
+                      <p style={{ fontSize: '12.5px', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {label}
+                      </p>
+                      <p style={{ fontSize: '10px', color: '#475569', marginTop: '2px' }}>
+                        {tag}
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
 
-        {/* Mobile & Small screens scrollable tabs */}
-        <div className="lg:hidden flex items-center gap-1 overflow-x-auto pb-2 pt-1 border-t border-slate-800/40">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeTab === item.id;
-            return (
+            <div style={{ padding: '0 16px 16px' }}>
               <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`whitespace-nowrap px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 ${
-                  isActive 
-                    ? 'bg-indigo-600/30 text-indigo-300 border border-indigo-500/50' 
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
+                onClick={() => { onOpenTutor(); setMobileOpen(false); }}
+                className="btn-primary w-full justify-center"
+                style={{ paddingTop: '12px', paddingBottom: '12px' }}
               >
-                <Icon className="h-3.5 w-3.5" />
-                <span>{item.label}</span>
+                <MessageSquare style={{ width: '15px', height: '15px' }} />
+                Ask Leo — AI Tutor
               </button>
-            );
-          })}
-        </div>
-      </div>
-    </header>
+            </div>
+          </div>
+        )}
+      </header>
+    </>
   );
 }

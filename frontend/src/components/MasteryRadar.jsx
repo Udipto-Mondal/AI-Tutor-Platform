@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { 
   BarChart3, 
   Target, 
@@ -76,10 +76,10 @@ export default function MasteryRadar({ onNavigateToStudyPlan, onStartQuizWithTop
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="glass-panel p-6 sm:p-8 relative overflow-hidden border-indigo-500/30">
+      <div className="glass-panel p-6 sm:p-8 relative overflow-hidden border-blue-500/25">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-900/40 border border-indigo-700/50 text-indigo-300 text-xs font-semibold">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/40 border border-blue-700/50 text-blue-300 text-xs font-semibold">
               <TrendingUp className="h-3.5 w-3.5" />
               <span>Machine Learning Knowledge Tracing Engine</span>
             </div>
@@ -118,7 +118,7 @@ export default function MasteryRadar({ onNavigateToStudyPlan, onStartQuizWithTop
         <div className="lg:col-span-6 glass-panel p-6 flex flex-col items-center justify-center space-y-4">
           <div className="flex items-center justify-between w-full border-b border-slate-800 pb-3">
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <Target className="h-4 w-4 text-indigo-400" />
+              <Target className="h-4 w-4 text-blue-400" />
               <span>Multidimensional Knowledge Polygon</span>
             </h3>
             <div className="flex items-center gap-2">
@@ -204,7 +204,7 @@ export default function MasteryRadar({ onNavigateToStudyPlan, onStartQuizWithTop
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" /> &gt;75% Mastered
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-indigo-400" /> 50-75% In Progress
+              <span className="w-2.5 h-2.5 rounded-full bg-blue-400" /> 50-75% In Progress
             </span>
             <span className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-rose-400" /> &lt;50% Weak Topic
@@ -252,7 +252,7 @@ export default function MasteryRadar({ onNavigateToStudyPlan, onStartQuizWithTop
                       )}
                     </div>
                     <span className={`text-xs font-mono font-bold ${
-                      t.mastery_score >= 0.75 ? 'text-emerald-400' : t.mastery_score >= 0.5 ? 'text-indigo-400' : 'text-rose-400'
+                      t.mastery_score >= 0.75 ? 'text-emerald-400' : t.mastery_score >= 0.5 ? 'text-blue-400' : 'text-rose-400'
                     }`}>
                       {Math.round((t.mastery_score || 0.5) * 100)}%
                     </span>
@@ -265,7 +265,7 @@ export default function MasteryRadar({ onNavigateToStudyPlan, onStartQuizWithTop
                         t.mastery_score >= 0.75 
                           ? 'bg-gradient-to-r from-emerald-500 to-teal-400' 
                           : t.mastery_score >= 0.5 
-                          ? 'bg-gradient-to-r from-indigo-500 to-cyan-400' 
+                          ? 'bg-gradient-to-r from-blue-500 to-cyan-400' 
                           : 'bg-gradient-to-r from-rose-600 to-orange-500'
                       }`}
                       style={{ width: `${Math.max(5, (t.mastery_score || 0.5) * 100)}%` }}

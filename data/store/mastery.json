@@ -1,0 +1,22 @@
+{
+  "default_student": {
+    "Backpropagation & Gradients": {
+      "topic": "Backpropagation & Gradients",
+      "mastery_score": 0.53,
+      "attempts_count": 1,
+      "correct_count": 0,
+      "predicted_weak_risk": 0.47,
+      "status": "In Progress",
+      "last_reviewed": "2026-09-09T04:51:40.031881Z"
+    },
+    "Activation Functions": {
+      "topic": "Activation Functions",
+      "mastery_score": 0.6499999999999999,
+      "attempts_count": 1,
+      "correct_count": 1,
+      "predicted_weak_risk": 0.35,
+      "status": "In Progress",
+      "last_reviewed": "2026-09-09T04:51:40.031881Z"
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+﻿import React, { useRef, useState, useEffect } from 'react';
 import { 
   PenTool, 
   Eraser, 
@@ -223,12 +223,12 @@ export default function HandwritingCanvas({
     <div className="space-y-4">
       {/* Problem context bar if standalone */}
       {isStandalone && (
-        <div className="glass-panel p-4 border-indigo-500/30 space-y-2">
+        <div className="glass-panel p-4 border-blue-500/25 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider font-mono">
+            <span className="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono">
               Topic: {topic}
             </span>
-            <span className="text-[11px] px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800">
+            <span className="text-[11px] px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800">
               Interactive Vision Testing
             </span>
           </div>
@@ -245,7 +245,7 @@ export default function HandwritingCanvas({
           <button
             onClick={() => setTool('pen')}
             className={`p-2 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all ${
-              tool === 'pen' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30' : 'text-slate-400 hover:text-slate-200'
+              tool === 'pen' ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20' : 'text-slate-400 hover:text-slate-200'
             }`}
             title="Pen Tool (Stylus or Mouse)"
           >
@@ -290,7 +290,7 @@ export default function HandwritingCanvas({
                 key={size}
                 onClick={() => setStrokeWidth(size)}
                 className={`px-2 py-1 rounded ${
-                  strokeWidth === size ? 'bg-indigo-950 text-indigo-300 font-bold border border-indigo-800' : 'hover:bg-slate-800'
+                  strokeWidth === size ? 'bg-blue-950 text-blue-300 font-bold border border-blue-800' : 'hover:bg-slate-800'
                 }`}
               >
                 {size}px
@@ -331,7 +331,7 @@ export default function HandwritingCanvas({
       </div>
 
       {/* Main Interactive Drawing Canvas */}
-      <div className="relative rounded-xl overflow-hidden border border-indigo-500/30 bg-[#0b1120] shadow-inner">
+      <div className="relative rounded-xl overflow-hidden border border-blue-500/25 bg-[#0b1120] shadow-inner">
         <canvas
           ref={canvasRef}
           onMouseDown={startDrawing}
@@ -346,7 +346,7 @@ export default function HandwritingCanvas({
 
         {!hasDrawn && (
           <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center text-slate-500 space-y-2">
-            <PenTool className="h-8 w-8 opacity-40 animate-pulse text-indigo-400" />
+            <PenTool className="h-8 w-8 opacity-40 animate-pulse text-blue-400" />
             <p className="text-xs font-medium">Draw or write mathematical formulas directly here with stylus/mouse</p>
             <p className="text-[10px] text-slate-600">Or upload a photo of handwritten notebook paper</p>
           </div>
@@ -373,7 +373,7 @@ export default function HandwritingCanvas({
 
       {/* Live Direct Evaluation Report Box */}
       {evaluationResult && (
-        <div className="glass-panel p-5 border-indigo-500/40 space-y-4 animate-in fade-in slide-in-from-bottom-3 duration-300">
+        <div className="glass-panel p-5 border-blue-500/35 space-y-4 animate-in fade-in slide-in-from-bottom-3 duration-300">
           <div className="flex items-center justify-between border-b border-slate-800 pb-3">
             <div className="flex items-center gap-2.5">
               <div className={`p-2 rounded-lg ${evaluationResult.is_correct ? 'bg-emerald-950 text-emerald-400' : 'bg-amber-950 text-amber-400'}`}>
@@ -384,7 +384,7 @@ export default function HandwritingCanvas({
                   Vision OCR & Semantic Rubric Evaluation
                 </h4>
                 <p className="text-xs text-slate-400">
-                  Earned Score: <span className="font-bold text-indigo-400">{(evaluationResult.score * 100).toFixed(0)}%</span>
+                  Earned Score: <span className="font-bold text-blue-400">{(evaluationResult.score * 100).toFixed(0)}%</span>
                 </p>
               </div>
             </div>
@@ -401,7 +401,7 @@ export default function HandwritingCanvas({
             <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">
               OCR Transcribed Formula / Steps:
             </span>
-            <p className="font-mono text-indigo-300 text-sm font-semibold">
+            <p className="font-mono text-blue-300 text-sm font-semibold">
               {evaluationResult.extracted_text || "dL/dw_ij = delta_j * a_i^(l-1)"}
             </p>
           </div>
@@ -424,8 +424,8 @@ export default function HandwritingCanvas({
           )}
 
           {/* Feedback note */}
-          <p className="text-xs text-slate-300 leading-relaxed bg-indigo-950/30 p-3 rounded-lg border border-indigo-900/40">
-            💡 {evaluationResult.feedback}
+          <p className="text-xs text-slate-300 leading-relaxed bg-blue-950/30 p-3 rounded-lg border border-blue-900/40">
+             {evaluationResult.feedback}
           </p>
         </div>
       )}

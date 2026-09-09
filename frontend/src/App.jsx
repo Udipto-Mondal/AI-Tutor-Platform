@@ -1,44 +1,47 @@
 import React, { useState } from 'react';
-import Navbar from './components/Navbar';
-import KnowledgeVault from './components/KnowledgeVault';
-import QuizStudio from './components/QuizStudio';
+import Navbar           from './components/Navbar';
+import KnowledgeVault   from './components/KnowledgeVault';
+import QuizStudio       from './components/QuizStudio';
 import HandwritingCanvas from './components/HandwritingCanvas';
-import MasteryRadar from './components/MasteryRadar';
-import StudyPlanView from './components/StudyPlanView';
-import MLOpsHub from './components/MLOpsHub';
+import MasteryRadar     from './components/MasteryRadar';
+import StudyPlanView    from './components/StudyPlanView';
+import MLOpsHub         from './components/MLOpsHub';
 import SocraticTutorDrawer from './components/SocraticTutorDrawer';
+import { MessageSquare, X } from 'lucide-react';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('vault');
+  const [activeTab,     setActiveTab]     = useState('vault');
   const [selectedDocId, setSelectedDocId] = useState(null);
-  const [isTutorOpen, setIsTutorOpen] = useState(false);
+  const [tutorOpen,     setTutorOpen]     = useState(false);
 
   const handleStartQuizWithDoc = (docId) => {
     setSelectedDocId(docId);
     setActiveTab('quiz');
   };
 
-  const handleStartQuizWithTopic = (topic) => {
+  const handleStartQuizWithTopic = () => {
     setActiveTab('quiz');
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 selection:bg-indigo-500 selection:text-white">
-      {/* Sticky Header */}
-      <Navbar 
-        activeTab={activeTab} 
+    <div className="min-h-screen flex flex-col" style={{ background: 'var(--bg-deep)' }}>
+
+      {/* ── Navbar ── */}
+      <Navbar
+        activeTab={activeTab}
         setActiveTab={setActiveTab}
-        onOpenTutor={() => setIsTutorOpen(true)}
+        onOpenTutor={() => setTutorOpen((v) => !v)}
       />
 
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* ── Page Content ── */}
+      <main className="flex-1 w-full max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-7 sm:py-9">
+
         {activeTab === 'vault' && (
           <KnowledgeVault onStartQuizWithDoc={handleStartQuizWithDoc} />
         )}
 
         {activeTab === 'quiz' && (
-          <QuizStudio 
+          <QuizStudio
             selectedDocId={selectedDocId}
             onNavigateToStudyPlan={() => setActiveTab('study_plan')}
             onNavigateToRadar={() => setActiveTab('radar')}
@@ -47,12 +50,13 @@ export default function App() {
 
         {activeTab === 'canvas' && (
           <div className="space-y-6">
-            <div className="glass-panel p-6 border-indigo-500/30">
-              <h1 className="text-xl sm:text-2xl font-extrabold text-white">
+            <div className="glass-panel p-6 sm:p-8" style={{ borderColor: 'rgba(59,130,246,0.20)' }}>
+              <h1 className="text-xl sm:text-2xl font-bold text-white">
                 Multimodal <span className="gradient-text-primary">Handwriting Lab</span>
               </h1>
-              <p className="text-xs sm:text-sm text-slate-400 mt-1">
-                Draw formulas, write derivations with your stylus/mouse, or upload notebook photos. The Computer Vision and OCR pipeline parses mathematical symbols and evaluates logic against ground-truth rubrics with partial credit.
+              <p className="mt-2 text-sm" style={{ color: 'var(--text-secondary)', maxWidth: '640px' }}>
+                Draw formulas, write derivations with your stylus or mouse, or upload a notebook photo.
+                The computer vision pipeline reads your work and grades it against the rubric.
               </p>
             </div>
             <HandwritingCanvas isStandalone={true} />
@@ -60,45 +64,61 @@ export default function App() {
         )}
 
         {activeTab === 'radar' && (
-          <MasteryRadar 
+          <MasteryRadar
             onNavigateToStudyPlan={() => setActiveTab('study_plan')}
             onStartQuizWithTopic={handleStartQuizWithTopic}
           />
         )}
 
         {activeTab === 'study_plan' && (
-          <StudyPlanView 
+          <StudyPlanView
             onStartQuizWithTopic={handleStartQuizWithTopic}
             onOpenHandwritingLab={() => setActiveTab('canvas')}
           />
         )}
 
-        {activeTab === 'mlops' && (
-          <MLOpsHub />
-        )}
+        {activeTab === 'mlops' && <MLOpsHub />}
       </main>
 
-      {/* Socratic Interactive AI Tutor Drawer */}
-      <SocraticTutorDrawer
-        isOpen={isTutorOpen}
-        onClose={() => setIsTutorOpen(false)}
-      />
-
-      {/* Footer */}
-      <footer className="border-t border-slate-800/80 py-6 text-center text-xs text-slate-500 font-mono">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>AI Tutor Platform © 2026 • Built for Udipto-Mondal</span>
-          <div className="flex items-center gap-4 text-slate-400">
-            <span>RAG</span>
-            <span>•</span>
-            <span>Vision OCR / CNN</span>
-            <span>•</span>
-            <span>Knowledge Tracing</span>
-            <span>•</span>
-            <span>MLflow</span>
+      {/* ── Footer ── */}
+      <footer
+        className="py-5 text-center text-xs"
+        style={{
+          borderTop: '1px solid rgba(255,255,255,0.05)',
+          color: 'var(--text-muted)',
+        }}
+      >
+        <div className="max-w-screen-xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <span>AI Tutor Platform — Built by Udipto Mondal</span>
+          <div className="flex items-center gap-3">
+            {['RAG', 'Vision / CNN', 'Knowledge Tracing', 'MLflow'].map((t, i) => (
+              <React.Fragment key={t}>
+                {i > 0 && <span className="opacity-30">·</span>}
+                <span>{t}</span>
+              </React.Fragment>
+            ))}
           </div>
         </div>
       </footer>
+
+      {/* ── Floating AI Chat Button ── */}
+      <button
+        onClick={() => setTutorOpen((v) => !v)}
+        className="float-chat-btn"
+        aria-label="Open Leo AI Tutor"
+        title="Ask Leo — AI Tutor"
+      >
+        {tutorOpen
+          ? <X           className="h-5 w-5 text-white" />
+          : <MessageSquare className="h-5 w-5 text-white" />
+        }
+      </button>
+
+      {/* ── Floating Chat Panel ── */}
+      <SocraticTutorDrawer
+        isOpen={tutorOpen}
+        onClose={() => setTutorOpen(false)}
+      />
     </div>
   );
 }

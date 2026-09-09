@@ -14,6 +14,7 @@ from app.models.schemas import (
     QuizQuestion, QuestionGradeResult, QuestionType, RubricItem
 )
 from app.services.vision.preprocessor import decode_base64_image, preprocess_handwriting_image
+from app.services.vision.cnn_grader import cnn_vision_evaluator
 from app.core.config import settings
 
 def extract_handwriting_with_gemini_vision(image_base64: str, question_context: str) -> Optional[Dict[str, Any]]:
@@ -59,9 +60,10 @@ def grade_handwritten_submission(
     question: QuizQuestion,
     fallback_text: Optional[str] = None
 ) -> QuestionGradeResult:
-    # 1. Preprocess image
+    # 1. Preprocess image & Run PyTorch CNN Feature Evaluator
     pil_image = decode_base64_image(image_base64)
     processed_img, cv_metrics = preprocess_handwriting_image(pil_image)
+    cnn_data = cnn_vision_evaluator.evaluate(image_base64, topic=question.topic)
     
     # 2. Extract OCR & Vision semantics
     vision_data = extract_handwriting_with_gemini_vision(image_base64, question.question_text)
@@ -123,16 +125,19 @@ def grade_handwritten_submission(
         if item_score < item.points * 0.6:
             misconceptions.append(f"Incomplete formulation for {item.criterion}")
             
-    # Normalize score
-    final_score = round(min(1.0, earned_score / total_rubric_points if total_rubric_points > 0 else 0.5), 2)
-    is_correct = bool(final_score >= 0.70)
+    # Normalize score (70% Rubric Match + 30% PyTorch CNN Visual Completeness)
+    rubric_ratio = earned_score / total_rubric_points if total_rubric_points > 0 else 0.5
+    cnn_score = cnn_data.get("cnn_score", 0.85)
+    final_score = round(min(1.0, max(0.0, rubric_ratio * 0.7 + cnn_score * 0.3)), 2)
+    is_correct = bool(final_score >= 0.65)
     
-    # Generate tailored feedback
+    # Generate tailored feedback including CNN metrics
+    cnn_note = cnn_data.get("visual_feedback", "")
     if is_correct:
-        feedback = f"Excellent work! Your handwritten derivation clearly shows {question.topic} principles with step-by-step clarity."
+        feedback = f"Excellent work! Your handwritten derivation clearly demonstrates {question.topic} principles. {cnn_note}"
         remedial_tip = None
     else:
-        feedback = f"Good effort. Your handwritten response captures partial steps, but needs review on specific derivation stages."
+        feedback = f"Good effort. Your handwritten response captures partial steps, but needs review on specific derivation stages. {cnn_note}"
         remedial_tip = f"Review the formula: {question.expected_answer}"
         
     return QuestionGradeResult(

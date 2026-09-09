@@ -1,52 +1,50 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Bot, 
-  X, 
-  Send, 
-  Sparkles, 
-  Lightbulb, 
-  BookOpen, 
-  HelpCircle,
-  BrainCircuit,
-  CornerDownLeft
+﻿import React, { useState, useRef, useEffect } from 'react';
+import {
+  MessageSquare,
+  X,
+  Send,
+  BookOpen,
+  ChevronDown,
+  Loader2,
+  Bot
 } from 'lucide-react';
 
+const QUICK_PROMPTS = [
+  'Why does Sigmoid cause vanishing gradients?',
+  'Explain the chain rule in backpropagation',
+  'How does Adam optimizer work?',
+  'What is dropout regularization?',
+];
+
+const INITIAL_MSG = {
+  role: 'assistant',
+  content:
+    "Hello! I'm Leo, your AI Tutor. Ask me anything about your study material — I'll guide you step by step rather than just giving you the answer.",
+  citations: ['Knowledge Vault'],
+};
+
 export default function SocraticTutorDrawer({ isOpen, onClose }) {
-  const [messages, setMessages] = useState([
-    {
-      role: 'assistant',
-      content: "Hello! I'm Leo, your Socratic AI Tutor. 🎓 I won't just hand you final answers—I'll guide your thinking step-by-step so you master the underlying intuitions and math proofs. What concept would you like to explore?",
-      hints: ["Ask for a conceptual explanation", "Ask for a step-by-step mathematical hint"],
-      citations: ["deep_learning_neural_networks.md"]
-    }
-  ]);
-  const [inputMessage, setInputMessage] = useState('');
-  const [loading, setLoading] = useState(false);
-  const messagesEndRef = useRef(null);
+  const [messages, setMessages] = useState([INITIAL_MSG]);
+  const [input, setInput]       = useState('');
+  const [loading, setLoading]   = useState(false);
+  const bottomRef               = useRef(null);
+  const inputRef                = useRef(null);
 
-  const quickPrompts = [
-    "Why does Sigmoid suffer from vanishing gradients?",
-    "Derive the output dimensions of a 32x32 CNN with 5x5 filter",
-    "How does Adam combine Momentum & RMSprop?",
-    "Give me a hint on Backpropagation chain rule"
-  ];
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
+  /* auto-scroll */
   useEffect(() => {
-    if (isOpen) {
-      scrollToBottom();
-    }
+    if (isOpen) bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isOpen]);
 
-  const handleSendMessage = async (textToSend = inputMessage) => {
-    if (!textToSend.trim()) return;
+  /* focus input when opened */
+  useEffect(() => {
+    if (isOpen) setTimeout(() => inputRef.current?.focus(), 100);
+  }, [isOpen]);
 
-    const userMsg = { role: 'user', content: textToSend };
-    setMessages((prev) => [...prev, userMsg]);
-    setInputMessage('');
+  const send = async (text = input) => {
+    const msg = text.trim();
+    if (!msg) return;
+    setMessages((p) => [...p, { role: 'user', content: msg }]);
+    setInput('');
     setLoading(true);
 
     try {
@@ -55,33 +53,33 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           student_id: 'default_student',
-          message: textToSend,
-          chat_history: messages.map(m => ({ role: m.role, content: m.content }))
-        })
+          message: msg,
+          chat_history: messages.map((m) => ({ role: m.role, content: m.content })),
+        }),
       });
 
       if (res.ok) {
         const data = await res.json();
-        setMessages((prev) => [
-          ...prev,
+        setMessages((p) => [
+          ...p,
           {
             role: 'assistant',
             content: data.reply,
             hints: data.hints_provided || [],
             citations: data.citations || [],
-            follow_up: data.follow_up_question
-          }
+            follow_up: data.follow_up_question,
+          },
         ]);
-      }
-    } catch (e) {
-      setMessages((prev) => [
-        ...prev,
+      } else throw new Error('Network error');
+    } catch {
+      setMessages((p) => [
+        ...p,
         {
           role: 'assistant',
-          content: "I'm having a brief connection hitch. Remember: in backpropagation, every weight gradient is computed as the local error delta times the upstream activation!",
-          hints: ["Review your notes in the Knowledge Vault."],
-          citations: []
-        }
+          content:
+            "I'm having a connection issue right now. Try refreshing or check your Knowledge Vault notes for context.",
+          citations: [],
+        },
       ]);
     } finally {
       setLoading(false);
@@ -91,114 +89,186 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-slate-950/95 border-l border-indigo-500/30 backdrop-blur-xl shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
-      {/* Drawer Header */}
-      <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/60">
+    <div
+      className="chat-drawer animate-slide-in-right"
+      role="dialog"
+      aria-label="Leo AI Tutor"
+    >
+      {/* ── Header ── */}
+      <div
+        className="flex items-center justify-between px-4 py-3.5"
+        style={{
+          borderBottom: '1px solid rgba(255,255,255,0.07)',
+          background: 'rgba(13, 21, 37, 0.70)',
+        }}
+      >
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-400 flex items-center justify-center shadow-md shadow-indigo-500/30">
-            <Bot className="h-5 w-5 text-white animate-pulse" />
+          <div
+            className="h-8 w-8 rounded-xl flex items-center justify-center shrink-0"
+            style={{
+              background: 'linear-gradient(135deg,#2563eb,#0891b2)',
+              boxShadow: '0 0 16px rgba(37,99,235,0.45)',
+            }}
+          >
+            <Bot className="h-4 w-4 text-white" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h3 className="text-sm font-bold text-white">Leo Socratic Tutor</h3>
-              <span className="text-[10px] px-2 py-0.2 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 font-mono">
-                Online
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-400 font-mono">
+            <p className="text-sm font-semibold text-white leading-tight">Leo — AI Tutor</p>
+            <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
               Grounded in your Knowledge Vault
             </p>
           </div>
+          <span className="badge badge-green ml-1">Live</span>
         </div>
 
         <button
           onClick={onClose}
-          className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800"
+          className="p-1.5 rounded-lg transition-colors"
+          style={{ color: 'var(--text-muted)' }}
+          aria-label="Close tutor"
         >
           <X className="h-4 w-4" />
         </button>
       </div>
 
-      {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((m, idx) => (
-          <div
-            key={idx}
-            className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'} space-y-1.5`}
+      {/* ── Quick Prompts ── */}
+      <div
+        className="flex gap-2 px-3 py-2.5 overflow-x-auto"
+        style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+      >
+        {QUICK_PROMPTS.map((q, i) => (
+          <button
+            key={i}
+            onClick={() => send(q)}
+            className="shrink-0 text-[11px] px-2.5 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors"
+            style={{
+              background: 'rgba(37,99,235,0.10)',
+              border: '1px solid rgba(59,130,246,0.20)',
+              color: '#93c5fd',
+            }}
           >
-            <div className={`max-w-[85%] p-3.5 rounded-2xl text-xs sm:text-sm leading-relaxed ${
-              m.role === 'user'
-                ? 'bg-indigo-600 text-white rounded-br-none shadow-md shadow-indigo-600/20'
-                : 'glass-panel text-slate-200 rounded-bl-none border-slate-800 space-y-2'
-            }`}>
-              <p className="whitespace-pre-wrap">{m.content}</p>
+            {q}
+          </button>
+        ))}
+      </div>
 
-              {/* Citations Tag */}
-              {m.citations && m.citations.length > 0 && (
-                <div className="pt-2 border-t border-slate-800/80 flex flex-wrap items-center gap-1 text-[10px] text-slate-400 font-mono">
-                  <BookOpen className="h-3 w-3 text-indigo-400" />
-                  <span>Notes: {m.citations.join(', ')}</span>
+      {/* ── Messages ── */}
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+        {messages.map((m, i) => (
+          <div
+            key={i}
+            className={`flex flex-col gap-1 ${m.role === 'user' ? 'items-end' : 'items-start'}`}
+          >
+            <div
+              className="max-w-[88%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed"
+              style={
+                m.role === 'user'
+                  ? {
+                      background: 'linear-gradient(135deg,#2563eb,#1d4ed8)',
+                      color: '#fff',
+                      borderBottomRightRadius: '4px',
+                      boxShadow: '0 2px 10px rgba(37,99,235,0.30)',
+                    }
+                  : {
+                      background: 'rgba(20,30,52,0.85)',
+                      border: '1px solid rgba(255,255,255,0.07)',
+                      color: '#cbd5e1',
+                      borderBottomLeftRadius: '4px',
+                    }
+              }
+            >
+              <p className="whitespace-pre-wrap text-[13px]">{m.content}</p>
+
+              {/* Hints */}
+              {m.hints?.length > 0 && (
+                <div
+                  className="mt-2.5 pt-2.5 space-y-1"
+                  style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}
+                >
+                  <p className="text-[11px] font-semibold" style={{ color: '#93c5fd' }}>
+                    Guided hints:
+                  </p>
+                  {m.hints.map((h, hi) => (
+                    <p key={hi} className="text-[12px]" style={{ color: '#94a3b8' }}>
+                      {hi + 1}. {h}
+                    </p>
+                  ))}
                 </div>
               )}
 
-              {/* Hints Box */}
-              {m.hints && m.hints.length > 0 && (
-                <div className="p-2 rounded-lg bg-indigo-950/40 border border-indigo-900/50 space-y-1 text-[11px] text-indigo-300">
-                  <div className="flex items-center gap-1 font-bold">
-                    <Lightbulb className="h-3.5 w-3.5 text-amber-400" />
-                    <span>Scaffolded Hints:</span>
-                  </div>
-                  {m.hints.map((hint, hIdx) => (
-                    <p key={hIdx} className="text-slate-300 pl-4 list-disc">• {hint}</p>
-                  ))}
+              {/* Citations */}
+              {m.citations?.length > 0 && (
+                <div
+                  className="flex items-center gap-1.5 mt-2 pt-2"
+                  style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}
+                >
+                  <BookOpen className="h-3 w-3 shrink-0" style={{ color: '#60a5fa' }} />
+                  <span className="text-[10.5px]" style={{ color: 'var(--text-muted)' }}>
+                    {m.citations.join(', ')}
+                  </span>
                 </div>
+              )}
+
+              {/* Follow-up suggestion */}
+              {m.follow_up && (
+                <button
+                  onClick={() => send(m.follow_up)}
+                  className="mt-2 flex items-center gap-1.5 text-[11px] font-medium transition-opacity hover:opacity-80"
+                  style={{ color: '#5eead4' }}
+                >
+                  <ChevronDown className="h-3 w-3" />
+                  {m.follow_up}
+                </button>
               )}
             </div>
           </div>
         ))}
 
         {loading && (
-          <div className="flex items-center gap-2 text-xs text-indigo-400 p-2">
-            <Sparkles className="h-4 w-4 animate-spin" />
-            <span>Leo is formulating Socratic inquiry...</span>
+          <div className="flex items-center gap-2 text-[12px]" style={{ color: '#60a5fa' }}>
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            <span>Leo is thinking...</span>
           </div>
         )}
 
-        <div ref={messagesEndRef} />
+        <div ref={bottomRef} />
       </div>
 
-      {/* Quick Prompts Chips */}
-      <div className="px-4 py-2 border-t border-slate-800/80 bg-slate-900/40 overflow-x-auto flex gap-1.5 scrollbar-none">
-        {quickPrompts.map((qp, i) => (
-          <button
-            key={i}
-            onClick={() => handleSendMessage(qp)}
-            className="whitespace-nowrap text-[11px] px-2.5 py-1 rounded-full bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700 transition-colors border border-slate-700/60 shrink-0"
-          >
-            {qp}
-          </button>
-        ))}
-      </div>
-
-      {/* Input Field */}
-      <div className="p-4 border-t border-slate-800 bg-slate-950">
+      {/* ── Input ── */}
+      <div
+        className="px-4 py-3"
+        style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}
+      >
         <form
-          onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }}
+          onSubmit={(e) => { e.preventDefault(); send(); }}
           className="flex items-center gap-2"
         >
           <input
+            ref={inputRef}
             type="text"
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            placeholder="Ask a question or explain your reasoning..."
-            className="flex-1 px-3.5 py-2.5 text-xs rounded-xl bg-slate-900 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Ask a question..."
+            className="flex-1 px-3.5 py-2.5 text-sm rounded-xl outline-none transition-colors"
+            style={{
+              background: 'rgba(20,30,52,0.80)',
+              border: '1px solid rgba(255,255,255,0.09)',
+              color: '#f0f4ff',
+              caretColor: '#3b82f6',
+            }}
+            onFocus={(e) => (e.target.style.borderColor = 'rgba(59,130,246,0.45)')}
+            onBlur={(e)  => (e.target.style.borderColor = 'rgba(255,255,255,0.09)')}
           />
           <button
             type="submit"
-            disabled={!inputMessage.trim() || loading}
-            className="p-2.5 rounded-xl bg-indigo-600 text-white disabled:opacity-30 hover:bg-indigo-500 transition-colors shadow-md shadow-indigo-600/30"
+            disabled={!input.trim() || loading}
+            className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0 transition-all disabled:opacity-35"
+            style={{
+              background: 'linear-gradient(135deg,#2563eb,#1d4ed8)',
+              boxShadow: '0 2px 10px rgba(37,99,235,0.40)',
+            }}
           >
-            <Send className="h-4 w-4" />
+            <Send className="h-4 w-4 text-white" />
           </button>
         </form>
       </div>

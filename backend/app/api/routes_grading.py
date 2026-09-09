@@ -28,6 +28,10 @@ class DirectHandwrittenGradeRequest(BaseModel):
 async def submit_and_grade_quiz(submission: QuizSubmissionRequest):
     quiz = storage.get_quiz(submission.quiz_id)
     if not quiz:
+        storage._seed_default_quiz_if_needed()
+        quiz = storage.get_quiz(submission.quiz_id)
+        
+    if not quiz:
         raise HTTPException(status_code=404, detail=f"Quiz {submission.quiz_id} not found")
         
     question_map = {q.id: q for q in quiz.questions}

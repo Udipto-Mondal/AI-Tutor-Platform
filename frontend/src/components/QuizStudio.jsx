@@ -239,6 +239,18 @@ export default function QuizStudio({ selectedDocId, onNavigateToStudyPlan, onNav
     return `${m}:${s < 10 ? '0' : ''}${s}`;
   };
 
+  const cleanQuizText = (text) => {
+    if (!text) return '';
+    return text
+      .replace(/\$\$[\s\S]*?\$\$/g, '')
+      .replace(/\$([^$]+)\$/g, '$1')
+      .replace(/\*\*([^*]+)\*\*/g, '$1')
+      .replace(/__([^_]+)__/g, '$1')
+      .replace(/#+/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  };
+
   const currentQ = quiz.questions[currentIdx] || DEFAULT_FALLBACK_QUIZ.questions[0];
   const currentAnswer = answers[currentQ.id] || {};
   const isLastQuestion = currentIdx === quiz.questions.length - 1;
@@ -246,24 +258,24 @@ export default function QuizStudio({ selectedDocId, onNavigateToStudyPlan, onNav
   return (
     <div className="space-y-6">
       {/* Quiz Top Info Header */}
-      <div className="glass-panel p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-indigo-500/30">
+      <div className="glass-panel p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-blue-500/25">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <h2 className="text-base sm:text-lg font-bold text-white">
-              {quiz.title}
+              {cleanQuizText(quiz.title)}
             </h2>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-950 text-indigo-300 border border-indigo-800 font-mono">
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-950 text-blue-300 border border-blue-800 font-mono">
               {(currentQ.difficulty || 'MEDIUM').toUpperCase()}
             </span>
           </div>
           <p className="text-xs text-slate-400 font-mono">
-            Topic Focus: <span className="text-cyan-400 font-semibold">{currentQ.topic}</span>
+            Topic Focus: <span className="text-cyan-400 font-semibold">{cleanQuizText(currentQ.topic)}</span>
           </p>
         </div>
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 font-mono text-xs">
-            <Clock className={`h-4 w-4 ${timeRemaining < 120 ? 'text-rose-400 animate-pulse' : 'text-indigo-400'}`} />
+            <Clock className={`h-4 w-4 ${timeRemaining < 120 ? 'text-rose-400 animate-pulse' : 'text-blue-400'}`} />
             <span className={timeRemaining < 120 ? 'text-rose-400 font-bold' : 'text-slate-200'}>
               {formatTimer(timeRemaining)}
             </span>
@@ -290,7 +302,7 @@ export default function QuizStudio({ selectedDocId, onNavigateToStudyPlan, onNav
               onClick={() => setCurrentIdx(idx)}
               className={`flex-1 min-w-12 py-2 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1 transition-all ${
                 isCurrent 
-                  ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 ring-2 ring-indigo-400'
+                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 ring-2 ring-blue-400'
                   : isAnswered
                   ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-800'
                   : 'bg-slate-900/80 text-slate-400 border border-slate-800 hover:bg-slate-800'
@@ -314,7 +326,7 @@ export default function QuizStudio({ selectedDocId, onNavigateToStudyPlan, onNav
           </div>
 
           <h3 className="text-base sm:text-lg font-bold text-slate-100 leading-relaxed">
-            {currentQ.question_text}
+            {cleanQuizText(currentQ.question_text)}
           </h3>
         </div>
 
@@ -329,12 +341,12 @@ export default function QuizStudio({ selectedDocId, onNavigateToStudyPlan, onNav
                   onClick={() => handleSelectOption(currentQ.id, opt.key)}
                   className={`p-4 rounded-xl text-left text-xs sm:text-sm font-medium transition-all flex items-start gap-3 border ${
                     isSelected
-                      ? 'bg-indigo-600/20 border-indigo-500 text-white shadow-md shadow-indigo-500/20'
+                      ? 'bg-blue-600/15 border-blue-500 text-white shadow-md shadow-blue-500/20'
                       : 'bg-slate-900/60 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-900'
                   }`}
                 >
                   <span className={`h-6 w-6 rounded-lg text-xs font-bold font-mono flex items-center justify-center shrink-0 ${
-                    isSelected ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400'
+                    isSelected ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400'
                   }`}>
                     {opt.key}
                   </span>
@@ -356,7 +368,7 @@ export default function QuizStudio({ selectedDocId, onNavigateToStudyPlan, onNav
               value={currentAnswer.text_answer || ''}
               onChange={(e) => handleTextAnswer(currentQ.id, e.target.value)}
               placeholder="Explain the mechanism, equations, or computational properties..."
-              className="w-full p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+              className="w-full p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500"
             />
           </div>
         )}
@@ -365,7 +377,7 @@ export default function QuizStudio({ selectedDocId, onNavigateToStudyPlan, onNav
         {currentQ.question_type === 'handwritten_derivation' && (
           <div className="space-y-3 pt-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
+              <span className="text-xs font-bold text-blue-300 flex items-center gap-1.5">
                 <PenTool className="h-4 w-4" />
                 <span>Handwritten Solution Canvas & Step-by-Step Proof</span>
               </span>
@@ -389,7 +401,7 @@ export default function QuizStudio({ selectedDocId, onNavigateToStudyPlan, onNav
                 placeholder="Optional text notes to accompany your handwritten sketch..."
                 value={currentAnswer.text_answer || ''}
                 onChange={(e) => handleTextAnswer(currentQ.id, e.target.value)}
-                className="w-full px-3 py-2 text-xs rounded-lg bg-slate-900/70 border border-slate-800 text-slate-300 placeholder-slate-600 focus:outline-none focus:border-indigo-500"
+                className="w-full px-3 py-2 text-xs rounded-lg bg-slate-900/70 border border-slate-800 text-slate-300 placeholder-slate-600 focus:outline-none focus:border-blue-500"
               />
             </div>
           </div>

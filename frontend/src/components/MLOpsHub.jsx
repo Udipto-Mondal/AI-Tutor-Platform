@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { 
   Activity, 
   Database, 
@@ -81,7 +81,7 @@ export default function MLOpsHub() {
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="glass-panel p-6 sm:p-8 relative overflow-hidden border-indigo-500/30">
+      <div className="glass-panel p-6 sm:p-8 relative overflow-hidden border-blue-500/25">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-700/50 text-cyan-300 text-xs font-semibold">
@@ -109,7 +109,7 @@ export default function MLOpsHub() {
               onClick={fetchMlopsData}
               className="btn-secondary text-xs py-2 px-3"
             >
-              <RefreshCw className={`h-4 w-4 text-indigo-400 ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`h-4 w-4 text-blue-400 ${loading ? 'animate-spin' : ''}`} />
               <span>Refresh Runs</span>
             </button>
           </div>
@@ -121,14 +121,14 @@ export default function MLOpsHub() {
         <div className="flex items-center justify-between border-b border-slate-800 pb-3">
           <div>
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <Database className="h-4 w-4 text-indigo-400" />
+              <Database className="h-4 w-4 text-blue-400" />
               <span>Trained Model Architectures & Validation Metrics</span>
             </h3>
             <p className="text-xs text-slate-400 font-mono">
               Experiment: {mlopsData.experiment_name}
             </p>
           </div>
-          <span className="text-xs px-2.5 py-1 rounded bg-indigo-950 text-indigo-300 border border-indigo-800 font-mono">
+          <span className="text-xs px-2.5 py-1 rounded bg-blue-950 text-blue-300 border border-blue-800 font-mono">
             {runs.length} Models Logged
           </span>
         </div>
@@ -155,11 +155,11 @@ export default function MLOpsHub() {
                     key={i}
                     onClick={() => setSelectedRun(r)}
                     className={`cursor-pointer transition-colors ${
-                      isSelected ? 'bg-indigo-950/40 text-white' : 'hover:bg-slate-900/40 text-slate-300'
+                      isSelected ? 'bg-blue-950/40 text-white' : 'hover:bg-slate-900/40 text-slate-300'
                     }`}
                   >
                     <td className="p-3 font-bold flex items-center gap-2">
-                      <Cpu className="h-4 w-4 text-indigo-400" />
+                      <Cpu className="h-4 w-4 text-blue-400" />
                       <span>{r.model_name.replace(/_/g, ' ')}</span>
                       {isProd && (
                         <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-sans">
@@ -221,12 +221,12 @@ export default function MLOpsHub() {
               <Layers className="h-4 w-4 text-cyan-400" />
               <span>Logged Artifacts</span>
             </h4>
-            <ul className="space-y-1.5 text-xs text-indigo-300 font-mono">
+            <ul className="space-y-1.5 text-xs text-blue-300 font-mono">
               <li className="flex items-center gap-1.5">
                 <span>📄</span> {selectedRun.model_name}_confusion_matrix.png
               </li>
               <li className="flex items-center gap-1.5">
-                <span>📈</span> {selectedRun.model_name}_roc_curve.png
+                <span></span> {selectedRun.model_name}_roc_curve.png
               </li>
               <li className="flex items-center gap-1.5">
                 <span>📦</span> production_weak_topic_model.joblib

@@ -55,7 +55,7 @@ def extract_text_from_file(filepath: Path) -> str:
     return text
 
 def extract_topics_from_text(text: str) -> List[str]:
-    # Extract markdown headers or prominent topic names
+    # 1. Extract markdown headers
     headers = re.findall(r"^#{1,3}\s+(.+)$", text, flags=re.MULTILINE)
     cleaned_topics = []
     
@@ -65,10 +65,33 @@ def extract_topics_from_text(text: str) -> List[str]:
         if len(clean_h) > 3 and clean_h not in cleaned_topics:
             cleaned_topics.append(clean_h)
             
+    # 2. Look for chapter or section headings (English and Bengali: অধ্যায়, পরিচ্ছেদ, পর্ব, সূচি)
     if not cleaned_topics:
-        # Fallback heuristics
-        candidates = ["Neural Networks", "Optimization", "Backpropagation", "CNNs", "Complexity", "Data Structures"]
+        sec_matches = re.findall(r"(?:অধ্যায়|পরিচ্ছেদ|পর্ব|সূচিপত্র|Chapter|Section|Part)\s*[:\-\—]?\s*([^\n\r]+)", text, flags=re.IGNORECASE)
+        for m in sec_matches:
+            clean_m = m.strip()[:40]
+            if len(clean_m) > 2 and clean_m not in cleaned_topics:
+                cleaned_topics.append(clean_m)
+
+    # 3. Look for numbered list headings (e.g. ১. বিষয়, 1. Topic)
+    if not cleaned_topics:
+        num_matches = re.findall(r"(?:^|\n)(?:[0-9০-৯]+[\.\)]\s*)([^\n\r]+)", text)
+        for m in num_matches:
+            clean_m = m.strip()[:45]
+            if len(clean_m) > 3 and clean_m not in cleaned_topics:
+                cleaned_topics.append(clean_m)
+
+    # 4. Fallback domain candidates
+    if not cleaned_topics:
+        candidates = [
+            "Neural Networks", "Optimization", "Backpropagation", "CNNs", "Complexity", "Data Structures",
+            "হুমায়ূন আহমেদ", "নিষাদ", "বাংলা সাহিত্য", "উপন্যাস", "চরিত্র চিত্রণ", "কাহিনী সংক্ষেপ"
+        ]
         cleaned_topics = [c for c in candidates if c.lower() in text.lower()]
+
+    # 5. Default topical sections if still none found
+    if not cleaned_topics:
+        cleaned_topics = ["Introduction & Overview", "Core Themes & Context", "Key Discussion & Analysis"]
         
     return cleaned_topics[:8]
 

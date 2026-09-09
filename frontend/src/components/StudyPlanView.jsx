@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { 
   Calendar, 
   CheckCircle2, 
@@ -169,7 +169,7 @@ export default function StudyPlanView({ onStartQuizWithTopic, onOpenHandwritingL
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="glass-panel p-6 sm:p-8 relative overflow-hidden border-indigo-500/30">
+      <div className="glass-panel p-6 sm:p-8 relative overflow-hidden border-blue-500/25">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-900/40 border border-emerald-700/50 text-emerald-300 text-xs font-semibold">
@@ -197,7 +197,7 @@ export default function StudyPlanView({ onStartQuizWithTopic, onOpenHandwritingL
               onClick={handleRegeneratePlan}
               className="btn-secondary text-xs py-2 px-3"
             >
-              <RotateCw className={`h-4 w-4 text-indigo-400 ${loading ? 'animate-spin' : ''}`} />
+              <RotateCw className={`h-4 w-4 text-blue-400 ${loading ? 'animate-spin' : ''}`} />
               <span>Re-optimize Plan</span>
             </button>
           </div>
@@ -253,7 +253,7 @@ export default function StudyPlanView({ onStartQuizWithTopic, onOpenHandwritingL
                   </p>
 
                   <div className="flex items-center gap-2 pt-1">
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-950 text-indigo-300 border border-indigo-800">
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-950 text-blue-300 border border-blue-800">
                       {task.topic}
                     </span>
                     <span className="text-[10px] text-slate-500 font-mono">
@@ -285,14 +285,14 @@ export default function StudyPlanView({ onStartQuizWithTopic, onOpenHandwritingL
                 <div
                   key={fc.id}
                   onClick={() => toggleCardFlip(fc.id)}
-                  className="glass-panel p-5 min-h-48 flex flex-col justify-between cursor-pointer border-indigo-500/20 hover:border-indigo-500/60 transition-all group"
+                  className="glass-panel p-5 min-h-48 flex flex-col justify-between cursor-pointer border-blue-500/20 hover:border-blue-500/60 transition-all group"
                 >
                   <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-950 text-indigo-300 font-mono">
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-950 text-blue-300 font-mono">
                       {fc.topic}
                     </span>
                     <span className="text-[10px] text-slate-400 flex items-center gap-1 font-mono">
-                      <RotateCw className="h-3 w-3 group-hover:rotate-180 transition-transform duration-300 text-indigo-400" />
+                      <RotateCw className="h-3 w-3 group-hover:rotate-180 transition-transform duration-300 text-blue-400" />
                       <span>{isFlipped ? 'Answer View' : 'Prompt View'}</span>
                     </span>
                   </div>

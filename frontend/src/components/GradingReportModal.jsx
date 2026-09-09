@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+﻿import React, { useEffect } from 'react';
 import { 
   Trophy, 
   Clock, 
@@ -35,7 +35,7 @@ export default function GradingReportModal({ report, onClose, onNavigateToStudyP
 
   return (
     <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-      <div className="glass-panel w-full max-w-4xl max-h-[90vh] flex flex-col p-6 sm:p-8 space-y-6 border-indigo-500/40 my-auto animate-in zoom-in-95 duration-200">
+      <div className="glass-panel w-full max-w-4xl max-h-[90vh] flex flex-col p-6 sm:p-8 space-y-6 border-blue-500/35 my-auto animate-in zoom-in-95 duration-200">
         
         {/* Header Summary Banner */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
@@ -129,7 +129,7 @@ export default function GradingReportModal({ report, onClose, onNavigateToStudyP
         {/* Detailed Question By Question Analysis */}
         <div className="overflow-y-auto space-y-4 pr-1 flex-1 max-h-96">
           <h3 className="text-sm font-bold text-slate-200 flex items-center gap-2">
-            <FileCheck className="h-4 w-4 text-indigo-400" />
+            <FileCheck className="h-4 w-4 text-blue-400" />
             <span>Question-by-Question Diagnostic Breakdown</span>
           </h3>
 
@@ -140,7 +140,7 @@ export default function GradingReportModal({ report, onClose, onNavigateToStudyP
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  <span className="h-6 w-6 rounded-full bg-slate-800 text-indigo-400 text-xs font-bold flex items-center justify-center font-mono">
+                  <span className="h-6 w-6 rounded-full bg-slate-800 text-blue-400 text-xs font-bold flex items-center justify-center font-mono">
                     #{idx + 1}
                   </span>
                   <span className="text-xs font-bold text-slate-300">
@@ -165,7 +165,7 @@ export default function GradingReportModal({ report, onClose, onNavigateToStudyP
 
               {/* OCR transcription for handwritten */}
               {q.extracted_text && (
-                <div className="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800/80 text-xs font-mono text-indigo-300">
+                <div className="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800/80 text-xs font-mono text-blue-300">
                   <span className="text-[10px] text-slate-400 block mb-0.5">Transcribed Solution / Submission:</span>
                   {q.extracted_text}
                 </div>
@@ -186,14 +186,14 @@ export default function GradingReportModal({ report, onClose, onNavigateToStudyP
               )}
 
               {/* AI Feedback */}
-              <p className="text-xs text-slate-300 bg-indigo-950/20 p-2.5 rounded-lg border border-indigo-900/30">
-                💡 {q.feedback}
+              <p className="text-xs text-slate-300 bg-blue-950/20 p-2.5 rounded-lg border border-blue-900/30">
+                 {q.feedback}
               </p>
 
               {/* Remedial tip */}
               {q.remedial_tip && (
                 <p className="text-[11px] text-amber-300/90 font-medium">
-                  🎯 Study Tip: {q.remedial_tip}
+                   Study Tip: {q.remedial_tip}
                 </p>
               )}
             </div>

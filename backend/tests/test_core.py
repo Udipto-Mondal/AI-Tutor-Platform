@@ -139,10 +139,35 @@ def test_knowledge_tracing_and_study_plan():
     assert len(plan.recommended_flashcards) >= 1
     assert plan.weak_topics == ["Backpropagation & Gradients"]
 
+def test_cnn_vision_evaluator():
+    from app.services.vision.cnn_grader import cnn_vision_evaluator
+    # Synthetic blank image
+    img = Image.new("RGB", (128, 128), color=(10, 15, 25))
+    import io, base64
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    b64_str = "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
+    
+    result = cnn_vision_evaluator.evaluate(b64_str, topic="Convolutional Neural Networks")
+    assert result is not None
+    assert "cnn_score" in result
+    assert "architecture" in result
+    assert 0.0 <= result["cnn_score"] <= 1.0
+
+def test_storage_chunk_persistence_and_default_quiz():
+    from app.db.storage import storage
+    # Default quiz should be present
+    quiz = storage.get_quiz("quiz_demo_01")
+    assert quiz is not None
+    assert quiz.id == "quiz_demo_01"
+    assert len(quiz.questions) == 4
+
 if __name__ == "__main__":
     test_ingestion_and_chunking()
     test_vector_store_indexing()
     test_quiz_generation_agent()
     test_vision_preprocessing_and_grading()
     test_knowledge_tracing_and_study_plan()
+    test_cnn_vision_evaluator()
+    test_storage_chunk_persistence_and_default_quiz()
     print("All core unit tests passed successfully!")
