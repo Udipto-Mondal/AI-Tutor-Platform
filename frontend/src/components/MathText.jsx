@@ -39,6 +39,20 @@ function formatMathToken(token, key) {
   clean = clean.replace(/\\?cdot/g, '·');
   clean = clean.replace(/\\?partial/g, '∂');
 
+  // If token is a derivative ratio like dL/dw_ij, dL/dz_j, dz_j/dw_ij
+  const derivMatch = clean.match(/^d([A-Za-z]+)\/d([a-zA-Z_0-9\^()]+)$/);
+  if (derivMatch) {
+    const num = derivMatch[1];
+    const den = derivMatch[2].replace(/[{}]/g, '');
+    return (
+      <span key={key} className="inline-flex items-center px-1 py-0.5 rounded bg-blue-50/80 border border-blue-200/80 font-serif italic text-blue-800 font-semibold text-[0.92em]">
+        <span>∂{num}</span>
+        <span className="mx-0.5 not-italic text-slate-400">/</span>
+        <span>∂{den}</span>
+      </span>
+    );
+  }
+
   // Check if token contains sub/sup: e.g. w_ij^(l), delta_j^(l), a_i^(l-1), W^T
   const subSupRegex = /^([a-zA-ZδΔσΣαβγλθπωμεφ∂]+)(?:_([a-zA-Z0-9]+|\{[^}]+\}))?(?:\^(\([^)]+\)|[a-zA-Z0-9]+|\{[^}]+\}))?$/;
   const match = clean.match(subSupRegex);
@@ -46,7 +60,7 @@ function formatMathToken(token, key) {
   if (match) {
     const [, base, sub, sup] = match;
     const cleanSub = sub ? sub.replace(/[{}]/g, '') : null;
-    const cleanSup = sup ? sup.replace(/[{}]/g, '') : null;
+    const cleanSup = sup ? sup.replace(/[{()}]/g, '') : null;
 
     return (
       <span

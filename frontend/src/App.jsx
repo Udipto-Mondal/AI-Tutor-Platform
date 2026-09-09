@@ -7,9 +7,11 @@ import MasteryRadar     from './components/MasteryRadar';
 import StudyPlanView    from './components/StudyPlanView';
 import SocraticTutorDrawer from './components/SocraticTutorDrawer';
 import { MessageSquare, X } from 'lucide-react';
+import { getStoredDocuments } from './utils/documentStorage';
 
 export default function App() {
   const [activeTab,     setActiveTab]     = useState('vault');
+  const [documents,     setDocuments]     = useState(getStoredDocuments);
   const [selectedDocId, setSelectedDocId] = useState(null);
   const [tutorOpen,     setTutorOpen]     = useState(false);
 
@@ -36,12 +38,18 @@ export default function App() {
       <main className="flex-1 w-full max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
 
         {activeTab === 'vault' && (
-          <KnowledgeVault onStartQuizWithDoc={handleStartQuizWithDoc} />
+          <KnowledgeVault 
+            documents={documents}
+            setDocuments={setDocuments}
+            onStartQuizWithDoc={handleStartQuizWithDoc} 
+          />
         )}
 
         {activeTab === 'quiz' && (
           <QuizStudio
+            documents={documents}
             selectedDocId={selectedDocId}
+            onSelectDocId={setSelectedDocId}
             onNavigateToStudyPlan={() => setActiveTab('study_plan')}
             onNavigateToRadar={() => setActiveTab('radar')}
           />
