@@ -22,9 +22,7 @@ class DataStorage:
         self.docs_file = self.storage_dir / "documents.json"
         self.chunks_file = self.storage_dir / "chunks.json"
         self.quizzes_file = self.storage_dir / "quizzes.json"
-        self.submissions_file = self.storage_dir / "submissions.json"
-        self.mastery_file = self.storage_dir / "mastery.json"
-        self.study_plans_file = self.storage_dir / "study_plans.json"
+        self.deleted_files_file = self.storage_dir / "deleted_files.json"
         
         self.documents: Dict[str, DocumentInfo] = {}
         self.chunks: Dict[str, DocumentChunk] = {}
@@ -32,12 +30,17 @@ class DataStorage:
         self.submissions: Dict[str, QuizGradeReport] = {}
         self.student_mastery: Dict[str, Dict[str, TopicMasteryRecord]] = {}
         self.study_plans: Dict[str, PersonalizedStudyPlan] = {}
+        self.deleted_filenames: set = set()
         
         self._load_from_disk()
         self._seed_default_quiz_if_needed()
 
     def _load_from_disk(self):
         try:
+            if self.deleted_files_file.exists():
+                with open(self.deleted_files_file, "r", encoding="utf-8") as f:
+                    self.deleted_filenames = set(json.load(f))
+            
             if self.docs_file.exists():
                 with open(self.docs_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
@@ -187,16 +190,55 @@ class DataStorage:
         chunks = [c for c in self.chunks.values() if c.doc_id == doc_id]
         return sorted(chunks, key=lambda x: x.chunk_index)
 
+    def mark_filename_deleted(self, filename: str):
+        if not filename:
+            return
+        self.deleted_filenames.add(filename)
+        try:
+            with open(self.deleted_files_file, "w", encoding="utf-8") as f:
+                json.dump(list(self.deleted_filenames), f, indent=2)
+        except Exception as e:
+            print(f"Error saving deleted filenames: {e}")
+
+    def is_filename_deleted(self, filename: str) -> bool:
+        return filename in self.deleted_filenames
+
+    def unmark_filename_deleted(self, filename: str):
+        if filename in self.deleted_filenames:
+            self.deleted_filenames.remove(filename)
+            try:
+                with open(self.deleted_files_file, "w", encoding="utf-8") as f:
+                    json.dump(list(self.deleted_filenames), f, indent=2)
+            except Exception:
+                pass
+
     def delete_document(self, doc_id: str) -> bool:
-        """Remove a document and all its chunks from storage."""
-        if doc_id not in self.documents:
+        """Remove a document and all duplicate records with matching filename or doc_id."""
+        target_doc = self.documents.get(doc_id)
+        target_filename = target_doc.filename if target_doc else None
+
+        # Find all doc_ids that share this filename or doc_id
+        matching_doc_ids = set()
+        if doc_id in self.documents:
+            matching_doc_ids.add(doc_id)
+        if target_filename:
+            self.mark_filename_deleted(target_filename)
+            for d_id, d in list(self.documents.items()):
+                if d.filename == target_filename:
+                    matching_doc_ids.add(d_id)
+
+        if not matching_doc_ids:
             return False
-        # Remove document record
-        del self.documents[doc_id]
-        # Remove all associated chunks
-        chunk_ids_to_delete = [cid for cid, c in self.chunks.items() if c.doc_id == doc_id]
-        for cid in chunk_ids_to_delete:
-            del self.chunks[cid]
+
+        # Remove all matching documents
+        for d_id in matching_doc_ids:
+            if d_id in self.documents:
+                del self.documents[d_id]
+            # Remove all associated chunks
+            chunk_ids_to_delete = [cid for cid, c in self.chunks.items() if c.doc_id == d_id]
+            for cid in chunk_ids_to_delete:
+                del self.chunks[cid]
+
         # Persist changes
         self._persist_documents()
         self._persist_chunks()

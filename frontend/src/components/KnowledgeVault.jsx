@@ -18,7 +18,14 @@ import {
   ChevronRight,
   Clock
 } from 'lucide-react';
-import { getStoredDocuments, saveStoredDocuments, extractTopicsFromFilename } from '../utils/documentStorage';
+import { 
+  getStoredDocuments, 
+  saveStoredDocuments, 
+  extractTopicsFromFilename,
+  markDocumentDeleted,
+  unmarkDocumentDeleted,
+  getDeletedFilenames
+} from '../utils/documentStorage';
 import { extractDocumentContent } from '../utils/pdfExtractor';
 import { saveDocumentText, getDocumentText } from '../utils/textStore';
 
@@ -152,25 +159,37 @@ export default function KnowledgeVault({ documents = [], setDocuments, onStartQu
     setLoading(true);
     try {
       const res = await fetch('/api/documents/list');
+      const deletedSet = getDeletedFilenames();
       if (res.ok) {
         const data = await res.json();
-        if (data?.length > 0) {
-          // Merge server docs with any locally stored documents
-          const existingIds = new Set(data.map(d => d.filename));
-          const currentLocal = getStoredDocuments();
-          const merged = [...data];
-          currentLocal.forEach(loc => {
-            if (!existingIds.has(loc.filename)) {
-              merged.push(loc);
-            }
-          });
-          setDocuments(merged);
-          saveStoredDocuments(merged);
-        }
+        // Exclude any document that was explicitly deleted by the user
+        const validServerDocs = (Array.isArray(data) ? data : []).filter(
+          d => !deletedSet.has(d.filename) && !deletedSet.has(d.id)
+        );
+        const existingIds = new Set(validServerDocs.map(d => d.filename));
+        const currentLocal = getStoredDocuments().filter(
+          loc => !deletedSet.has(loc.filename) && !deletedSet.has(loc.id)
+        );
+        const merged = [...validServerDocs];
+        currentLocal.forEach(loc => {
+          if (!existingIds.has(loc.filename)) {
+            merged.push(loc);
+          }
+        });
+        setDocuments(merged);
+        saveStoredDocuments(merged);
+      } else {
+        const stored = getStoredDocuments().filter(
+          loc => !deletedSet.has(loc.filename) && !deletedSet.has(loc.id)
+        );
+        setDocuments(stored);
       }
     } catch {
       // Fallback: load existing stored documents
-      const stored = getStoredDocuments();
+      const deletedSet = getDeletedFilenames();
+      const stored = getStoredDocuments().filter(
+        loc => !deletedSet.has(loc.filename) && !deletedSet.has(loc.id)
+      );
       setDocuments(stored);
     } finally {
       setLoading(false);
@@ -184,6 +203,9 @@ export default function KnowledgeVault({ documents = [], setDocuments, onStartQu
   /* ── upload handler with guaranteed local persistence & authentic text extraction ── */
   const doUpload = async (file) => {
     if (!file) return;
+
+    // Reset deleted status if re-uploading file with same name
+    unmarkDocumentDeleted(file.name);
 
     setUploading(true);
     setUploadPct(15);
@@ -268,7 +290,11 @@ export default function KnowledgeVault({ documents = [], setDocuments, onStartQu
   const confirmDelete = async () => {
     const doc = deleteTarget;
     setDeleteTarget(null);
+    if (!doc) return;
     setStatus({ type: 'info', text: `Removing ${doc.filename}…` });
+
+    // Mark as deleted in localStorage so it never resurrects
+    markDocumentDeleted(doc.filename, doc.id);
 
     // Remove immediately from state & localStorage
     const updated = documents.filter(d => d.id !== doc.id && d.filename !== doc.filename);
@@ -276,7 +302,7 @@ export default function KnowledgeVault({ documents = [], setDocuments, onStartQu
     saveStoredDocuments(updated);
 
     try {
-      await fetch(`/api/documents/${doc.id}`, { method: 'DELETE' });
+      await fetch(`/api/documents/${encodeURIComponent(doc.id)}`, { method: 'DELETE' });
     } catch { /* ignore network error */ }
 
     setStatus({ type: 'success', text: `"${doc.filename}" removed from Knowledge Vault.` });

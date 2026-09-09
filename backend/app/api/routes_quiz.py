@@ -20,7 +20,7 @@ async def generate_quiz(request: QuizGenerationRequest):
 
 @router.get("/generate", response_model=Quiz)
 async def generate_quiz_get(
-    num_questions: int = 4,
+    num_questions: int = 5,
     difficulty: str = "medium",
     include_handwritten: bool = True,
     doc_id: str = None

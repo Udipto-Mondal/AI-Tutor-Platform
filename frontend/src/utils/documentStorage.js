@@ -26,32 +26,68 @@ export const DEFAULT_DOCS = [
 ];
 
 const STORAGE_KEY = 'ai_tutor_documents_vault_v1';
+const DELETED_KEY = 'ai_tutor_deleted_filenames_v1';
+const INITIALIZED_KEY = 'ai_tutor_vault_initialized_v2';
+
+export function getDeletedFilenames() {
+  try {
+    const raw = localStorage.getItem(DELETED_KEY);
+    return raw ? new Set(JSON.parse(raw)) : new Set();
+  } catch {
+    return new Set();
+  }
+}
+
+export function markDocumentDeleted(filename, id) {
+  try {
+    const deleted = getDeletedFilenames();
+    if (filename) deleted.add(filename);
+    if (id) deleted.add(id);
+    localStorage.setItem(DELETED_KEY, JSON.stringify([...deleted]));
+  } catch {
+    // ignore
+  }
+}
+
+export function unmarkDocumentDeleted(filename) {
+  try {
+    const deleted = getDeletedFilenames();
+    if (filename && deleted.has(filename)) {
+      deleted.delete(filename);
+      localStorage.setItem(DELETED_KEY, JSON.stringify([...deleted]));
+    }
+  } catch {
+    // ignore
+  }
+}
 
 export function getStoredDocuments() {
   try {
+    const isInit = localStorage.getItem(INITIALIZED_KEY);
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
+    const deleted = getDeletedFilenames();
+
+    if (!isInit && !raw) {
+      // First time ever visiting: seed default docs
       localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_DOCS));
+      localStorage.setItem(INITIALIZED_KEY, 'true');
       seedDefaultPreviews();
       return DEFAULT_DOCS;
     }
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed) && parsed.length > 0) {
-      // Ensure defaults exist if not already present
-      const existingIds = new Set(parsed.map(d => d.id || d.filename));
-      const merged = [...parsed];
-      DEFAULT_DOCS.forEach(def => {
-        if (!existingIds.has(def.id) && !existingIds.has(def.filename)) {
-          merged.push(def);
-        }
-      });
-      return merged;
+
+    if (!raw) {
+      return [];
     }
-    seedDefaultPreviews();
-    return DEFAULT_DOCS;
+
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      // Filter out any documents that the user explicitly deleted!
+      return parsed.filter(d => !deleted.has(d.filename) && !deleted.has(d.id));
+    }
+    return [];
   } catch (e) {
     console.warn('Storage read fallback:', e);
-    return DEFAULT_DOCS;
+    return [];
   }
 }
 

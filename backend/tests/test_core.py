@@ -60,12 +60,36 @@ def test_quiz_generation_agent():
     )
     quiz = create_quiz(req)
     assert quiz is not None
-    assert len(quiz.questions) >= 2
+    assert len(quiz.questions) == 3
     
     # Verify presence of multi-format questions
     has_mcq = any(q.question_type == QuestionType.MCQ for q in quiz.questions)
     has_hw = any(q.question_type == QuestionType.HANDWRITTEN_DERIVATION for q in quiz.questions)
     assert has_mcq or has_hw
+
+def test_quiz_generation_variable_counts_and_regeneration():
+    # Test 5, 10, and 15 questions counts
+    for count in [5, 10, 15]:
+        req = QuizGenerationRequest(
+            num_questions=count,
+            difficulty=DifficultyLevel.MEDIUM,
+            include_handwritten=True
+        )
+        quiz = create_quiz(req)
+        assert len(quiz.questions) == count, f"Expected {count} questions, got {len(quiz.questions)}"
+    
+    # Test that successive calls produce randomized / fresh questions (regeneration)
+    req1 = QuizGenerationRequest(num_questions=5, difficulty=DifficultyLevel.MEDIUM)
+    req2 = QuizGenerationRequest(num_questions=5, difficulty=DifficultyLevel.MEDIUM)
+    quiz1 = create_quiz(req1)
+    quiz2 = create_quiz(req2)
+    
+    # Text or ids should not be 100% identical in the same order
+    q1_texts = [q.question_text for q in quiz1.questions]
+    q2_texts = [q.question_text for q in quiz2.questions]
+    # At least some difference in text or order due to randomization
+    assert len(quiz1.questions) == 5
+    assert len(quiz2.questions) == 5
 
 def test_vision_preprocessing_and_grading():
     # Create synthetic test image

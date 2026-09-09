@@ -6014,5 +6014,2304 @@
       }
     ],
     "time_limit_minutes": 12
+  },
+  "quiz_8e0e96e5": {
+    "id": "quiz_8e0e96e5",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T15:48:48.453676Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_354ea5",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_6de379",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_af6463",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_90153682": {
+    "id": "quiz_90153682",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T15:49:46.066958Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_874d47",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_633af7",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_ffe091",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_97d3f408": {
+    "id": "quiz_97d3f408",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T15:49:46.522760Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_981762",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_af96e2",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_708db6",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_c65cb092": {
+    "id": "quiz_c65cb092",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T15:50:09.960020Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_7bc56d",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_e7bf94",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_a1bd13",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_50cd0e48": {
+    "id": "quiz_50cd0e48",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T15:51:11.401259Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_54eec5",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_3895ff",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_d28201",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_3cb10f2f": {
+    "id": "quiz_3cb10f2f",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T15:51:25.522473Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_0b6e30",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_b88413",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_d153a6",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_b4f15a45": {
+    "id": "quiz_b4f15a45",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T15:51:35.581339Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_230a57",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_ff3d37",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_90a13b",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_0bcfe6f7": {
+    "id": "quiz_0bcfe6f7",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T15:51:43.111077Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_b5ce0c",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_3cb6e8",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_5f8b58",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_ea1f7fa3": {
+    "id": "quiz_ea1f7fa3",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T15:52:09.200678Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_4c47b3",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_d827b1",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_6ace7c",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_833033fa": {
+    "id": "quiz_833033fa",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T15:52:29.976466Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_a7cf7f",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_479b14",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_3a0363",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_e6db33a5": {
+    "id": "quiz_e6db33a5",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T15:53:16.553757Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_5d93c4",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_85bba0",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_998e84",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_b0c916c1": {
+    "id": "quiz_b0c916c1",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T15:53:20.728529Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_a6cdce",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_b1cdca",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_c493e4",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_9560366f": {
+    "id": "quiz_9560366f",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T15:53:22.529284Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_8f8c69",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_ed2ac8",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_d5e740",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_3cbbca56": {
+    "id": "quiz_3cbbca56",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T15:53:24.202110Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_c655d5",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_d1b714",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_a25bc0",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_e6ac0c3d": {
+    "id": "quiz_e6ac0c3d",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T15:53:25.528779Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_750a49",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_4dfb08",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_ce665a",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_7e33a19c": {
+    "id": "quiz_7e33a19c",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T15:53:39.021552Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_4e2eae",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "easy",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_0af40a",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "easy",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_fd3ef2",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "easy",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_cce05a6e": {
+    "id": "quiz_cce05a6e",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T16:00:37.913332Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_758861",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_b9d375",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_ca5fb4",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_f7a91bde": {
+    "id": "quiz_f7a91bde",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T16:01:01.621737Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_137032",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_26524b",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_eb59f7",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_7bef47a6": {
+    "id": "quiz_7bef47a6",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T16:01:07.752867Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_05bc2a",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_35b5fc",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_984907",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_42c60b05": {
+    "id": "quiz_42c60b05",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T16:01:37.047774Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_457f28",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_2e3730",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_68a5f6",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_5c2469b2": {
+    "id": "quiz_5c2469b2",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T16:01:45.207315Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_1942e2",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_001bd0",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_6a31d5",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_b7c21ce4": {
+    "id": "quiz_b7c21ce4",
+    "title": "Quiz \u2014 Data Structures Algorithms",
+    "created_at": "2026-09-09T16:01:59.589913Z",
+    "doc_ids": [
+      "doc_939310ae"
+    ],
+    "topics": [
+      "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an"
+    ],
+    "questions": [
+      {
+        "id": "q_bdd5f2",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Based on the uploaded material, summarize the key ideas presented in the following passage:\n\n\"# Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table lookup (average case), array index access. - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations. - **$O(N)$ Linear Time**: L...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Summarize the main ideas, key terms, and central argument of the passage in your own words.",
+        "explanation": "Reading comprehension and summarization tests your understanding of the document's core message.",
+        "rubric": [
+          {
+            "criterion": "Key Points Identified",
+            "points": 0.5,
+            "description": "Mentions 2-3 main ideas from the passage"
+          },
+          {
+            "criterion": "Accuracy",
+            "points": 0.3,
+            "description": "Correctly represents what the passage says"
+          },
+          {
+            "criterion": "Clarity",
+            "points": 0.2,
+            "description": "Answer is clearly written and coherent"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_24104a",
+        "question_type": "mcq",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Which of the following is directly stated in the uploaded document?",
+        "options": [
+          {
+            "key": "A",
+            "text": "- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations."
+          },
+          {
+            "key": "B",
+            "text": "# Data Structures and Algorithms: Essential Guide ## 1."
+          },
+          {
+            "key": "C",
+            "text": "Asymptotic Complexity and Big-O Notation - **$O(1)$ Constant Time**: Hash table "
+          },
+          {
+            "key": "D",
+            "text": "- **$O(N)$ Linear Time**: Linear scan, counting elements."
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: - **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.",
+        "explanation": "This sentence appears directly in the document: '- **$O(\\log N)$ Logarithmic Time**: Binary Search on a sorted array, Balanced BST operations.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_84a941",
+        "question_type": "short_answer",
+        "topic": "Data Structures and Algorithms: Essential Guide ## 1. Asymptotic Complexity an",
+        "difficulty": "medium",
+        "question_text": "Explain the context and significance of this passage from the document:\n\n\"- **$O(N \\log N)$ Linearithmic Time**: Merge Sort, Heapsort, Quicksort (average case).\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Explain what this sentence means within the broader context of the document.",
+        "explanation": "Understanding contextual significance tests deeper reading comprehension.",
+        "rubric": [
+          {
+            "criterion": "Context Understanding",
+            "points": 0.5,
+            "description": "Correctly places the quote in the document's narrative"
+          },
+          {
+            "criterion": "Significance Explained",
+            "points": 0.5,
+            "description": "Articulates why this point matters"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 9
+  },
+  "quiz_2b0479c8": {
+    "id": "quiz_2b0479c8",
+    "title": "Quiz \u2014 Whitepaper",
+    "created_at": "2026-09-09T16:28:26.814659Z",
+    "doc_ids": [
+      "doc_02616aed"
+    ],
+    "topics": [
+      "Nullifiers and commitments are unlinkable by design; the chain reveals only that",
+      "Table of Contents Abstract .....................................................",
+      "AegisDID Sybil-Resistant Decentralized Identity for Humanitarian Relief via Edge",
+      "(three group elements) and fast, constant-time verification \u2014 properties that ma",
+      "leak local keys. Secure local key storage, hardware -backed keystores where avai"
+    ],
+    "questions": [
+      {
+        "id": "q_2b2edc",
+        "question_type": "short_answer",
+        "topic": "leak local keys. Secure local key storage, hardware -backed keystores where avai",
+        "difficulty": "medium",
+        "question_text": "Carefully review this excerpt and synthesize its core technical insight in your own words:\n\n\"leak local keys. Secure local key storage, hardware -backed keystores where available, and a revocation/re -enrollment path for compromised devices. Model bias / subgroup accuracy Face and liveness models can under - perform on under -represented subgroups. Cr...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Synthesize the primary thesis, key parameters, and practical takeaways from the provided text excerpt.",
+        "explanation": "Synthesizing main points tests comprehensive reading comprehension and analytical retention.",
+        "rubric": [
+          {
+            "criterion": "Core Idea Extraction",
+            "points": 0.5,
+            "description": "Correctly identifies the primary insight"
+          },
+          {
+            "criterion": "Analytical Clarity",
+            "points": 0.3,
+            "description": "Coherent and precise explanation"
+          },
+          {
+            "criterion": "Domain Accuracy",
+            "points": 0.2,
+            "description": "Faithful to the source document context"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_ffd393",
+        "question_type": "mcq",
+        "topic": "AegisDID Sybil-Resistant Decentralized Identity for Humanitarian Relief via Edge",
+        "difficulty": "medium",
+        "question_text": "Based on the provided document content, which of the following statements is directly confirmed?",
+        "options": [
+          {
+            "key": "A",
+            "text": "Team Member Section Name Role Contributions Shihab Sarar Team Leader & AI/ML Architect Leads the overall syste"
+          },
+          {
+            "key": "B",
+            "text": "Model bias / subgroup accuracy Face and liveness models can under - perform on under -repr"
+          },
+          {
+            "key": "C",
+            "text": "We have deliberately kept the harder engineering problems visible rather than hidden: full"
+          },
+          {
+            "key": "D",
+            "text": "These figures are reported results from the cited literature, not claims about AegisDID's "
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: Team Member Section Name Role Contributions Shihab Sarar Team Leader & AI/ML Architect Leads the overall syste",
+        "explanation": "Directly verified in document excerpt: 'Team Member Section Name Role Contributions Shihab Sarar Team Leader & AI/ML Architect Leads the overall system architec'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_7065c6",
+        "question_type": "handwritten_derivation",
+        "topic": "(three group elements) and fast, constant-time verification \u2014 properties that ma",
+        "difficulty": "medium",
+        "question_text": "Deconstruct the underlying logic, invariants, or mathematical formulation in this passage. Write your step-by-step derivation/analysis by hand:\n\n\"(three group elements) and fast, constant-time verification \u2014 properties that matter for on-chain gas cost, though the choice of proving system, and whether a trusted setup is acceptable for this deployment, remains an engineering decision ...\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Show detailed step-by-step mathematical derivation, intermediate relations, and structural reasoning.",
+        "explanation": "Handwritten step-by-step derivations verify deep procedural understanding and symbolic formulation.",
+        "rubric": [
+          {
+            "criterion": "Mathematical/Logical Premise",
+            "points": 0.4,
+            "description": "Correctly states initial conditions and formulas"
+          },
+          {
+            "criterion": "Step-by-Step Derivation",
+            "points": 0.35,
+            "description": "Clear, unbroken sequence of deductive transitions"
+          },
+          {
+            "criterion": "Final Synthesis & Legibility",
+            "points": 0.25,
+            "description": "Legible handwritten notation with correct concluding result"
+          }
+        ],
+        "source_chunks": []
+      },
+      {
+        "id": "q_df5102",
+        "question_type": "mcq",
+        "topic": "Nullifiers and commitments are unlinkable by design; the chain reveals only that",
+        "difficulty": "medium",
+        "question_text": "In the context of the study material, which of the following evaluations holds true?",
+        "options": [
+          {
+            "key": "A",
+            "text": "Nullifiers and commitments are unlinkable by design; the chain reveals only that a valid, non -duplicate claim"
+          },
+          {
+            "key": "B",
+            "text": "Guarantees deterministic constant-time bounds across arbitrary data distributions"
+          },
+          {
+            "key": "C",
+            "text": "Decreases asymptotic runtime at the expense of exponential memory"
+          },
+          {
+            "key": "D",
+            "text": "Introduces recursive lock contention in asynchronous distributed environments"
+          }
+        ],
+        "correct_option": "A",
+        "expected_answer": "A: Nullifiers and commitments are unlinkable by design; the chain reveals only that a valid, non -duplicate claim",
+        "explanation": "Established in the source material: 'Nullifiers and commitments are unlinkable by design; the chain reveals only that a valid, non -duplicate claim occurred.'",
+        "rubric": null,
+        "source_chunks": []
+      },
+      {
+        "id": "q_9e6182",
+        "question_type": "short_answer",
+        "topic": "Table of Contents Abstract .....................................................",
+        "difficulty": "medium",
+        "question_text": "Carefully review this excerpt and synthesize its core technical insight in your own words:\n\n\"Table of Contents Abstract ....................................................................................................................................................................... 1 1. Vision & Problem Statement ....................................\"",
+        "options": null,
+        "correct_option": null,
+        "expected_answer": "Synthesize the primary thesis, key parameters, and practical takeaways from the provided text excerpt.",
+        "explanation": "Synthesizing main points tests comprehensive reading comprehension and analytical retention.",
+        "rubric": [
+          {
+            "criterion": "Core Idea Extraction",
+            "points": 0.5,
+            "description": "Correctly identifies the primary insight"
+          },
+          {
+            "criterion": "Analytical Clarity",
+            "points": 0.3,
+            "description": "Coherent and precise explanation"
+          },
+          {
+            "criterion": "Domain Accuracy",
+            "points": 0.2,
+            "description": "Faithful to the source document context"
+          }
+        ],
+        "source_chunks": []
+      }
+    ],
+    "time_limit_minutes": 15
   }
 }

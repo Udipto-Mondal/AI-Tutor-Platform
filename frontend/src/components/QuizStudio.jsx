@@ -68,13 +68,14 @@ export default function QuizStudio({
     if (doc?.topics_covered?.length > 0) {
       return doc.topics_covered.map(t => cleanTopicString(t));
     }
-    return ['Core Concepts & Foundations', 'Algorithms & Invariants', 'Trade-offs & Edge Cases'];
+    return Object.keys(CS_TOPIC_BANKS);
   };
 
   const [availableTopics, setAvailableTopics] = useState(() => computeTopics(activeDoc, null));
   const [selectedTopic, setSelectedTopic] = useState('Data Structures & Big-O Complexity');
   const [quizDifficulty, setQuizDifficulty] = useState('medium');
-  const [numQuestions, setNumQuestions] = useState(4);
+  const [numQuestions, setNumQuestions] = useState(5);
+  const [toastMsg, setToastMsg] = useState('');
 
   // Active quiz state
   const [quiz, setQuiz] = useState({
@@ -83,15 +84,22 @@ export default function QuizStudio({
     doc_title: 'Study Notes',
     topic_focus: 'Data Structures & Big-O Complexity',
     difficulty: 'medium',
-    time_limit_minutes: 12,
-    questions: CS_TOPIC_BANKS['Data Structures & Big-O Complexity']?.slice(0, 4) || []
+    time_limit_minutes: 15,
+    questions: CS_TOPIC_BANKS['Data Structures & Big-O Complexity']?.slice(0, 5) || []
   });
   const [loading, setLoading] = useState(false);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [answers, setAnswers] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [gradingReport, setGradingReport] = useState(null);
-  const [timeRemaining, setTimeRemaining] = useState(720);
+  const [timeRemaining, setTimeRemaining] = useState(900);
+
+  // Auto-dismiss toast after 4.5 seconds
+  useEffect(() => {
+    if (!toastMsg) return;
+    const t = setTimeout(() => setToastMsg(''), 4500);
+    return () => clearTimeout(t);
+  }, [toastMsg]);
 
   const fileInputRef = useRef(null);
 
@@ -99,7 +107,11 @@ export default function QuizStudio({
   useEffect(() => {
     let isMounted = true;
     const loadText = async () => {
-      if (!activeDoc) return;
+      if (!activeDoc) {
+        const tops = Object.keys(CS_TOPIC_BANKS);
+        setAvailableTopics(tops);
+        return;
+      }
       const rec = await getDocumentText(activeDoc.id);
       if (!isMounted) return;
 
@@ -179,8 +191,9 @@ export default function QuizStudio({
         const data = await res.json();
         if (data && data.questions && data.questions.length >= count) {
           setQuiz(data);
-          setTimeRemaining((data.time_limit_minutes || count * 3) * 60);
+          setTimeRemaining((data.time_limit_minutes || Math.round(count * 2.5)) * 60);
           setLoading(false);
+          setToastMsg(`✨ Generated fresh quiz with ${data.questions.length} questions!`);
           return;
         }
       }
@@ -211,8 +224,9 @@ export default function QuizStudio({
     });
 
     setQuiz(generated);
-    setTimeRemaining((generated.time_limit_minutes || count * 3) * 60);
+    setTimeRemaining((generated.time_limit_minutes || Math.round(count * 2.5)) * 60);
     setLoading(false);
+    setToastMsg(`✨ Generated fresh quiz with ${generated.questions.length} questions!`);
   };
 
   // Timer countdown
@@ -519,11 +533,15 @@ export default function QuizStudio({
               }}
               className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white font-medium text-slate-800 focus:outline-none focus:border-blue-500"
             >
-              {allDocs.map((d) => (
-                <option key={d.id} value={d.id}>
-                  {cleanDocumentTitle(d.filename)} ({d.file_type.toUpperCase()})
-                </option>
-              ))}
+              {allDocs.length > 0 ? (
+                allDocs.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {cleanDocumentTitle(d.filename)} ({d.file_type.toUpperCase()})
+                  </option>
+                ))
+              ) : (
+                <option value="">Standard CS Curriculum (All Topics)</option>
+              )}
             </select>
           </div>
 
@@ -558,15 +576,17 @@ export default function QuizStudio({
             <select
               value={numQuestions}
               onChange={(e) => {
-                const cnt = parseInt(e.target.value, 10) || 4;
+                const cnt = parseInt(e.target.value, 10) || 5;
                 setNumQuestions(cnt);
                 handleGenerateQuiz(activeDoc?.filename, selectedTopic, quizDifficulty, cnt);
               }}
               className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white font-medium text-slate-800 focus:outline-none focus:border-blue-500"
             >
-              <option value={4}>4 Questions (Standard)</option>
-              <option value={5}>5 Questions (Comprehensive)</option>
-              <option value={6}>6 Questions (Rigorous Exam)</option>
+              <option value={5}>5 Questions (Quick Check)</option>
+              <option value={8}>8 Questions (Targeted Practice)</option>
+              <option value={10}>10 Questions (Standard Quiz)</option>
+              <option value={15}>15 Questions (Comprehensive Assessment)</option>
+              <option value={20}>20 Questions (Full Mock Exam)</option>
             </select>
           </div>
 
@@ -629,6 +649,20 @@ export default function QuizStudio({
         </div>
       </div>
 
+      {/* ── Toast Notification Banner for Dynamic Updates ── */}
+      {toastMsg && (
+        <div className="flex items-center gap-2.5 px-4 py-3 bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs rounded-xl font-medium shadow-xs animate-fade-in">
+          <Sparkles className="h-4 w-4 text-emerald-600 shrink-0 animate-pulse" />
+          <span className="font-semibold">{toastMsg}</span>
+          <button
+            onClick={() => setToastMsg('')}
+            className="ml-auto text-emerald-700 hover:text-emerald-950 p-1 rounded-md hover:bg-emerald-100 transition-colors"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
+
       {/* ── Active Quiz Header Card (Clean, Executive SaaS Styling) ── */}
       <div className="glass-panel p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-slate-200">
         <div className="space-y-1">
@@ -650,7 +684,7 @@ export default function QuizStudio({
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
           <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 font-mono text-xs shadow-xs">
             <Clock className={`h-4 w-4 ${timeRemaining < 120 ? 'text-rose-600 animate-pulse' : 'text-blue-600'}`} />
             <span className={timeRemaining < 120 ? 'text-rose-600 font-bold' : 'text-slate-700 font-semibold'}>
@@ -659,12 +693,26 @@ export default function QuizStudio({
           </div>
 
           <button
+            onClick={() => {
+              setAnswers({});
+              setCurrentIdx(0);
+              setTimeRemaining((quiz.time_limit_minutes || Math.round(numQuestions * 2.5)) * 60);
+              setToastMsg('🧹 Cleared all answers! Quiz reset for re-attempt from Question 1.');
+            }}
+            className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5 text-slate-600 hover:text-slate-900 border-slate-200 hover:bg-slate-100 shadow-xs"
+            title="Clear all responses to re-attempt this quiz"
+          >
+            <span>Reset Answers</span>
+          </button>
+
+          <button
             onClick={() => handleGenerateQuiz(activeDoc?.filename, selectedTopic, quizDifficulty, numQuestions)}
-            className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5"
-            title="Generate new questions for this topic"
+            disabled={loading}
+            className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5 bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100 font-semibold shadow-xs"
+            title="Generate fresh new randomized questions for this topic"
           >
             <RefreshCw className={`h-3.5 w-3.5 text-blue-600 ${loading ? 'animate-spin' : ''}`} />
-            <span>Regenerate</span>
+            <span>{loading ? 'Regenerating…' : 'Regenerate Questions'}</span>
           </button>
         </div>
       </div>
