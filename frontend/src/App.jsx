@@ -5,7 +5,6 @@ import QuizStudio       from './components/QuizStudio';
 import HandwritingCanvas from './components/HandwritingCanvas';
 import MasteryRadar     from './components/MasteryRadar';
 import StudyPlanView    from './components/StudyPlanView';
-import MLOpsHub         from './components/MLOpsHub';
 import SocraticTutorDrawer from './components/SocraticTutorDrawer';
 import { MessageSquare, X } from 'lucide-react';
 
@@ -34,7 +33,7 @@ export default function App() {
       />
 
       {/* ── Page Content ── */}
-      <main className="flex-1 w-full max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-7 sm:py-9">
+      <main className="flex-1 w-full max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
 
         {activeTab === 'vault' && (
           <KnowledgeVault onStartQuizWithDoc={handleStartQuizWithDoc} />
@@ -49,14 +48,17 @@ export default function App() {
         )}
 
         {activeTab === 'canvas' && (
-          <div className="space-y-6">
-            <div className="glass-panel p-6 sm:p-8" style={{ borderColor: 'rgba(59,130,246,0.20)' }}>
-              <h1 className="text-xl sm:text-2xl font-bold text-white">
+          <div className="space-y-6 animate-fade-up">
+            <div className="glass-panel p-6 sm:p-8">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold mb-2">
+                <span>Multimodal Vision & CNN</span>
+              </div>
+              <h1 className="text-xl sm:text-2xl font-bold text-slate-900">
                 Multimodal <span className="gradient-text-primary">Handwriting Lab</span>
               </h1>
-              <p className="mt-2 text-sm" style={{ color: 'var(--text-secondary)', maxWidth: '640px' }}>
+              <p className="mt-2 text-sm text-slate-600 max-w-2xl">
                 Draw formulas, write derivations with your stylus or mouse, or upload a notebook photo.
-                The computer vision pipeline reads your work and grades it against the rubric.
+                The computer vision pipeline reads your handwritten work and grades it against the rubric.
               </p>
             </div>
             <HandwritingCanvas isStandalone={true} />
@@ -76,22 +78,16 @@ export default function App() {
             onOpenHandwritingLab={() => setActiveTab('canvas')}
           />
         )}
-
-        {activeTab === 'mlops' && <MLOpsHub />}
       </main>
 
       {/* ── Footer ── */}
       <footer
-        className="py-5 text-center text-xs"
-        style={{
-          borderTop: '1px solid rgba(255,255,255,0.05)',
-          color: 'var(--text-muted)',
-        }}
+        className="py-5 text-center text-xs border-t border-slate-200/80 bg-white/70 backdrop-blur text-slate-500"
       >
         <div className="max-w-screen-xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>AI Tutor Platform — Built by Udipto Mondal</span>
-          <div className="flex items-center gap-3">
-            {['RAG', 'Vision / CNN', 'Knowledge Tracing', 'MLflow'].map((t, i) => (
+          <span className="font-medium text-slate-600">AI Tutor Platform — Personalized Adaptive Learning</span>
+          <div className="flex items-center gap-3 font-mono text-[11px] text-slate-500">
+            {['RAG Architecture', 'Vision / CNN', 'Knowledge Tracing', 'Adaptive Planner'].map((t, i) => (
               <React.Fragment key={t}>
                 {i > 0 && <span className="opacity-30">·</span>}
                 <span>{t}</span>

@@ -262,34 +262,34 @@ export default function QuizStudio({ selectedDocId, onNavigateToStudyPlan, onNav
   return (
     <div className="space-y-6">
       {/* Quiz Top Info Header */}
-      <div className="glass-panel p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-blue-500/25">
+      <div className="glass-panel p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-slate-200">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <h2 className="text-base sm:text-lg font-bold text-white">
+            <h2 className="text-base sm:text-lg font-bold text-slate-900">
               {cleanQuizText(quiz.title)}
             </h2>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-950 text-blue-300 border border-blue-800 font-mono">
+            <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 font-mono font-bold">
               {(currentQ.difficulty || 'MEDIUM').toUpperCase()}
             </span>
           </div>
-          <p className="text-xs text-slate-400 font-mono">
-            Topic Focus: <span className="text-cyan-400 font-semibold">{cleanQuizText(currentQ.topic)}</span>
+          <p className="text-xs text-slate-500 font-mono">
+            Topic Focus: <span className="text-blue-700 font-bold">{cleanQuizText(currentQ.topic)}</span>
           </p>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 font-mono text-xs">
-            <Clock className={`h-4 w-4 ${timeRemaining < 120 ? 'text-rose-400 animate-pulse' : 'text-blue-400'}`} />
-            <span className={timeRemaining < 120 ? 'text-rose-400 font-bold' : 'text-slate-200'}>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white border border-slate-200 font-mono text-xs shadow-xs">
+            <Clock className={`h-4 w-4 ${timeRemaining < 120 ? 'text-rose-600 animate-pulse' : 'text-blue-600'}`} />
+            <span className={timeRemaining < 120 ? 'text-rose-600 font-bold' : 'text-slate-700 font-semibold'}>
               {formatTimer(timeRemaining)}
             </span>
           </div>
 
           <button
             onClick={() => handleGenerateQuiz()}
-            className="text-xs text-slate-400 hover:text-slate-200 py-1.5 px-2.5 rounded bg-slate-800 hover:bg-slate-700 flex items-center gap-1"
+            className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5"
           >
-            <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`h-3.5 w-3.5 text-blue-600 ${loading ? 'animate-spin' : ''}`} />
             <span>New Quiz</span>
           </button>
         </div>
@@ -304,16 +304,16 @@ export default function QuizStudio({ selectedDocId, onNavigateToStudyPlan, onNav
             <button
               key={q.id}
               onClick={() => setCurrentIdx(idx)}
-              className={`flex-1 min-w-12 py-2 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1 transition-all ${
+              className={`flex-1 min-w-14 py-2 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all ${
                 isCurrent 
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 ring-2 ring-blue-400'
+                  ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25 ring-2 ring-blue-300'
                   : isAnswered
-                  ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-800'
-                  : 'bg-slate-900/80 text-slate-400 border border-slate-800 hover:bg-slate-800'
+                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-300'
+                  : 'bg-white text-slate-700 border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 shadow-xs'
               }`}
             >
               <span>Q{idx + 1}</span>
-              {isAnswered && <CheckCircle2 className="h-3 w-3" />}
+              {isAnswered && <CheckCircle2 className="h-3.5 w-3.5" />}
             </button>
           );
         })}
@@ -321,30 +321,27 @@ export default function QuizStudio({ selectedDocId, onNavigateToStudyPlan, onNav
 
       {/* Main Question Card */}
       <div className="glass-panel p-6 sm:p-8 space-y-6 relative overflow-hidden transition-all duration-300">
-        {/* Subtle top accent gradient */}
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-blue-500/0 via-blue-500/40 to-teal-500/0" />
-
         <div className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-500/10 text-blue-300 border border-blue-500/20 font-mono font-semibold text-[11px]">
-                <span className="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulse" />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 border border-blue-200 font-mono font-bold text-[11px]">
+                <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse" />
                 Question {String(currentIdx + 1).padStart(2, '0')} / {String(quiz.questions.length).padStart(2, '0')}
               </span>
-              <span className="text-slate-400 font-medium text-xs">
+              <span className="text-slate-600 font-semibold text-xs">
                 {currentQ.topic}
               </span>
             </div>
 
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-800/80 text-slate-300 border border-slate-700/60 font-mono text-[11px] uppercase tracking-wider">
-              {currentQ.question_type === 'handwritten_derivation' && <PenLine className="h-3 w-3 text-cyan-400" />}
-              {currentQ.question_type === 'mcq' && <CheckSquare className="h-3 w-3 text-blue-400" />}
-              {currentQ.question_type === 'short_answer' && <AlignLeft className="h-3 w-3 text-teal-400" />}
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 border border-slate-200 font-mono text-[11px] uppercase font-semibold">
+              {currentQ.question_type === 'handwritten_derivation' && <PenLine className="h-3 w-3 text-cyan-600" />}
+              {currentQ.question_type === 'mcq' && <CheckSquare className="h-3 w-3 text-blue-600" />}
+              {currentQ.question_type === 'short_answer' && <AlignLeft className="h-3 w-3 text-teal-600" />}
               <span>{currentQ.question_type.replace(/_/g, ' ')}</span>
             </span>
           </div>
 
-          <h3 className="text-base sm:text-[1.125rem] font-medium text-slate-100 leading-relaxed tracking-normal font-sans">
+          <h3 className="text-base sm:text-lg font-medium text-slate-900 leading-relaxed tracking-normal font-sans">
             <MathText text={currentQ.question_text} />
           </h3>
         </div>
@@ -360,12 +357,12 @@ export default function QuizStudio({ selectedDocId, onNavigateToStudyPlan, onNav
                   onClick={() => handleSelectOption(currentQ.id, opt.key)}
                   className={`p-4 rounded-xl text-left text-xs sm:text-sm font-medium transition-all flex items-start gap-3 border ${
                     isSelected
-                      ? 'bg-blue-600/15 border-blue-500 text-white shadow-md shadow-blue-500/20'
-                      : 'bg-slate-900/60 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-900'
+                      ? 'bg-blue-50/90 border-blue-500 text-blue-950 shadow-sm ring-1 ring-blue-500'
+                      : 'bg-white border-slate-200 text-slate-800 hover:border-blue-300 hover:bg-blue-50/30 shadow-xs'
                   }`}
                 >
                   <span className={`h-6 w-6 rounded-lg text-xs font-bold font-mono flex items-center justify-center shrink-0 ${
-                    isSelected ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400'
+                    isSelected ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600 border border-slate-200'
                   }`}>
                     {opt.key}
                   </span>
@@ -381,7 +378,7 @@ export default function QuizStudio({ selectedDocId, onNavigateToStudyPlan, onNav
         {/* Short Answer Input */}
         {currentQ.question_type === 'short_answer' && (
           <div className="space-y-2 pt-2">
-            <label className="text-xs font-semibold text-slate-300">
+            <label className="text-xs font-semibold text-slate-700">
               Type your conceptual explanation:
             </label>
             <textarea
@@ -389,7 +386,7 @@ export default function QuizStudio({ selectedDocId, onNavigateToStudyPlan, onNav
               value={currentAnswer.text_answer || ''}
               onChange={(e) => handleTextAnswer(currentQ.id, e.target.value)}
               placeholder="Explain the mechanism, equations, or computational properties..."
-              className="w-full p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500"
+              className="w-full p-3.5 rounded-xl bg-white border border-slate-300 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             />
           </div>
         )}
@@ -398,12 +395,12 @@ export default function QuizStudio({ selectedDocId, onNavigateToStudyPlan, onNav
         {currentQ.question_type === 'handwritten_derivation' && (
           <div className="space-y-3 pt-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-blue-300 flex items-center gap-1.5">
+              <span className="text-xs font-bold text-blue-700 flex items-center gap-1.5">
                 <PenTool className="h-4 w-4" />
                 <span>Handwritten Solution Canvas & Step-by-Step Proof</span>
               </span>
-              <span className="text-[11px] text-slate-400 font-mono">
-                Multimodal CNN / OCR Active
+              <span className="text-[11px] text-slate-500 font-mono font-medium">
+                Multimodal CNN / Vision Active
               </span>
             </div>
 
@@ -422,14 +419,14 @@ export default function QuizStudio({ selectedDocId, onNavigateToStudyPlan, onNav
                 placeholder="Optional text notes to accompany your handwritten sketch..."
                 value={currentAnswer.text_answer || ''}
                 onChange={(e) => handleTextAnswer(currentQ.id, e.target.value)}
-                className="w-full px-3 py-2 text-xs rounded-lg bg-slate-900/70 border border-slate-800 text-slate-300 placeholder-slate-600 focus:outline-none focus:border-blue-500"
+                className="w-full px-3.5 py-2.5 text-xs rounded-xl bg-white border border-slate-300 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500"
               />
             </div>
           </div>
         )}
 
         {/* Navigation & Submit Bar */}
-        <div className="flex items-center justify-between pt-6 border-t border-slate-800">
+        <div className="flex items-center justify-between pt-6 border-t border-slate-100">
           <button
             onClick={() => setCurrentIdx((prev) => Math.max(0, prev - 1))}
             disabled={currentIdx === 0}

@@ -5,7 +5,6 @@ import {
   PenLine,
   BarChart3,
   CalendarCheck,
-  Gauge,
   Menu,
   X,
   MessageSquare
@@ -18,7 +17,6 @@ const NAV_ITEMS = [
   { id: 'canvas',     label: 'Handwriting Lab',  icon: PenLine,       tag: 'Vision' },
   { id: 'radar',      label: 'Mastery Radar',    icon: BarChart3,     tag: 'ML' },
   { id: 'study_plan', label: 'Study Plan',        icon: CalendarCheck, tag: 'Adaptive' },
-  { id: 'mlops',      label: 'MLOps Hub',         icon: Gauge,         tag: 'MLflow' },
 ];
 
 export default function Navbar({ activeTab, setActiveTab, onOpenTutor }) {

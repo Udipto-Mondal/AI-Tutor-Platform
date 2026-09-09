@@ -79,31 +79,31 @@ export default function MasteryRadar({ onNavigateToStudyPlan, onStartQuizWithTop
       <div className="glass-panel p-6 sm:p-8 relative overflow-hidden border-blue-500/25">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/40 border border-blue-700/50 text-blue-300 text-xs font-semibold">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold">
               <TrendingUp className="h-3.5 w-3.5" />
               <span>Machine Learning Knowledge Tracing Engine</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
               Student Concept <span className="gradient-text-primary">Mastery Radar</span>
             </h1>
-            <p className="text-slate-300 text-sm leading-relaxed">
+            <p className="text-slate-600 text-sm leading-relaxed">
               Real-time probabilistic tracking trained on quiz attempts, reaction latencies, handwritten accuracy, and forgetting curves to predict weak topics before exams.
             </p>
           </div>
 
           {/* Key Metric Gauges */}
           <div className="flex items-center gap-3">
-            <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 text-center min-w-28">
-              <span className="text-[10px] text-slate-400 uppercase font-mono">Proficiency</span>
-              <div className="text-2xl font-extrabold text-white mt-1">
+            <div className="p-4 rounded-xl bg-white border border-slate-200 text-center min-w-28 shadow-xs">
+              <span className="text-[10px] text-slate-500 uppercase font-mono font-bold">Proficiency</span>
+              <div className="text-2xl font-extrabold text-slate-900 mt-1">
                 <span className="gradient-text-primary">{Math.round((profile.overall_proficiency || 0.68) * 100)}%</span>
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 text-center min-w-28">
-              <span className="text-[10px] text-slate-400 uppercase font-mono">Velocity</span>
-              <div className="text-2xl font-extrabold text-cyan-400 mt-1 flex items-center justify-center gap-1">
-                <Zap className="h-5 w-5 text-amber-400" />
+            <div className="p-4 rounded-xl bg-white border border-slate-200 text-center min-w-28 shadow-xs">
+              <span className="text-[10px] text-slate-500 uppercase font-mono font-bold">Velocity</span>
+              <div className="text-2xl font-extrabold text-blue-700 mt-1 flex items-center justify-center gap-1">
+                <Zap className="h-5 w-5 text-amber-500" />
                 <span>{profile.learning_velocity || 1.2}x</span>
               </div>
             </div>
@@ -116,20 +116,20 @@ export default function MasteryRadar({ onNavigateToStudyPlan, onStartQuizWithTop
         
         {/* Radar SVG Visualizer */}
         <div className="lg:col-span-6 glass-panel p-6 flex flex-col items-center justify-center space-y-4">
-          <div className="flex items-center justify-between w-full border-b border-slate-800 pb-3">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <Target className="h-4 w-4 text-blue-400" />
+          <div className="flex items-center justify-between w-full border-b border-slate-200 pb-3">
+            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <Target className="h-4 w-4 text-blue-600" />
               <span>Multidimensional Knowledge Polygon</span>
             </h3>
             <div className="flex items-center gap-2">
               <button 
                 onClick={fetchProfile} 
-                className="text-xs text-slate-400 hover:text-slate-200 p-1 rounded hover:bg-slate-800"
+                className="text-xs text-slate-500 hover:text-slate-900 p-1 rounded hover:bg-slate-100"
                 title="Refresh from Backend"
               >
                 <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
               </button>
-              <span className="text-[11px] text-slate-400 font-mono">
+              <span className="text-[11px] text-slate-500 font-mono">
                 {numTopics} Monitored Topics
               </span>
             </div>
@@ -171,8 +171,8 @@ export default function MasteryRadar({ onNavigateToStudyPlan, onStartQuizWithTop
               {points && (
                 <polygon
                   points={points}
-                  fill="rgba(99, 102, 241, 0.25)"
-                  stroke="#818cf8"
+                  fill="rgba(59, 130, 246, 0.20)"
+                  stroke="#2563eb"
                   strokeWidth="2.5"
                   className="transition-all duration-500 ease-out"
                 />
@@ -190,7 +190,7 @@ export default function MasteryRadar({ onNavigateToStudyPlan, onStartQuizWithTop
                     cx={x}
                     cy={y}
                     r="4.5"
-                    fill={t.mastery_score >= 0.75 ? '#34d399' : t.mastery_score >= 0.5 ? '#818cf8' : '#f43f5e'}
+                    fill={t.mastery_score >= 0.75 ? '#059669' : t.mastery_score >= 0.5 ? '#2563eb' : '#e11d48'}
                     stroke="#ffffff"
                     strokeWidth="1.5"
                   />
@@ -199,24 +199,24 @@ export default function MasteryRadar({ onNavigateToStudyPlan, onStartQuizWithTop
             </svg>
           </div>
 
-          <div className="flex items-center gap-4 text-xs font-mono text-slate-400">
+          <div className="flex items-center gap-4 text-xs font-mono text-slate-500">
             <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" /> &gt;75% Mastered
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> &gt;75% Mastered
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-blue-400" /> 50-75% In Progress
+              <span className="w-2.5 h-2.5 rounded-full bg-blue-500" /> 50-75% In Progress
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-rose-400" /> &lt;50% Weak Topic
+              <span className="w-2.5 h-2.5 rounded-full bg-rose-500" /> &lt;50% Weak Topic
             </span>
           </div>
         </div>
 
         {/* Detailed Topic Mastery Breakdown List */}
         <div className="lg:col-span-6 glass-panel p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <BarChart3 className="h-4 w-4 text-cyan-400" />
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <BarChart3 className="h-4 w-4 text-blue-600" />
               <span>Concept Competency Status</span>
             </h3>
             <button
@@ -236,43 +236,43 @@ export default function MasteryRadar({ onNavigateToStudyPlan, onStartQuizWithTop
                   key={idx}
                   className={`p-3.5 rounded-xl border transition-all ${
                     isWeak 
-                      ? 'bg-rose-950/20 border-rose-800/40 hover:border-rose-700' 
-                      : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
+                      ? 'bg-rose-50/70 border-rose-200 hover:border-rose-300' 
+                      : 'bg-white border-slate-200 hover:border-blue-300 shadow-xs'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1.5">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-slate-200">
+                      <span className="text-xs font-bold text-slate-900">
                         {t.topic}
                       </span>
                       {isWeak && (
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-bold">
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 border border-rose-300 font-bold">
                           Weak Topic
                         </span>
                       )}
                     </div>
                     <span className={`text-xs font-mono font-bold ${
-                      t.mastery_score >= 0.75 ? 'text-emerald-400' : t.mastery_score >= 0.5 ? 'text-blue-400' : 'text-rose-400'
+                      t.mastery_score >= 0.75 ? 'text-emerald-600' : t.mastery_score >= 0.5 ? 'text-blue-600' : 'text-rose-600'
                     }`}>
                       {Math.round((t.mastery_score || 0.5) * 100)}%
                     </span>
                   </div>
 
                   {/* Progress bar */}
-                  <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                  <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
                     <div 
                       className={`h-full rounded-full transition-all duration-500 ${
                         t.mastery_score >= 0.75 
-                          ? 'bg-gradient-to-r from-emerald-500 to-teal-400' 
+                          ? 'bg-gradient-to-r from-emerald-500 to-teal-500' 
                           : t.mastery_score >= 0.5 
-                          ? 'bg-gradient-to-r from-blue-500 to-cyan-400' 
-                          : 'bg-gradient-to-r from-rose-600 to-orange-500'
+                          ? 'bg-gradient-to-r from-blue-500 to-cyan-500' 
+                          : 'bg-gradient-to-r from-rose-500 to-orange-500'
                       }`}
                       style={{ width: `${Math.max(5, (t.mastery_score || 0.5) * 100)}%` }}
                     />
                   </div>
 
-                  <div className="flex items-center justify-between text-[11px] text-slate-400 mt-2 font-mono">
+                  <div className="flex items-center justify-between text-[11px] text-slate-500 mt-2 font-mono">
                     <span>{t.attempts_count || 1} quiz attempts ({t.correct_count || 0} correct)</span>
                     <span className="text-slate-500">Risk of failure: {Math.round((t.predicted_weak_risk || 0.35) * 100)}%</span>
                   </div>

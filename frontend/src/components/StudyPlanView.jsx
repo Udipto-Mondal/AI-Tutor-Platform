@@ -168,35 +168,35 @@ export default function StudyPlanView({ onStartQuizWithTopic, onOpenHandwritingL
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="glass-panel p-6 sm:p-8 relative overflow-hidden border-blue-500/25">
+      <div className="glass-panel p-6 sm:p-8 relative overflow-hidden border-slate-200">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-900/40 border border-emerald-700/50 text-emerald-300 text-xs font-semibold">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
               <Calendar className="h-3.5 w-3.5" />
               <span>Adaptive Remediation Roadmap</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
               Personalized <span className="gradient-text-emerald">Study Plan</span>
             </h1>
-            <p className="text-slate-300 text-sm leading-relaxed">
+            <p className="text-slate-600 text-sm leading-relaxed">
               Tailored specifically to your weak concepts ({(studyPlan.weak_topics || []).join(', ') || 'All Core Topics'}). Follow daily micro-sessions to reach concept mastery.
             </p>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 text-center min-w-32">
-              <span className="text-[10px] text-slate-400 uppercase font-mono">Plan Progress</span>
-              <div className="text-2xl font-extrabold text-emerald-400 mt-1">
+            <div className="p-4 rounded-xl bg-white border border-slate-200 text-center min-w-32 shadow-xs">
+              <span className="text-[10px] text-slate-500 uppercase font-mono font-bold">Plan Progress</span>
+              <div className="text-2xl font-extrabold text-emerald-600 mt-1">
                 {progressPct}%
               </div>
-              <span className="text-[10px] text-slate-500">{completedTasks}/{totalTasks} tasks</span>
+              <span className="text-[10px] text-slate-500 font-mono">{completedTasks}/{totalTasks} tasks</span>
             </div>
 
             <button
               onClick={handleRegeneratePlan}
               className="btn-secondary text-xs py-2 px-3"
             >
-              <RotateCw className={`h-4 w-4 text-blue-400 ${loading ? 'animate-spin' : ''}`} />
+              <RotateCw className={`h-4 w-4 text-blue-600 ${loading ? 'animate-spin' : ''}`} />
               <span>Re-optimize Plan</span>
             </button>
           </div>
@@ -209,11 +209,11 @@ export default function StudyPlanView({ onStartQuizWithTopic, onOpenHandwritingL
         {/* Left: 7-Day Roadmap */}
         <div className="lg:col-span-7 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-emerald-400" />
+            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-emerald-600" />
               <span>Daily Actionable Roadmap</span>
             </h3>
-            <span className="text-xs text-slate-400 font-mono">
+            <span className="text-xs text-slate-500 font-mono">
               7-Day Sprint
             </span>
           </div>
@@ -225,34 +225,34 @@ export default function StudyPlanView({ onStartQuizWithTopic, onOpenHandwritingL
                 onClick={() => handleToggleTask(task.id, task.completed)}
                 className={`glass-panel p-4 flex items-start gap-3.5 cursor-pointer transition-all ${
                   task.completed 
-                    ? 'bg-slate-900/40 border-slate-800 opacity-60' 
-                    : 'border-slate-800 hover:border-emerald-500/40 hover:bg-slate-900/90'
+                    ? 'bg-slate-50 border-slate-200 opacity-65' 
+                    : 'bg-white border-slate-200 hover:border-emerald-400 hover:bg-emerald-50/15 shadow-xs'
                 }`}
               >
-                <button className="mt-0.5 text-slate-400 hover:text-emerald-400 transition-colors">
+                <button className="mt-0.5 text-slate-400 hover:text-emerald-600 transition-colors">
                   {task.completed ? (
-                    <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600" />
                   ) : (
-                    <Circle className="h-5 w-5 text-slate-500" />
+                    <Circle className="h-5 w-5 text-slate-400" />
                   )}
                 </button>
 
                 <div className="flex-1 space-y-1">
                   <div className="flex items-center justify-between gap-2">
-                    <span className={`text-xs font-bold ${task.completed ? 'line-through text-slate-500' : 'text-slate-200'}`}>
+                    <span className={`text-xs font-bold ${task.completed ? 'line-through text-slate-400' : 'text-slate-900'}`}>
                       Day {task.day_number}: {task.title}
                     </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">
+                    <span className="text-[10.5px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-mono border border-slate-200">
                       {task.duration_minutes} min
                     </span>
                   </div>
 
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                  <p className="text-xs text-slate-600 leading-relaxed">
                     {task.description}
                   </p>
 
                   <div className="flex items-center gap-2 pt-1">
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-950 text-blue-300 border border-blue-800">
+                    <span className="text-[10.5px] px-2.5 py-0.5 rounded-full font-medium bg-blue-50 text-blue-700 border border-blue-200">
                       {task.topic}
                     </span>
                     <span className="text-[10px] text-slate-500 font-mono">
@@ -268,11 +268,11 @@ export default function StudyPlanView({ onStartQuizWithTopic, onOpenHandwritingL
         {/* Right: Remediation Flashcards */}
         <div className="lg:col-span-5 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-cyan-400" />
+            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-blue-600" />
               <span>Targeted Remediation Flashcards</span>
             </h3>
-            <span className="text-xs text-slate-400 font-mono">
+            <span className="text-xs text-slate-500 font-mono">
               Click to Flip
             </span>
           </div>
@@ -284,14 +284,14 @@ export default function StudyPlanView({ onStartQuizWithTopic, onOpenHandwritingL
                 <div
                   key={fc.id}
                   onClick={() => toggleCardFlip(fc.id)}
-                  className="glass-panel p-5 min-h-48 flex flex-col justify-between cursor-pointer border-blue-500/20 hover:border-blue-500/60 transition-all group"
+                  className="glass-panel p-5 min-h-48 flex flex-col justify-between cursor-pointer border-slate-200 hover:border-blue-400 bg-white shadow-xs hover:shadow-md transition-all group"
                 >
-                  <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-950 text-blue-300 font-mono">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                    <span className="text-[10.5px] px-2.5 py-0.5 rounded-full font-medium bg-blue-50 text-blue-700 border border-blue-200">
                       {fc.topic}
                     </span>
-                    <span className="text-[10px] text-slate-400 flex items-center gap-1 font-mono">
-                      <RotateCw className="h-3 w-3 group-hover:rotate-180 transition-transform duration-300 text-blue-400" />
+                    <span className="text-[10px] text-slate-500 flex items-center gap-1 font-mono">
+                      <RotateCw className="h-3 w-3 group-hover:rotate-180 transition-transform duration-300 text-blue-600" />
                       <span>{isFlipped ? 'Answer View' : 'Prompt View'}</span>
                     </span>
                   </div>
@@ -299,11 +299,11 @@ export default function StudyPlanView({ onStartQuizWithTopic, onOpenHandwritingL
                   {/* Card Content */}
                   <div className="py-4 text-center">
                     {!isFlipped ? (
-                      <p className="text-xs sm:text-sm font-medium text-slate-100 leading-relaxed">
+                      <p className="text-xs sm:text-sm font-medium text-slate-900 leading-relaxed">
                         <MathText text={fc.front_prompt} />
                       </p>
                     ) : (
-                      <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800 text-xs font-mono text-cyan-300 leading-relaxed text-left">
+                      <div className="p-3.5 rounded-xl bg-blue-50/80 border border-blue-200 text-xs font-mono text-blue-950 leading-relaxed text-left">
                         <MathText text={fc.back_solution} />
                       </div>
                     )}

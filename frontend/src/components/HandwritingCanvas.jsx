@@ -239,13 +239,13 @@ export default function HandwritingCanvas({
       )}
 
       {/* Canvas Toolset Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-2.5 rounded-xl bg-slate-900/90 border border-slate-800">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-2.5 rounded-xl bg-slate-100/90 border border-slate-200">
         {/* Tool Selectors */}
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => setTool('pen')}
             className={`p-2 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all ${
-              tool === 'pen' ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20' : 'text-slate-400 hover:text-slate-200'
+              tool === 'pen' ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/20' : 'text-slate-600 hover:text-slate-900 hover:bg-white'
             }`}
             title="Pen Tool (Stylus or Mouse)"
           >
@@ -256,7 +256,7 @@ export default function HandwritingCanvas({
           <button
             onClick={() => setTool('eraser')}
             className={`p-2 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all ${
-              tool === 'eraser' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-slate-200'
+              tool === 'eraser' ? 'bg-slate-700 text-white' : 'text-slate-600 hover:text-slate-900 hover:bg-white'
             }`}
             title="Eraser"
           >
@@ -264,16 +264,16 @@ export default function HandwritingCanvas({
             <span className="hidden sm:inline">Eraser</span>
           </button>
 
-          <div className="h-5 w-px bg-slate-700/60 mx-1" />
+          <div className="h-5 w-px bg-slate-300 mx-1" />
 
           {/* Color Palettes */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             {colors.map((c) => (
               <button
                 key={c.hex}
                 onClick={() => { setStrokeColor(c.hex); setTool('pen'); }}
                 className={`w-5 h-5 rounded-full border transition-transform ${
-                  strokeColor === c.hex && tool === 'pen' ? 'scale-125 border-white shadow-sm' : 'border-transparent hover:scale-110'
+                  strokeColor === c.hex && tool === 'pen' ? 'scale-125 border-slate-900 ring-2 ring-blue-400' : 'border-slate-300 hover:scale-110'
                 }`}
                 style={{ backgroundColor: c.hex }}
                 title={c.name}
@@ -281,16 +281,16 @@ export default function HandwritingCanvas({
             ))}
           </div>
 
-          <div className="h-5 w-px bg-slate-700/60 mx-1" />
+          <div className="h-5 w-px bg-slate-300 mx-1" />
 
           {/* Stroke Width Selector */}
-          <div className="flex items-center gap-1 text-slate-400 text-xs font-mono">
+          <div className="flex items-center gap-1 text-slate-600 text-xs font-mono">
             {[2, 4, 7].map((size) => (
               <button
                 key={size}
                 onClick={() => setStrokeWidth(size)}
-                className={`px-2 py-1 rounded ${
-                  strokeWidth === size ? 'bg-blue-950 text-blue-300 font-bold border border-blue-800' : 'hover:bg-slate-800'
+                className={`px-2 py-1 rounded transition-colors ${
+                  strokeWidth === size ? 'bg-blue-600 text-white font-bold' : 'hover:bg-white text-slate-600'
                 }`}
               >
                 {size}px
@@ -304,7 +304,7 @@ export default function HandwritingCanvas({
           <button
             onClick={handleUndo}
             disabled={history.length <= 1}
-            className="p-2 text-slate-400 hover:text-slate-200 disabled:opacity-30 rounded hover:bg-slate-800"
+            className="p-2 text-slate-500 hover:text-slate-900 disabled:opacity-30 rounded hover:bg-white"
             title="Undo"
           >
             <RotateCcw className="h-4 w-4" />
@@ -312,13 +312,13 @@ export default function HandwritingCanvas({
 
           <button
             onClick={handleClear}
-            className="text-xs text-slate-400 hover:text-rose-400 px-2.5 py-1.5 rounded hover:bg-slate-800"
+            className="text-xs text-slate-600 hover:text-rose-600 px-2.5 py-1.5 rounded hover:bg-white"
           >
             Clear
           </button>
 
-          <label className="text-xs text-slate-300 hover:text-white px-2.5 py-1.5 rounded bg-slate-800 hover:bg-slate-700 cursor-pointer flex items-center gap-1.5">
-            <Upload className="h-3.5 w-3.5" />
+          <label className="text-xs text-slate-700 hover:text-slate-900 px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 shadow-xs cursor-pointer flex items-center gap-1.5 font-medium transition-colors">
+            <Upload className="h-3.5 w-3.5 text-blue-600" />
             <span className="hidden sm:inline">Upload Photo</span>
             <input
               type="file"

@@ -3,27 +3,26 @@
 @tailwind utilities;
 
 /* ─────────────────────────────────────────────────────────
-   Design Tokens — Premium Sky-Blue & Crisp White Theme
-   Inspired by Modern SaaS (Vercel / Linear / Stripe)
-   Primary: Cerulean / Royal Blue (#2563eb) + Teal Accent (#0d9488)
-   Background: Soft pastel sky-blue gradient at the top fading to pure white
+   Design Tokens — Executive Modern SaaS Theme
+   Clean Sky-Blue & Pure White Palette (Linear / Stripe / Vercel style)
+   Ultra-crisp contrast, zero muddy gray or dark-mode residue
 ───────────────────────────────────────────────────────── */
 :root {
   --bg-deep:        #f0f7ff;
   --bg-surface:     #ffffff;
-  --bg-card:        rgba(255, 255, 255, 0.94);
+  --bg-card:        #ffffff;
   --bg-card-hover:  #ffffff;
-  --border-subtle:  rgba(186, 230, 253, 0.85); /* sky-200 */
-  --border-active:  rgba(59, 130, 246, 0.55);
+  --border-subtle:  #e2e8f0;
+  --border-sky:     rgba(186, 230, 253, 0.80);
+  --border-active:  #3b82f6;
   --blue-primary:   #2563eb;
   --blue-light:     #3b82f6;
   --blue-glow:      rgba(37, 99, 235, 0.12);
   --teal:           #0d9488;
-  --teal-glow:      rgba(13, 148, 136, 0.12);
   --emerald:        #059669;
   --amber:          #d97706;
   --rose:           #e11d48;
-  --text-primary:   #0f172a; /* Slate 900 for ultra-crisp readability */
+  --text-primary:   #0f172a; /* Slate 900 */
   --text-secondary: #334155; /* Slate 700 */
   --text-muted:     #64748b; /* Slate 500 */
 }
@@ -35,7 +34,6 @@
   padding: 0;
 }
 
-/* ─── Base ─────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
@@ -49,14 +47,14 @@ body {
   overflow-x: hidden;
   line-height: 1.6;
   background-image:
-    linear-gradient(180deg, #dbeafe 0%, #e0f2fe 180px, #f0f7ff 380px, #f8fafc 650px, #ffffff 100%);
+    linear-gradient(180deg, #dbeafe 0%, #e0f2fe 160px, #f0f7ff 340px, #f8fafc 580px, #ffffff 100%);
   background-attachment: fixed;
 }
 
 h1, h2, h3, h4, h5, h6, .font-heading {
   font-family: 'Outfit', 'Inter', sans-serif;
-  letter-spacing: -0.025em;
-  line-height: 1.25;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
   color: #0f172a;
 }
 
@@ -65,40 +63,35 @@ code, pre, .font-mono {
   font-size: 0.875em;
 }
 
-/* ─── Glassmorphism Cards ───────────────────────────────── */
+/* ─── Executive Glass Cards ─────────────────────────────── */
 .glass-panel {
-  background: var(--bg-card);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid var(--border-subtle);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   box-shadow:
-    0 4px 20px -2px rgba(15, 23, 42, 0.04),
-    0 2px 6px -1px rgba(15, 23, 42, 0.02),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    0 1px 3px rgba(15, 23, 42, 0.03),
+    0 8px 24px -4px rgba(15, 23, 42, 0.05);
   border-radius: 1rem;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-panel:hover {
-  border-color: var(--border-active);
+  border-color: #cbd5e1;
   box-shadow:
-    0 12px 30px -4px rgba(37, 99, 235, 0.08),
-    0 4px 12px -2px rgba(15, 23, 42, 0.03),
-    0 0 0 1px rgba(59, 130, 246, 0.15);
+    0 4px 6px -1px rgba(15, 23, 42, 0.04),
+    0 12px 28px -4px rgba(37, 99, 235, 0.08);
 }
 
 .glass-card-interactive {
   cursor: pointer;
-  transform: translateY(0);
-  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease, box-shadow 0.22s ease;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card-interactive:hover {
-  transform: translateY(-3px);
-  border-color: rgba(59, 130, 246, 0.50);
+  transform: translateY(-2px);
+  border-color: #93c5fd;
   box-shadow:
-    0 14px 32px -4px rgba(37, 99, 235, 0.12),
-    0 0 0 1px rgba(59, 130, 246, 0.20);
+    0 12px 30px -4px rgba(37, 99, 235, 0.10),
+    0 4px 10px -2px rgba(15, 23, 42, 0.04);
 }
 
 /* ─── Gradient Text ─────────────────────────────────────── */
@@ -110,14 +103,14 @@ code, pre, .font-mono {
 }
 
 .gradient-text-emerald {
-  background: linear-gradient(135deg, #059669 0%, #0d9488 100%);
+  background: linear-gradient(135deg, #047857 0%, #0d9488 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .gradient-text-amber {
-  background: linear-gradient(135deg, #d97706 0%, #ea580c 100%);
+  background: linear-gradient(135deg, #b45309 0%, #d97706 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -136,7 +129,7 @@ code, pre, .font-mono {
   gap: 0.45rem;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   border: 1px solid rgba(255, 255, 255, 0.20);
-  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.28);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
   cursor: pointer;
   white-space: nowrap;
   letter-spacing: 0.01em;
@@ -148,13 +141,13 @@ code, pre, .font-mono {
 
 .btn-primary:hover {
   background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.40);
-  transform: translateY(-1.5px);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+  transform: translateY(-1px);
 }
 
 .btn-primary:active {
   transform: translateY(0);
-  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.20);
 }
 
 .btn-primary:disabled {
@@ -164,7 +157,7 @@ code, pre, .font-mono {
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.90);
+  background: #ffffff;
   color: #334155;
   padding: 0.6rem 1.2rem;
   border-radius: 0.625rem;
@@ -174,18 +167,18 @@ code, pre, .font-mono {
   align-items: center;
   gap: 0.45rem;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  border: 1px solid rgba(203, 213, 225, 0.85);
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
   cursor: pointer;
   white-space: nowrap;
 }
 
 .btn-secondary:hover {
-  background: #ffffff;
-  border-color: rgba(147, 197, 253, 0.95);
+  background: #f8fafc;
+  border-color: #94a3b8;
   color: #0f172a;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.06);
 }
 
 .btn-secondary:disabled {
@@ -193,7 +186,7 @@ code, pre, .font-mono {
   cursor: not-allowed;
 }
 
-/* ─── Inputs & Textareas ────────────────────────────────── */
+/* ─── Form Controls ─────────────────────────────────────── */
 input[type="text"],
 input[type="number"],
 input[type="search"],
@@ -201,7 +194,8 @@ textarea,
 select {
   background-color: #ffffff !important;
   color: #0f172a !important;
-  border-color: rgba(203, 213, 225, 0.85) !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 0.625rem;
   transition: all 0.2s ease;
 }
 
@@ -214,8 +208,8 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  border-color: rgba(59, 130, 246, 0.75) !important;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12) !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
 }
 
 /* ─── Canvas ─────────────────────────────────────────────── */
@@ -226,8 +220,8 @@ select:focus {
   background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
   background-size: 20px 20px;
   border-radius: 0.75rem;
-  border: 1px solid rgba(186, 230, 253, 0.85);
-  box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+  border: 1px solid #cbd5e1;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.25);
 }
 
 /* ─── Scrollbar ──────────────────────────────────────────── */
@@ -239,11 +233,11 @@ select:focus {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.45);
+  background: rgba(148, 163, 184, 0.40);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.65);
+  background: rgba(100, 116, 139, 0.60);
 }
 
 /* ─── Flip Card ──────────────────────────────────────────── */
@@ -253,22 +247,13 @@ select:focus {
 .rotate-y-180 { transform: rotateY(180deg); }
 
 /* ─── Responsive Micro-Animations ────────────────────────── */
-@keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 12px rgba(37, 99, 235, 0.20); }
-  50%       { box-shadow: 0 0 24px rgba(37, 99, 235, 0.45); }
-}
-
-.animate-glow {
-  animation: pulseGlow 3s infinite ease-in-out;
-}
-
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade-up {
-  animation: fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes subtleFloat {
@@ -290,7 +275,7 @@ select:focus {
   height: 3.5rem;
   border-radius: 50%;
   background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 60%, #0284c7 100%);
-  border: 2px solid #ffffff;
+  border: 2.5px solid #ffffff;
   box-shadow:
     0 8px 24px rgba(37, 99, 235, 0.35),
     0 0 0 4px rgba(37, 99, 235, 0.10);
@@ -304,7 +289,7 @@ select:focus {
 .float-chat-btn:hover {
   transform: scale(1.08) translateY(-2px);
   box-shadow:
-    0 12px 32px rgba(37, 99, 235, 0.48),
+    0 12px 30px rgba(37, 99, 235, 0.45),
     0 0 0 6px rgba(37, 99, 235, 0.15);
 }
 
@@ -312,21 +297,7 @@ select:focus {
   transform: scale(0.96);
 }
 
-@keyframes ripplePulse {
-  0%   { box-shadow: 0 0 0 0   rgba(37, 99, 235, 0.40); }
-  70%  { box-shadow: 0 0 0 12px rgba(37, 99, 235, 0); }
-  100% { box-shadow: 0 0 0 0   rgba(37, 99, 235, 0); }
-}
-
-.float-chat-btn {
-  animation: ripplePulse 2.5s infinite;
-}
-
-.float-chat-btn:hover {
-  animation: none;
-}
-
-/* ─── Chat Drawer (floating panel) ──────────────────────── */
+/* ─── Chat Drawer (Floating Panel) ──────────────────────── */
 .chat-drawer {
   position: fixed;
   bottom: 6.5rem;
@@ -335,12 +306,10 @@ select:focus {
   width: min(420px, calc(100vw - 2rem));
   max-height: min(640px, calc(100dvh - 8rem));
   border-radius: 1.25rem;
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(186, 230, 253, 0.90);
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
   box-shadow:
-    0 24px 64px rgba(15, 23, 42, 0.15),
+    0 24px 60px rgba(15, 23, 42, 0.16),
     0 4px 16px rgba(37, 99, 235, 0.08);
   display: flex;
   flex-direction: column;
@@ -348,7 +317,7 @@ select:focus {
   transform-origin: bottom right;
 }
 
-/* ─── Status Badges (Light-Mode Tailored) ─────────────────── */
+/* ─── Status Badges (Clean Pastel Chips) ─────────────────── */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -361,12 +330,12 @@ select:focus {
   text-transform: uppercase;
 }
 
-.badge-blue   { background: rgba(37,99,235,0.08);  color: #1d4ed8 !important; border: 1px solid rgba(37,99,235,0.22); }
-.badge-teal   { background: rgba(13,148,136,0.08); color: #0f766e !important; border: 1px solid rgba(13,148,136,0.22); }
-.badge-green  { background: rgba(16,185,129,0.08); color: #047857 !important; border: 1px solid rgba(16,185,129,0.22); }
-.badge-amber  { background: rgba(245,158,11,0.08); color: #b45309 !important; border: 1px solid rgba(245,158,11,0.22); }
-.badge-rose   { background: rgba(244,63,94,0.08);  color: #be123c !important; border: 1px solid rgba(244,63,94,0.22); }
-.badge-slate  { background: rgba(100,116,139,0.08); color: #475569 !important; border: 1px solid rgba(100,116,139,0.20); }
+.badge-blue   { background: #eff6ff; color: #1d4ed8 !important; border: 1px solid #bfdbfe; }
+.badge-teal   { background: #f0fdfa; color: #0f766e !important; border: 1px solid #99f6e4; }
+.badge-green  { background: #ecfdf5; color: #047857 !important; border: 1px solid #a7f3d0; }
+.badge-amber  { background: #fffbeb; color: #b45309 !important; border: 1px solid #fde68a; }
+.badge-rose   { background: #fff1f2; color: #be123c !important; border: 1px solid #fecdd3; }
+.badge-slate  { background: #f8fafc; color: #475569 !important; border: 1px solid #e2e8f0; }
 
 /* ─── Academic Math Typography ───────────────────────────── */
 .math-var {
@@ -381,14 +350,14 @@ select:focus {
   align-items: center;
   padding: 0.15rem 0.5rem;
   border-radius: 0.375rem;
-  background: rgba(2, 132, 199, 0.08);
-  border: 1px solid rgba(2, 132, 199, 0.25);
-  color: #0369a1;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
   font-family: 'Fira Code', monospace;
   font-size: 0.9em;
 }
 
-/* ─── Color Contrast Harmonization for Light Theme ──────── */
+/* ─── Global Clean Light Overrides ──────────────────────── */
 .text-white,
 .glass-panel .text-white {
   color: #0f172a;
@@ -398,7 +367,7 @@ select:focus {
 .glass-panel .text-slate-100,
 .text-slate-200,
 .glass-panel .text-slate-200 {
-  color: #1e293b;
+  color: #0f172a;
 }
 
 .text-slate-300,
@@ -411,7 +380,29 @@ select:focus {
   color: #64748b;
 }
 
-/* Elements that must always keep white text */
+/* Overriding any harsh dark backgrounds to clean light surfaces */
+.bg-slate-900,
+.bg-slate-950,
+.glass-panel .bg-slate-900,
+.glass-panel .bg-slate-950 {
+  background-color: #f8fafc;
+  border-color: #e2e8f0;
+  color: #0f172a;
+}
+
+.bg-slate-800,
+.glass-panel .bg-slate-800 {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #1e293b;
+}
+
+.border-slate-800,
+.border-slate-700 {
+  border-color: #e2e8f0 !important;
+}
+
+/* Keep white text on primary buttons / blue pills */
 .btn-primary,
 .btn-primary *,
 .bg-blue-600,
@@ -421,27 +412,7 @@ select:focus {
   color: #ffffff !important;
 }
 
-/* Dark slate cards overridden to clean crisp surfaces */
-.bg-slate-900,
-.bg-slate-950,
-.glass-panel .bg-slate-900,
-.glass-panel .bg-slate-950 {
-  background-color: rgba(248, 250, 252, 0.85);
-  border-color: rgba(203, 213, 225, 0.80);
-}
-
-.bg-slate-800,
-.glass-panel .bg-slate-800 {
-  background-color: rgba(241, 245, 249, 0.90);
-  border-color: rgba(203, 213, 225, 0.70);
-}
-
-.border-slate-800,
-.border-slate-700 {
-  border-color: rgba(203, 213, 225, 0.75) !important;
-}
-
-/* ─── Responsive Utilities ──────────────────────────────── */
+/* ─── Responsive Adjustments ────────────────────────────── */
 @media (max-width: 640px) {
   .glass-panel {
     border-radius: 0.875rem;
