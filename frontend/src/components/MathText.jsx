@@ -51,16 +51,16 @@ function formatMathToken(token, key) {
     return (
       <span
         key={key}
-        className="inline-flex items-baseline font-serif italic text-cyan-300 font-semibold px-0.5 tracking-tight"
+        className="inline-flex items-baseline font-serif italic text-blue-700 font-bold px-0.5 tracking-tight"
       >
         <span>{base}</span>
         {cleanSub && (
-          <sub className="text-[0.72em] font-sans not-italic text-cyan-400/90 -bottom-0.5 relative ml-[0.5px]">
+          <sub className="text-[0.72em] font-sans not-italic text-blue-600 -bottom-0.5 relative ml-[0.5px]">
             {cleanSub}
           </sub>
         )}
         {cleanSup && (
-          <sup className="text-[0.72em] font-sans not-italic text-cyan-400/90 -top-1 relative ml-[0.5px]">
+          <sup className="text-[0.72em] font-sans not-italic text-blue-600 -top-1 relative ml-[0.5px]">
             {cleanSup}
           </sup>
         )}
@@ -72,7 +72,7 @@ function formatMathToken(token, key) {
   const dimMatch = clean.match(/^(\d+)\s*(?:[xX×]|\\times)\s*(\d+)$/);
   if (dimMatch) {
     return (
-      <span key={key} className="inline-block font-mono text-cyan-200 font-medium px-1.5 py-0.5 rounded bg-cyan-950/40 border border-cyan-800/40 text-[0.9em]">
+      <span key={key} className="inline-block font-mono text-blue-800 font-medium px-1.5 py-0.5 rounded bg-blue-50 border border-blue-200 text-[0.9em]">
         {dimMatch[1]} × {dimMatch[2]}
       </span>
     );
@@ -81,7 +81,7 @@ function formatMathToken(token, key) {
   // If token is an isolated mathematical assignment like P = 2 or S = 1 or O = ...
   if (/^[A-Za-z]\s*=\s*[\d\w]/.test(clean)) {
     return (
-      <span key={key} className="inline-block font-mono text-cyan-200 font-medium px-1.5 py-0.5 rounded bg-cyan-950/40 border border-cyan-800/40 text-[0.9em]">
+      <span key={key} className="inline-block font-mono text-blue-800 font-medium px-1.5 py-0.5 rounded bg-blue-50 border border-blue-200 text-[0.9em]">
         {clean}
       </span>
     );
@@ -90,7 +90,7 @@ function formatMathToken(token, key) {
   // Single math variable like L, l, W, X, b, z
   if (/^[a-zA-Z]$/.test(clean)) {
     return (
-      <span key={key} className="font-serif italic text-cyan-300 font-semibold px-0.5">
+      <span key={key} className="font-serif italic text-blue-700 font-bold px-0.5">
         {clean}
       </span>
     );
@@ -98,7 +98,7 @@ function formatMathToken(token, key) {
 
   // Fallback math span
   return (
-    <span key={key} className="font-mono text-cyan-200 text-[0.95em]">
+    <span key={key} className="font-mono text-blue-800 text-[0.95em]">
       {clean}
     </span>
   );

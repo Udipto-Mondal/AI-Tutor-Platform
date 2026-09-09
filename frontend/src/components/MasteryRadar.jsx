@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   BarChart3, 
   Target, 
@@ -145,7 +145,7 @@ export default function MasteryRadar({ onNavigateToStudyPlan, onStartQuizWithTop
                   cy={centerY}
                   r={maxRadius * level}
                   fill="none"
-                  stroke="rgba(255, 255, 255, 0.08)"
+                  stroke="rgba(148, 163, 184, 0.35)"
                   strokeDasharray="3 3"
                 />
               ))}
@@ -162,7 +162,7 @@ export default function MasteryRadar({ onNavigateToStudyPlan, onStartQuizWithTop
                     y1={centerY}
                     x2={x}
                     y2={y}
-                    stroke="rgba(255, 255, 255, 0.12)"
+                    stroke="rgba(148, 163, 184, 0.30)"
                   />
                 );
               })}

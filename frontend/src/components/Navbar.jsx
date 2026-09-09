@@ -32,12 +32,13 @@ export default function Navbar({ activeTab, setActiveTab, onOpenTutor }) {
   return (
     <>
       <header
-        className="sticky top-0 z-40 w-full"
+        className="sticky top-0 z-40 w-full transition-colors duration-300"
         style={{
-          background: 'rgba(6,11,20,0.92)',
-          backdropFilter: 'blur(20px) saturate(160%)',
-          WebkitBackdropFilter: 'blur(20px) saturate(160%)',
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
+          background: 'rgba(235, 245, 255, 0.92)',
+          backdropFilter: 'blur(20px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+          borderBottom: '1px solid rgba(186, 230, 253, 0.75)',
+          boxShadow: '0 2px 16px rgba(37, 99, 235, 0.04)',
         }}
       >
         <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -53,7 +54,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenTutor }) {
             </button>
 
             {/* ── Desktop Nav ── */}
-            <nav className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
+            <nav className="hidden lg:flex items-center gap-1 flex-1 justify-center">
               {NAV_ITEMS.map(({ id, label, icon: Icon }) => {
                 const active = activeTab === id;
                 return (
@@ -65,17 +66,17 @@ export default function Navbar({ activeTab, setActiveTab, onOpenTutor }) {
                       padding: '7px 14px',
                       borderRadius: '8px',
                       fontSize: '13px',
-                      fontWeight: 500,
+                      fontWeight: active ? 600 : 500,
                       display: 'flex',
                       alignItems: 'center',
                       gap: '7px',
                       transition: 'all 0.18s ease',
-                      color: active ? '#93c5fd' : '#94a3b8',
-                      background: active ? 'rgba(37,99,235,0.12)' : 'transparent',
-                      border: active ? '1px solid rgba(59,130,246,0.28)' : '1px solid transparent',
+                      color: active ? '#1d4ed8' : '#475569',
+                      background: active ? 'rgba(37,99,235,0.08)' : 'transparent',
+                      border: active ? '1px solid rgba(37,99,235,0.20)' : '1px solid transparent',
                     }}
                   >
-                    <Icon style={{ width: '13px', height: '13px', flexShrink: 0 }} />
+                    <Icon style={{ width: '14px', height: '14px', flexShrink: 0, color: active ? '#2563eb' : '#64748b' }} />
                     <span>{label}</span>
                     {active && (
                       <span style={{
@@ -86,7 +87,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenTutor }) {
                         height: '2px',
                         width: '28px',
                         borderRadius: '99px',
-                        background: 'linear-gradient(90deg,#3b82f6,#14b8a6)',
+                        background: 'linear-gradient(90deg,#2563eb,#0284c7)',
                       }} />
                     )}
                   </button>
@@ -133,8 +134,9 @@ export default function Navbar({ activeTab, setActiveTab, onOpenTutor }) {
           <div
             className="lg:hidden animate-fade-up"
             style={{
-              borderTop: '1px solid rgba(255,255,255,0.06)',
-              background: 'rgba(8,14,26,0.98)',
+              borderTop: '1px solid rgba(186, 230, 253, 0.75)',
+              background: 'rgba(235, 245, 255, 0.98)',
+              backdropFilter: 'blur(24px)',
             }}
           >
             <div
@@ -155,15 +157,15 @@ export default function Navbar({ activeTab, setActiveTab, onOpenTutor }) {
                       borderRadius: '12px',
                       textAlign: 'left',
                       transition: 'all 0.15s ease',
-                      background: active ? 'rgba(37,99,235,0.15)' : 'rgba(255,255,255,0.03)',
+                      background: active ? 'rgba(37,99,235,0.10)' : 'rgba(255,255,255,0.70)',
                       border: active
-                        ? '1px solid rgba(59,130,246,0.32)'
-                        : '1px solid rgba(255,255,255,0.06)',
-                      color: active ? '#93c5fd' : '#94a3b8',
+                        ? '1px solid rgba(37,99,235,0.30)'
+                        : '1px solid rgba(186,230,253,0.50)',
+                      color: active ? '#1d4ed8' : '#475569',
                       cursor: 'pointer',
                     }}
                   >
-                    <Icon style={{ width: '15px', height: '15px', flexShrink: 0 }} />
+                    <Icon style={{ width: '15px', height: '15px', flexShrink: 0, color: active ? '#2563eb' : '#64748b' }} />
                     <div style={{ minWidth: 0 }}>
                       <p style={{ fontSize: '12.5px', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {label}

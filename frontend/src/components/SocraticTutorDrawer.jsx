@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   MessageSquare,
   X,
@@ -98,23 +98,23 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
       <div
         className="flex items-center justify-between px-4 py-3.5"
         style={{
-          borderBottom: '1px solid rgba(255,255,255,0.07)',
-          background: 'rgba(13, 21, 37, 0.70)',
+          borderBottom: '1px solid rgba(186, 230, 253, 0.75)',
+          background: 'rgba(235, 245, 255, 0.90)',
         }}
       >
         <div className="flex items-center gap-3">
           <div
             className="h-8 w-8 rounded-xl flex items-center justify-center shrink-0"
             style={{
-              background: 'linear-gradient(135deg,#2563eb,#0891b2)',
-              boxShadow: '0 0 16px rgba(37,99,235,0.45)',
+              background: 'linear-gradient(135deg,#2563eb,#0284c7)',
+              boxShadow: '0 2px 10px rgba(37,99,235,0.30)',
             }}
           >
             <Bot className="h-4 w-4 text-white" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-white leading-tight">Leo — AI Tutor</p>
-            <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
+            <p className="text-sm font-semibold text-slate-900 leading-tight">Leo — AI Tutor</p>
+            <p className="text-[11px] text-slate-500">
               Grounded in your Knowledge Vault
             </p>
           </div>
@@ -123,8 +123,7 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
 
         <button
           onClick={onClose}
-          className="p-1.5 rounded-lg transition-colors"
-          style={{ color: 'var(--text-muted)' }}
+          className="p-1.5 rounded-lg transition-colors text-slate-500 hover:text-slate-800"
           aria-label="Close tutor"
         >
           <X className="h-4 w-4" />
@@ -134,7 +133,7 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
       {/* ── Quick Prompts ── */}
       <div
         className="flex gap-2 px-3 py-2.5 overflow-x-auto"
-        style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+        style={{ borderBottom: '1px solid rgba(186, 230, 253, 0.60)', background: 'rgba(248, 250, 252, 0.70)' }}
       >
         {QUICK_PROMPTS.map((q, i) => (
           <button
@@ -142,9 +141,9 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
             onClick={() => send(q)}
             className="shrink-0 text-[11px] px-2.5 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors"
             style={{
-              background: 'rgba(37,99,235,0.10)',
-              border: '1px solid rgba(59,130,246,0.20)',
-              color: '#93c5fd',
+              background: 'rgba(37,99,235,0.08)',
+              border: '1px solid rgba(37,99,235,0.22)',
+              color: '#1d4ed8',
             }}
           >
             {q}
@@ -153,7 +152,7 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
       </div>
 
       {/* ── Messages ── */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 bg-white/60">
         {messages.map((m, i) => (
           <div
             key={i}
@@ -167,13 +166,14 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
                       background: 'linear-gradient(135deg,#2563eb,#1d4ed8)',
                       color: '#fff',
                       borderBottomRightRadius: '4px',
-                      boxShadow: '0 2px 10px rgba(37,99,235,0.30)',
+                      boxShadow: '0 2px 10px rgba(37,99,235,0.25)',
                     }
                   : {
-                      background: 'rgba(20,30,52,0.85)',
-                      border: '1px solid rgba(255,255,255,0.07)',
-                      color: '#cbd5e1',
+                      background: '#f8fafc',
+                      border: '1px solid rgba(203, 213, 225, 0.85)',
+                      color: '#0f172a',
                       borderBottomLeftRadius: '4px',
+                      boxShadow: '0 1px 4px rgba(15, 23, 42, 0.04)',
                     }
               }
             >
@@ -183,13 +183,13 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
               {m.hints?.length > 0 && (
                 <div
                   className="mt-2.5 pt-2.5 space-y-1"
-                  style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}
+                  style={{ borderTop: '1px solid rgba(203, 213, 225, 0.60)' }}
                 >
-                  <p className="text-[11px] font-semibold" style={{ color: '#93c5fd' }}>
+                  <p className="text-[11px] font-semibold text-blue-700">
                     Guided hints:
                   </p>
                   {m.hints.map((h, hi) => (
-                    <p key={hi} className="text-[12px]" style={{ color: '#94a3b8' }}>
+                    <p key={hi} className="text-[12px] text-slate-700">
                       {hi + 1}. {h}
                     </p>
                   ))}
@@ -200,10 +200,10 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
               {m.citations?.length > 0 && (
                 <div
                   className="flex items-center gap-1.5 mt-2 pt-2"
-                  style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}
+                  style={{ borderTop: '1px solid rgba(203, 213, 225, 0.60)' }}
                 >
-                  <BookOpen className="h-3 w-3 shrink-0" style={{ color: '#60a5fa' }} />
-                  <span className="text-[10.5px]" style={{ color: 'var(--text-muted)' }}>
+                  <BookOpen className="h-3 w-3 shrink-0 text-blue-600" />
+                  <span className="text-[10.5px] text-slate-500">
                     {m.citations.join(', ')}
                   </span>
                 </div>
@@ -213,8 +213,7 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
               {m.follow_up && (
                 <button
                   onClick={() => send(m.follow_up)}
-                  className="mt-2 flex items-center gap-1.5 text-[11px] font-medium transition-opacity hover:opacity-80"
-                  style={{ color: '#5eead4' }}
+                  className="mt-2 flex items-center gap-1.5 text-[11px] font-medium transition-opacity hover:opacity-80 text-teal-700"
                 >
                   <ChevronDown className="h-3 w-3" />
                   {m.follow_up}
@@ -225,7 +224,7 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
         ))}
 
         {loading && (
-          <div className="flex items-center gap-2 text-[12px]" style={{ color: '#60a5fa' }}>
+          <div className="flex items-center gap-2 text-[12px] text-blue-600">
             <Loader2 className="h-3.5 w-3.5 animate-spin" />
             <span>Leo is thinking...</span>
           </div>
@@ -236,8 +235,8 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
 
       {/* ── Input ── */}
       <div
-        className="px-4 py-3"
-        style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}
+        className="px-4 py-3 bg-white"
+        style={{ borderTop: '1px solid rgba(186, 230, 253, 0.70)' }}
       >
         <form
           onSubmit={(e) => { e.preventDefault(); send(); }}
@@ -249,15 +248,10 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask a question..."
-            className="flex-1 px-3.5 py-2.5 text-sm rounded-xl outline-none transition-colors"
+            className="flex-1 px-3.5 py-2.5 text-sm rounded-xl outline-none transition-colors border border-slate-300 text-slate-900 bg-slate-50 focus:bg-white"
             style={{
-              background: 'rgba(20,30,52,0.80)',
-              border: '1px solid rgba(255,255,255,0.09)',
-              color: '#f0f4ff',
-              caretColor: '#3b82f6',
+              caretColor: '#2563eb',
             }}
-            onFocus={(e) => (e.target.style.borderColor = 'rgba(59,130,246,0.45)')}
-            onBlur={(e)  => (e.target.style.borderColor = 'rgba(255,255,255,0.09)')}
           />
           <button
             type="submit"
@@ -265,7 +259,7 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
             className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0 transition-all disabled:opacity-35"
             style={{
               background: 'linear-gradient(135deg,#2563eb,#1d4ed8)',
-              boxShadow: '0 2px 10px rgba(37,99,235,0.40)',
+              boxShadow: '0 2px 10px rgba(37,99,235,0.30)',
             }}
           >
             <Send className="h-4 w-4 text-white" />
