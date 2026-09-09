@@ -191,8 +191,29 @@ function extractChapters(text, isBangla) {
   return uniqueChapters.slice(0, 12);
 }
 
+export function cleanDocumentTitle(filename) {
+  if (!filename) return 'Study Material';
+  let clean = filename
+    .replace(/\.[^/.]+$/, '') // remove extension (.pdf, .md, etc.)
+    .replace(/\[[^\]]*\]/g, '') // remove brackets like [EnglishOnlineClub.com]
+    .replace(/\([^)]*\)/g, '') // remove parens like (6th Edition)
+    .replace(/[-_]+/g, ' ')
+    .replace(/\b(?:189|programming questions|solutions|edition|pdf|ebook|download|www\.[^\s]+)\b/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  // Strip dangling trailing prepositions
+  clean = clean.replace(/[\s\-_–—]+(?:and|or|for|with|by|to|of|in|at)\s*$/i, '').trim();
+
+  if (!clean || clean.length < 2) {
+    clean = filename.replace(/\.[^/.]+$/, '').trim();
+  }
+  return clean;
+}
+
 function cleanHeading(str) {
   return str
+    .replace(/\[[^\]]*\]/g, '')
     .replace(/[._\-–—]+$/g, '')
     .replace(/^\d+[\s\t]+www\.[^\s]+/i, '')
     .replace(/\.{2,}/g, '')
@@ -201,25 +222,51 @@ function cleanHeading(str) {
 }
 
 /**
- * Fallback topic generation when no formal chapter headings are detected
+ * Intelligent topic generation without noisy filenames
  */
 function generateFallbackTopics(text, filename, isBangla) {
-  const cleanName = filename
-    .replace(/\.[^/.]+$/, '')
-    .replace(/[_-]+/g, ' ')
-    .trim();
+  const sample = (text || '').toLowerCase();
 
   if (isBangla) {
     return [
-      `সামগ্রিক বিষয়বস্তু (${cleanName})`,
-      'প্রধান ঘটনাপ্রবাহ ও চরিত্র বিশ্লেষণ',
-      'উদ্ধৃতাংশ ও মূল আলোচনা'
-    ];
-  } else {
-    return [
-      `Comprehensive Overview (${cleanName})`,
-      'Key Concepts & Methodologies',
-      'Analytical Evaluation & Findings'
+      'মূল বিষয়বস্তু ও চরিত্র রূপায়ণ',
+      'প্রধান ঘটনাপ্রবাহ ও সংলাপ বিশ্লেষণ',
+      'উদ্ধৃতি ও প্রেক্ষাপট অনুধাবন',
+      'সারমর্ম ও সামগ্রিক মূল্যায়ন'
     ];
   }
+
+  // Detect coding / algorithms content
+  const isCoding = /\b(?:algorithm|binary|tree|graph|array|string|complexity|big-?o|dynamic programming|data structure|stack|queue|sort|interview|pointer|recursion)\b/i.test(sample) ||
+    /coding|program|interview/i.test(filename);
+
+  if (isCoding) {
+    return [
+      'Data Structures & Big-O Complexity',
+      'Algorithm Design & Edge Cases',
+      'Problem Solving & Invariants',
+      'System Architecture & Scalability'
+    ];
+  }
+
+  // Detect machine learning / neural networks content
+  const isML = /\b(?:neural|gradient|weight|loss|activation|backpropagation|tensor|epoch|convolution)\b/i.test(sample) ||
+    /deep|learning|neural/i.test(filename);
+
+  if (isML) {
+    return [
+      'Neural Architectures & Forward Pass',
+      'Loss Functions & Optimization',
+      'Backpropagation & Gradients',
+      'Regularization & Convergence'
+    ];
+  }
+
+  // General academic
+  return [
+    'Core Concepts & Foundations',
+    'Methodologies & Structural Analysis',
+    'Analytical Evaluation & Findings',
+    'Critical Synthesis & Applications'
+  ];
 }

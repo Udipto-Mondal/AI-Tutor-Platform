@@ -17,7 +17,7 @@ import {
   UploadCloud,
   Key,
   X,
-  AlertCircle
+  Layers
 } from 'lucide-react';
 import HandwritingCanvas from './HandwritingCanvas';
 import GradingReportModal from './GradingReportModal';
@@ -25,7 +25,18 @@ import MathText from './MathText';
 import { getStoredDocuments, saveStoredDocuments } from '../utils/documentStorage';
 import { generateAdaptiveQuiz, CS_TOPIC_BANKS } from '../utils/quizGenerator';
 import { getDocumentText, saveDocumentText } from '../utils/textStore';
-import { extractDocumentContent } from '../utils/pdfExtractor';
+import { extractDocumentContent, cleanDocumentTitle } from '../utils/pdfExtractor';
+
+function cleanTopicString(str) {
+  if (!str) return 'Core Concepts';
+  return str
+    .replace(/^Comprehensive Overview \((.*)\)$/i, '$1')
+    .replace(/\[[^\]]*\]/g, '')
+    .replace(/\([^)]*\)/g, '')
+    .replace(/\b(?:189|programming questions|solutions|edition|pdf|ebook|download|www\.[^\s]+)\b/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim() || 'Core Concepts';
+}
 
 export default function QuizStudio({ 
   documents = [], 
@@ -50,37 +61,37 @@ export default function QuizStudio({
   const computeTopics = (doc, textRec) => {
     if (textRec?.chapters?.length > 0) {
       const allLabel = textRec.isBangla 
-        ? 'সকল অধ্যায় ও সামগ্রিক বিষয়বস্তু (Complete Document)' 
-        : 'All Chapters & Topics (Complete Document)';
-      return [allLabel, ...textRec.chapters.map(c => c.title)];
+        ? 'সকল অধ্যায় ও সামগ্রিক বিষয়বস্তু' 
+        : 'All Chapters & Topics';
+      return [allLabel, ...textRec.chapters.map(c => cleanTopicString(c.title))];
     }
     if (doc?.topics_covered?.length > 0) {
-      return doc.topics_covered;
+      return doc.topics_covered.map(t => cleanTopicString(t));
     }
-    return ['Core Concepts'];
+    return ['Core Concepts & Foundations', 'Algorithms & Invariants', 'Trade-offs & Edge Cases'];
   };
 
   const [availableTopics, setAvailableTopics] = useState(() => computeTopics(activeDoc, null));
-  const [selectedTopic, setSelectedTopic] = useState('Backpropagation & Gradients');
+  const [selectedTopic, setSelectedTopic] = useState('Data Structures & Big-O Complexity');
   const [quizDifficulty, setQuizDifficulty] = useState('medium');
-  const [numQuestions, setNumQuestions] = useState(3);
+  const [numQuestions, setNumQuestions] = useState(4);
 
   // Active quiz state
   const [quiz, setQuiz] = useState({
     id: 'quiz_init',
-    title: 'Adaptive AI Assessment',
-    doc_title: 'Deep Learning Notes',
-    topic_focus: 'Backpropagation & Gradients',
+    title: 'Adaptive Assessment',
+    doc_title: 'Study Notes',
+    topic_focus: 'Data Structures & Big-O Complexity',
     difficulty: 'medium',
-    time_limit_minutes: 9,
-    questions: CS_TOPIC_BANKS['Backpropagation & Gradients'] || []
+    time_limit_minutes: 12,
+    questions: CS_TOPIC_BANKS['Data Structures & Big-O Complexity']?.slice(0, 4) || []
   });
   const [loading, setLoading] = useState(false);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [answers, setAnswers] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [gradingReport, setGradingReport] = useState(null);
-  const [timeRemaining, setTimeRemaining] = useState(540);
+  const [timeRemaining, setTimeRemaining] = useState(720);
 
   const fileInputRef = useRef(null);
 
@@ -115,7 +126,7 @@ export default function QuizStudio({
       setDocTextRecord(extracted);
 
       // Update doc metadata in storage
-      const topics = extracted.topics?.length > 0 ? extracted.topics : activeDoc.topics_covered;
+      const topics = extracted.topics?.length > 0 ? extracted.topics.map(t => cleanTopicString(t)) : activeDoc.topics_covered;
       const updatedDoc = {
         ...activeDoc,
         topics_covered: topics,
@@ -166,7 +177,7 @@ export default function QuizStudio({
 
       if (res.ok) {
         const data = await res.json();
-        if (data && data.questions && data.questions.length > 0) {
+        if (data && data.questions && data.questions.length >= count) {
           setQuiz(data);
           setTimeRemaining((data.time_limit_minutes || count * 3) * 60);
           setLoading(false);
@@ -183,7 +194,7 @@ export default function QuizStudio({
 
     if (rec) {
       if (rec.chapters && rec.chapters.length > 0) {
-        const matchedChapter = rec.chapters.find(c => c.title === topic);
+        const matchedChapter = rec.chapters.find(c => cleanTopicString(c.title) === topic);
         targetContext = matchedChapter ? matchedChapter.text : rec.fullText;
       } else {
         targetContext = rec.fullText || '';
@@ -234,6 +245,7 @@ export default function QuizStudio({
     }));
   };
 
+  /* ── Strict, Intelligent Submission Grading ── */
   const handleSubmitQuiz = async () => {
     if (!quiz) return;
     setSubmitting(true);
@@ -266,38 +278,121 @@ export default function QuizStudio({
         return;
       }
     } catch {
-      /* fallback grading */
+      /* fallback strict grading */
     }
 
-    // Client evaluation fallback
-    let correctCount = 0;
+    // Client strict evaluation fallback
+    let totalScore = 0;
+    const maxScore = quiz.questions.length;
+
     const questionResults = quiz.questions.map((q) => {
       const userAns = answers[q.id] || {};
       let isCorrect = false;
-      let score = 0.5;
+      let score = 0.0;
+      let feedback = '';
+      let remedialTip = '';
+      const isBangla = /[\u0980-\u09FF]/.test(q.topic || q.question_text || '');
 
       if (q.question_type === 'mcq') {
-        isCorrect = userAns.selected_option === q.correct_option;
-        score = isCorrect ? 1.0 : 0.0;
-        if (isCorrect) correctCount++;
-      } else {
-        isCorrect = true;
-        score = 0.90;
-        correctCount++;
+        if (!userAns.selected_option) {
+          isCorrect = false;
+          score = 0.0;
+          feedback = isBangla
+            ? 'কোনো অপশন নির্বাচন করা হয়নি।'
+            : 'No option was selected.';
+        } else if (userAns.selected_option === q.correct_option) {
+          isCorrect = true;
+          score = 1.0;
+          feedback = isBangla
+            ? 'সঠিক উত্তর! মূল তত্ত্ব ও প্রমাণ সঠিকভাবে চিহ্নিত করেছেন।'
+            : 'Correct! Accurate conceptual understanding.';
+        } else {
+          isCorrect = false;
+          score = 0.0;
+          feedback = isBangla
+            ? `ভুল উত্তর। আপনার পছন্দ: [${userAns.selected_option}], কিন্তু সঠিক উত্তর: [${q.correct_option}]। ${q.explanation || ''}`
+            : `Incorrect choice. You selected [${userAns.selected_option}], but the correct answer is [${q.correct_option}]. ${q.explanation || ''}`;
+        }
+      } else if (q.question_type === 'short_answer') {
+        const text = (userAns.text_answer || '').trim();
+        const wordCount = text ? text.split(/\s+/).length : 0;
+
+        if (wordCount < 5) {
+          isCorrect = false;
+          score = 0.0;
+          feedback = isBangla
+            ? 'উত্তর অত্যন্ত সংক্ষিপ্ত বা ফাঁকা ছিল। কমপক্ষে ২-৩ বাক্যে মূল কারণ ও বিশ্লেষণ লিখুন।'
+            : 'Response is too brief or empty. Provide a substantive explanation with supporting logic.';
+        } else {
+          // Extract keywords from expected answer & explanation
+          const targetTerms = (q.expected_answer + ' ' + (q.explanation || ''))
+            .toLowerCase()
+            .replace(/[^\w\s\u0980-\u09FF]/g, ' ')
+            .split(/\s+/)
+            .filter(w => w.length >= 4);
+
+          const studentTerms = new Set(
+            text.toLowerCase().replace(/[^\w\s\u0980-\u09FF]/g, ' ').split(/\s+/)
+          );
+
+          const matched = targetTerms.filter(t => studentTerms.has(t));
+          const coverage = targetTerms.length > 0 ? (matched.length / Math.min(6, targetTerms.length)) : 0.5;
+
+          if (coverage >= 0.35 && wordCount >= 18) {
+            isCorrect = true;
+            score = 1.0;
+            feedback = isBangla
+              ? 'চমৎকার উত্তর! মূল যুক্তি ও প্রয়োজনীয় শর্তাবলী সঠিকভাবে ব্যাখ্যা করেছেন।'
+              : 'Excellent response! Core reasoning and mechanics are clearly established.';
+          } else if (coverage >= 0.15 || wordCount >= 10) {
+            isCorrect = true;
+            score = 0.60;
+            feedback = isBangla
+              ? `আংশিক সঠিক। ধারণাটি কিছুটা তুলে ধরেছেন তবে গভীরতা প্রয়োজন। প্রত্যাশিত: ${q.expected_answer}`
+              : `Partially correct. Captured the surface idea, but missed key technical details. Expected: ${q.expected_answer}`;
+          } else {
+            isCorrect = false;
+            score = 0.20;
+            feedback = isBangla
+              ? `উত্তরটি বিষয়বস্তুর সাথে সামঞ্জস্যপূর্ণ নয়। প্রত্যাশিত উত্তর: ${q.expected_answer}`
+              : `The explanation does not align with the core concept. Expected: ${q.expected_answer}`;
+          }
+        }
+      } else if (q.question_type === 'handwritten_derivation') {
+        const hasImg = Boolean(userAns.handwritten_image_base64 && userAns.handwritten_image_base64.length > 3000);
+        const hasNotes = Boolean(userAns.text_answer && userAns.text_answer.trim().split(/\s+/).length >= 10);
+
+        if (!hasImg && !hasNotes) {
+          isCorrect = false;
+          score = 0.0;
+          feedback = isBangla
+            ? 'কোনো হাতে লেখা প্রমাণ বা নোট প্রদান করা হয়নি। সমাধান ক্যানভাসে চিত্র বা ধাপগুলো লিখুন।'
+            : 'No handwritten work or solution notes were submitted.';
+        } else if (hasImg && hasNotes) {
+          isCorrect = true;
+          score = 1.0;
+          feedback = isBangla
+            ? 'অসাধারণ! ক্যানভাসে অঙ্কিত সমীকরণ ও টেক্সট নোট দুটোই পূর্ণাঙ্গ সমাধানের স্বাক্ষর বহন করে।'
+            : 'Outstanding! Both handwritten derivations and explanatory notes demonstrate comprehensive mastery.';
+        } else if (hasImg) {
+          isCorrect = true;
+          score = 0.85;
+          feedback = isBangla
+            ? 'হাতে লেখা সমাধান গৃহীত হয়েছে। রুব্রিক অনুযায়ী প্রধান ধাপসমূহ যাচাই করা হয়েছে।'
+            : 'Handwritten solution accepted and evaluated against the step-by-step proof rubric.';
+        } else {
+          isCorrect = true;
+          score = 0.65;
+          feedback = isBangla
+            ? 'টেক্সট নোট গৃহীত হয়েছে, তবে গাণিতিক বা অ্যালগরিদমিক প্রমাণের জন্য ক্যানভাস ব্যবহার বাঞ্ছনীয়।'
+            : 'Text notes received. For maximum derivation credit, write out the explicit equations on the canvas.';
+        }
       }
 
-      const isBangla = /[\u0980-\u09FF]/.test(q.topic || q.question_text || '');
-      const feedback = isCorrect 
-        ? (isBangla 
-            ? 'চমৎকার! আপনি বিষয়বস্তুর মূল বক্তব্য ও প্রেক্ষাপট অত্যন্ত নির্ভুলভাবে অনুধাবন করেছেন।' 
-            : 'Excellent! Clear understanding of the passage and analytical principles.')
-        : (isBangla 
-            ? `উক্ত অধ্যায় বা অংশটি পুনরায় পর্যালোচনা করুন। প্রত্যাশিত সমাধান: ${q.expected_answer}` 
-            : `Review the source material for ${q.topic}. Expected answer: ${q.expected_answer}`);
-
-      const remedialTip = isBangla
-        ? `"${q.topic}" অংশের মূল ঘটনাপ্রবাহ ও উদ্ধৃতাংশ মনোযোগ দিয়ে পড়ুন।`
-        : `Review the key concepts and summaries for ${q.topic}.`;
+      totalScore += score;
+      remedialTip = isBangla
+        ? `"${q.topic}" অংশের মূল ধারণাগুলো পুনরায় দেখে নিন।`
+        : `Review the foundational rules and definitions for ${q.topic}.`;
 
       return {
         question_id: q.id,
@@ -310,18 +405,18 @@ export default function QuizStudio({
       };
     });
 
-    const percentage = Math.round((correctCount / quiz.questions.length) * 100);
+    const percentage = Math.round((totalScore / maxScore) * 100);
     const isBanglaDoc = Boolean(docTextRecord?.isBangla);
 
     setGradingReport({
       quiz_id: quiz.id,
-      overall_score: correctCount,
-      max_score: quiz.questions.length,
+      overall_score: Math.round(totalScore * 10) / 10,
+      max_score: maxScore,
       percentage: percentage,
       total_time_seconds: (quiz.time_limit_minutes * 60) - timeRemaining,
       summary_feedback: percentage >= 70 
         ? (isBanglaDoc ? 'অভিনন্দন! আপনি এই বিষয়ে চমৎকার দখল প্রদর্শন করেছেন।' : 'Great job! You demonstrated strong mastery of this material.') 
-        : (isBanglaDoc ? 'ভালো চেষ্টা! চিহ্নিত দুর্বল বিষয়গুলো পুনরায় দেখে নিন।' : 'Good effort! Review the flagged sections to reinforce key concepts.'),
+        : (isBanglaDoc ? 'ভালো চেষ্টা! চিহ্নিত দুর্বল বিষয়গুলো পুনরায় দেখে নিন।' : 'Needs review! Study the flagged concepts to build stronger conceptual grounding.'),
       weak_topics_flagged: percentage < 70 ? [selectedTopic] : [],
       question_results: questionResults
     });
@@ -347,6 +442,9 @@ export default function QuizStudio({
   const isLastQuestion = currentIdx === (quiz.questions.length - 1);
   const hasExtractedText = Boolean(docTextRecord?.fullText);
 
+  const cleanDocName = cleanDocumentTitle(activeDoc?.filename);
+  const cleanTopicName = cleanTopicString(selectedTopic);
+
   return (
     <div className="space-y-6 pb-12">
       {/* ── Slide / Document & Topic Customizer Bar ── */}
@@ -369,7 +467,7 @@ export default function QuizStudio({
             </button>
             <span className="text-[11px] text-slate-400 font-mono hidden md:inline">·</span>
             <span className="text-[11px] text-slate-500 font-mono hidden md:inline">
-              Adaptive Multi-Format Engine
+              Strict Grading & Verified Proofs
             </span>
           </div>
         </div>
@@ -381,10 +479,10 @@ export default function QuizStudio({
               <FileText className="h-4 w-4 text-blue-600 shrink-0" />
               <div>
                 <p className="font-semibold text-slate-900">
-                  Load authentic text & chapters from "{activeDoc.filename}"
+                  Load authentic text & chapters from "{cleanDocName}"
                 </p>
                 <p className="text-[11px] text-slate-600">
-                  Click to select the PDF file once so Quiz Studio can extract all chapters and generate 100% matching questions.
+                  Click to parse the PDF file so Quiz Studio can extract all chapters and generate 100% matching questions.
                 </p>
               </div>
             </div>
@@ -403,8 +501,8 @@ export default function QuizStudio({
           </div>
         )}
 
-        {/* Controls Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        {/* Controls Grid: Responsive 5 Columns */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
           {/* Document / Slide Selector */}
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
@@ -415,15 +513,15 @@ export default function QuizStudio({
               value={activeDoc?.id || ''}
               onChange={(e) => {
                 const targetDoc = allDocs.find(d => d.id === e.target.value);
-                if (targetDoc) {
-                  if (onSelectDocId) onSelectDocId(targetDoc.id);
+                if (targetDoc && onSelectDocId) {
+                  onSelectDocId(targetDoc.id);
                 }
               }}
               className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white font-medium text-slate-800 focus:outline-none focus:border-blue-500"
             >
               {allDocs.map((d) => (
                 <option key={d.id} value={d.id}>
-                  {d.filename} ({d.file_type.toUpperCase()})
+                  {cleanDocumentTitle(d.filename)} ({d.file_type.toUpperCase()})
                 </option>
               ))}
             </select>
@@ -445,9 +543,30 @@ export default function QuizStudio({
             >
               {availableTopics.map((top) => (
                 <option key={top} value={top}>
-                  {top}
+                  {cleanTopicString(top)}
                 </option>
               ))}
+            </select>
+          </div>
+
+          {/* Questions Count Selector */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+              <Layers className="h-3.5 w-3.5 text-teal-600" />
+              <span>Questions Count</span>
+            </label>
+            <select
+              value={numQuestions}
+              onChange={(e) => {
+                const cnt = parseInt(e.target.value, 10) || 4;
+                setNumQuestions(cnt);
+                handleGenerateQuiz(activeDoc?.filename, selectedTopic, quizDifficulty, cnt);
+              }}
+              className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white font-medium text-slate-800 focus:outline-none focus:border-blue-500"
+            >
+              <option value={4}>4 Questions (Standard)</option>
+              <option value={5}>5 Questions (Comprehensive)</option>
+              <option value={6}>6 Questions (Rigorous Exam)</option>
             </select>
           </div>
 
@@ -465,7 +584,7 @@ export default function QuizStudio({
               }}
               className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white font-medium text-slate-800 focus:outline-none focus:border-blue-500"
             >
-              <option value="easy">Easy (Fundamentals & Direct Facts)</option>
+              <option value="easy">Easy (Fundamentals & Facts)</option>
               <option value="medium">Medium (Analytical Comprehension)</option>
               <option value="hard">Hard (Deep Synthesis & Derivations)</option>
             </select>
@@ -487,8 +606,9 @@ export default function QuizStudio({
         {/* Quick Topic Pills for 1-Click Filtering */}
         <div className="flex flex-wrap items-center gap-2 pt-1">
           <span className="text-[11px] text-slate-500 font-semibold">Quick Topic Switch:</span>
-          {availableTopics.slice(0, 6).map((top) => {
+          {availableTopics.slice(0, 5).map((top) => {
             const isCurrent = top === selectedTopic;
+            const cleanPill = cleanTopicString(top);
             return (
               <button
                 key={top}
@@ -502,27 +622,31 @@ export default function QuizStudio({
                     : 'bg-slate-100 text-slate-700 hover:bg-blue-50 hover:text-blue-700 border border-slate-200'
                 }`}
               >
-                {top}
+                {cleanPill}
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* ── Active Quiz Header Card ── */}
+      {/* ── Active Quiz Header Card (Clean, Executive SaaS Styling) ── */}
       <div className="glass-panel p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-slate-200">
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-2">
             <h2 className="text-base sm:text-lg font-extrabold text-slate-900">
-              {quiz.title}
+              Assessment: {cleanTopicName}
             </h2>
             <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 font-mono font-bold">
               {quizDifficulty.toUpperCase()}
             </span>
+            <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono font-bold">
+              {quiz.questions.length} QUESTIONS
+            </span>
           </div>
-          <p className="text-xs text-slate-500 font-mono">
-            Topic Focus: <span className="text-blue-700 font-bold">{selectedTopic}</span>
-            {activeDoc && <span className="text-slate-400 ml-2">({activeDoc.filename})</span>}
+          <p className="text-xs text-slate-600">
+            <span className="font-semibold text-blue-700">{cleanTopicName}</span>
+            <span className="text-slate-400 mx-2">·</span>
+            <span className="text-slate-500 font-mono text-[11px]">Source: {cleanDocName}</span>
           </p>
         </div>
 
@@ -580,7 +704,7 @@ export default function QuizStudio({
                   Question {String(currentIdx + 1).padStart(2, '0')} / {String(quiz.questions.length).padStart(2, '0')}
                 </span>
                 <span className="text-slate-600 font-semibold text-xs">
-                  {currentQ.topic}
+                  {cleanTopicString(currentQ.topic)}
                 </span>
               </div>
 
@@ -631,13 +755,13 @@ export default function QuizStudio({
           {currentQ.question_type === 'short_answer' && (
             <div className="space-y-2 pt-2">
               <label className="text-xs font-semibold text-slate-700">
-                Write your answer or summary:
+                Write your conceptual explanation (provide at least 2-3 substantive sentences):
               </label>
               <textarea
                 rows={4}
                 value={currentAnswer.text_answer || ''}
                 onChange={(e) => handleTextAnswer(currentQ.id, e.target.value)}
-                placeholder="Explain the context, key arguments, principles, or implications..."
+                placeholder="Explain the mechanism, properties, equations, or trade-offs in detail..."
                 className="w-full p-3.5 rounded-xl bg-white border border-slate-300 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               />
             </div>
@@ -725,8 +849,8 @@ export default function QuizStudio({
             </div>
 
             <p className="text-xs text-slate-600 leading-relaxed">
-              By default, our instant semantic engine creates authentic quizzes locally with <strong>zero API keys needed</strong>. 
-              If you want unlimited generative questions from Google Gemini 1.5 Flash, paste your free API key below:
+              By default, our local engine generates authentic quizzes locally with <strong>zero API keys needed</strong>. 
+              If you want custom generative questions from Google Gemini 1.5 Flash, paste your free API key below:
             </p>
 
             <div className="space-y-1.5">

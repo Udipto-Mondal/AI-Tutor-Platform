@@ -85,36 +85,47 @@ export function saveStoredDocuments(docs) {
 }
 
 export function extractTopicsFromFilename(filename) {
-  if (!filename) return ['General Concepts', 'Lecture Notes'];
+  if (!filename) return ['Core Concepts', 'Lecture Notes'];
   
   const cleanName = filename
-    .replace(/\.[^/.]+$/, '') // remove extension
-    .replace(/[_-]+/g, ' ')
-    .trim();
+    .replace(/\.[^/.]+$/, '')
+    .replace(/\[[^\]]*\]/g, '')
+    .replace(/\([^)]*\)/g, '')
+    .replace(/[-_]+/g, ' ')
+    .replace(/\b(?:189|programming questions|solutions|edition|pdf|ebook|download|www\.[^\s]+)\b/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim() || 'Study Notes';
 
-  // If filename is in Bengali, provide natural Bengali topic pills
+  // If filename is in Bengali
   if (/[\u0980-\u09FF]/.test(cleanName)) {
     return [
       cleanName,
-      `মূল বক্তব্য ও চরিত্র বিশ্লেষণ (${cleanName})`,
-      'গুরুত্বপূর্ণ উদ্ধৃতি ও প্রেক্ষাপট'
+      'মূল বক্তব্য ও চরিত্র রূপায়ণ',
+      'প্রধান ঘটনাপ্রবাহ ও সংলাপ বিশ্লেষণ',
+      'উদ্ধৃতি ও প্রেক্ষাপট অনুধাবন'
     ];
   }
 
-  // Split by common separators
+  // Detect coding
+  if (/coding|program|interview|algo|data structure/i.test(cleanName)) {
+    return [
+      'Data Structures & Big-O Complexity',
+      'Algorithm Design & Edge Cases',
+      'Problem Solving & Invariants',
+      'System Architecture & Scalability'
+    ];
+  }
+
+  // Split clean name into short, meaningful topics
   const words = cleanName.split(/\s+/);
   if (words.length <= 2) {
-    return [cleanName, 'Overview & Structure', 'Core Analysis'];
+    return [cleanName, 'Foundations & Architecture', 'Analytical Evaluation', 'Practical Applications'];
   }
 
-  // Generate 3 nice distinct concept tags
-  const chunks = [];
-  for (let i = 0; i < words.length; i += 2) {
-    const slice = words.slice(i, i + 2).join(' ');
-    if (slice) {
-      chunks.push(slice.charAt(0).toUpperCase() + slice.slice(1));
-    }
-  }
-
-  return chunks.slice(0, 4);
+  return [
+    cleanName.slice(0, 30),
+    'Core Concepts & Foundations',
+    'Methodologies & Structural Analysis',
+    'Practical Synthesis & Trade-offs'
+  ];
 }
