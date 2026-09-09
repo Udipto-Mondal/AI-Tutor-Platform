@@ -67,7 +67,7 @@ Respond with:
             f"Great question! Let's break down this concept step-by-step using your uploaded notes.\n\n"
             f"When we look at this, remember that ideas and structures operate through sequential steps. "
             f"First, consider what the core context represents.\n\n"
-            + (f"💡 **Key Context Grounding (from your notes):**\n\"{retrieved_chunks[0].content[:240]}...\"\n\n" if retrieved_chunks else "")
+            + (f"**[Reference Context Grounding]:**\n\"{retrieved_chunks[0].content[:240]}...\"\n\n" if retrieved_chunks else "")
             + "How would you connect this idea to your question?"
         )
         hints = [
@@ -77,7 +77,7 @@ Respond with:
         follow_up = "What do you think is the central message or outcome here?"
     elif any(k in msg_lower for k in ["hint", "help", "stuck", "সাহায্য", "বুঝিনি", "হিন্ট"]):
         reply = (
-            "No problem at all—getting stuck is a natural part of mastering difficult topics! 🚀\n\n"
+            "Getting stuck on challenging derivations is a normal part of mastery. Let's work through it step-by-step.\n\n"
             + (f"Here is a key reference passage from your indexed document:\n> *\"{retrieved_chunks[0].content[:220]}...\"*\n\n" if retrieved_chunks else "")
             + "Take it step-by-step. What stands out to you in this section?"
         )

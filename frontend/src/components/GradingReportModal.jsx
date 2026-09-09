@@ -1,4 +1,4 @@
-﻿import React, { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { 
   Trophy, 
   Clock, 
@@ -10,9 +10,11 @@ import {
   BookOpen, 
   Target,
   FileCheck,
-  Zap
+  Zap,
+  X
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import MathText from './MathText';
 
 export default function GradingReportModal({ report, onClose, onNavigateToStudyPlan, onNavigateToRadar }) {
   useEffect(() => {
@@ -64,9 +66,10 @@ export default function GradingReportModal({ report, onClose, onNavigateToStudyP
 
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 self-start sm:self-center"
+            className="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 self-start sm:self-center transition-colors"
+            aria-label="Close report"
           >
-            ✕
+            <X className="h-5 w-5" />
           </button>
         </div>
 

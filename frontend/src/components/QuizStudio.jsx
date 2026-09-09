@@ -9,14 +9,18 @@ import {
   PenTool, 
   HelpCircle, 
   BookOpen, 
-  Layers,
-  Settings,
-  Flame,
-  Award,
-  RefreshCw
+  Layers, 
+  Settings, 
+  Award, 
+  RefreshCw,
+  PenLine,
+  CheckSquare,
+  AlignLeft,
+  Activity
 } from 'lucide-react';
 import HandwritingCanvas from './HandwritingCanvas';
 import GradingReportModal from './GradingReportModal';
+import MathText from './MathText';
 
 const DEFAULT_FALLBACK_QUIZ = {
   id: 'quiz_demo_01',
@@ -316,17 +320,32 @@ export default function QuizStudio({ selectedDocId, onNavigateToStudyPlan, onNav
       </div>
 
       {/* Main Question Card */}
-      <div className="glass-panel p-6 sm:p-8 space-y-6">
-        <div className="space-y-3">
-          <div className="flex items-center justify-between text-xs text-slate-400">
-            <span className="font-mono">Question {currentIdx + 1} of {quiz.questions.length}</span>
-            <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono">
-              Type: {currentQ.question_type.replace('_', ' ').toUpperCase()}
+      <div className="glass-panel p-6 sm:p-8 space-y-6 relative overflow-hidden transition-all duration-300">
+        {/* Subtle top accent gradient */}
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-blue-500/0 via-blue-500/40 to-teal-500/0" />
+
+        <div className="space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-500/10 text-blue-300 border border-blue-500/20 font-mono font-semibold text-[11px]">
+                <span className="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulse" />
+                Question {String(currentIdx + 1).padStart(2, '0')} / {String(quiz.questions.length).padStart(2, '0')}
+              </span>
+              <span className="text-slate-400 font-medium text-xs">
+                {currentQ.topic}
+              </span>
+            </div>
+
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-800/80 text-slate-300 border border-slate-700/60 font-mono text-[11px] uppercase tracking-wider">
+              {currentQ.question_type === 'handwritten_derivation' && <PenLine className="h-3 w-3 text-cyan-400" />}
+              {currentQ.question_type === 'mcq' && <CheckSquare className="h-3 w-3 text-blue-400" />}
+              {currentQ.question_type === 'short_answer' && <AlignLeft className="h-3 w-3 text-teal-400" />}
+              <span>{currentQ.question_type.replace(/_/g, ' ')}</span>
             </span>
           </div>
 
-          <h3 className="text-base sm:text-lg font-bold text-slate-100 leading-relaxed">
-            {cleanQuizText(currentQ.question_text)}
+          <h3 className="text-base sm:text-[1.125rem] font-medium text-slate-100 leading-relaxed tracking-normal font-sans">
+            <MathText text={currentQ.question_text} />
           </h3>
         </div>
 
@@ -350,7 +369,9 @@ export default function QuizStudio({ selectedDocId, onNavigateToStudyPlan, onNav
                   }`}>
                     {opt.key}
                   </span>
-                  <span className="leading-snug pt-0.5">{opt.text}</span>
+                  <span className="leading-snug pt-0.5">
+                    <MathText text={opt.text} />
+                  </span>
                 </button>
               );
             })}

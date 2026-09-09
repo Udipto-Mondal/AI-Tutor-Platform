@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Activity, 
   Database, 
@@ -12,7 +12,9 @@ import {
   RefreshCw,
   ExternalLink,
   ShieldCheck,
-  TrendingUp
+  TrendingUp,
+  FileImage,
+  Box
 } from 'lucide-react';
 
 const DEFAULT_FALLBACK_MLOPS = {
@@ -221,15 +223,18 @@ export default function MLOpsHub() {
               <Layers className="h-4 w-4 text-cyan-400" />
               <span>Logged Artifacts</span>
             </h4>
-            <ul className="space-y-1.5 text-xs text-blue-300 font-mono">
-              <li className="flex items-center gap-1.5">
-                <span>📄</span> {selectedRun.model_name}_confusion_matrix.png
+            <ul className="space-y-1.5 text-xs text-slate-300 font-mono">
+              <li className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-slate-900/70 border border-slate-800/80">
+                <FileImage className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
+                <span className="truncate">{selectedRun.model_name}_confusion_matrix.png</span>
               </li>
-              <li className="flex items-center gap-1.5">
-                <span></span> {selectedRun.model_name}_roc_curve.png
+              <li className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-slate-900/70 border border-slate-800/80">
+                <FileImage className="h-3.5 w-3.5 text-blue-400 shrink-0" />
+                <span className="truncate">{selectedRun.model_name}_roc_curve.png</span>
               </li>
-              <li className="flex items-center gap-1.5">
-                <span>📦</span> production_weak_topic_model.joblib
+              <li className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-slate-900/70 border border-slate-800/80">
+                <Box className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                <span className="truncate">production_weak_topic_model.joblib</span>
               </li>
             </ul>
           </div>

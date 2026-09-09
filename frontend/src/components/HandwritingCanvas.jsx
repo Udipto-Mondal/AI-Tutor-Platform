@@ -1,4 +1,4 @@
-﻿import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { 
   PenTool, 
   Eraser, 
@@ -356,8 +356,15 @@ export default function HandwritingCanvas({
       {/* Direct Evaluation Button if Standalone */}
       {isStandalone && (
         <div className="flex items-center justify-between pt-2">
-          <div className="text-xs text-slate-400 font-mono">
-            {hasDrawn ? '✓ Handwriting captured' : 'Canvas empty'}
+          <div className="text-xs text-slate-400 font-mono flex items-center gap-1.5">
+            {hasDrawn ? (
+              <>
+                <CheckCircle className="h-3.5 w-3.5 text-emerald-400" />
+                <span>Handwriting captured</span>
+              </>
+            ) : (
+              <span>Canvas empty</span>
+            )}
           </div>
 
           <button

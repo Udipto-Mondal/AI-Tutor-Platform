@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Calendar, 
   CheckCircle2, 
@@ -7,12 +7,11 @@ import {
   RotateCw, 
   BookOpen, 
   PenTool, 
-  Flame, 
-  ArrowRight,
   Layers,
   HelpCircle,
   Award
 } from 'lucide-react';
+import MathText from './MathText';
 
 const DEFAULT_FALLBACK_PLAN = {
   plan_id: 'plan_default_01',
@@ -300,12 +299,12 @@ export default function StudyPlanView({ onStartQuizWithTopic, onOpenHandwritingL
                   {/* Card Content */}
                   <div className="py-4 text-center">
                     {!isFlipped ? (
-                      <p className="text-xs sm:text-sm font-bold text-slate-100 leading-relaxed">
-                        {fc.front_prompt}
+                      <p className="text-xs sm:text-sm font-medium text-slate-100 leading-relaxed">
+                        <MathText text={fc.front_prompt} />
                       </p>
                     ) : (
-                      <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800 text-xs font-mono text-cyan-300 leading-relaxed">
-                        {fc.back_solution}
+                      <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800 text-xs font-mono text-cyan-300 leading-relaxed text-left">
+                        <MathText text={fc.back_solution} />
                       </div>
                     )}
                   </div>

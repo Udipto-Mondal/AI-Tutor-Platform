@@ -10,6 +10,7 @@ import {
   X,
   MessageSquare
 } from 'lucide-react';
+import Logo from './Logo';
 
 const NAV_ITEMS = [
   { id: 'vault',      label: 'Knowledge Vault', icon: BookOpen,      tag: 'RAG' },
@@ -42,50 +43,13 @@ export default function Navbar({ activeTab, setActiveTab, onOpenTutor }) {
         <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 gap-4">
 
-            {/* ── Brand Logo (Humanized Black Circle Icon) ── */}
+            {/* ── Brand Logo (Vector Geometric Neural Prism) ── */}
             <button
               onClick={() => handleTab('vault')}
-              className="flex items-center gap-2.5 sm:gap-3 shrink-0 group focus:outline-none transition-transform duration-200 active:scale-95"
+              className="focus:outline-none transition-transform duration-200 active:scale-95"
               aria-label="AI Tutor — Go to Knowledge Vault"
             >
-              <div
-                className="relative rounded-full transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.45)]"
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '9999px',
-                  border: '1.5px solid rgba(255, 255, 255, 0.14)',
-                  boxShadow: '0 0 16px rgba(59,130,246,0.30), 0 2px 8px rgba(0,0,0,0.5)',
-                  flexShrink: 0,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  overflow: 'hidden',
-                  background: '#0a0f1d',
-                }}
-              >
-                <img
-                  src="/ai-tutor-circle.png"
-                  alt="AI Tutor"
-                  style={{
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: '9999px',
-                    objectFit: 'cover',
-                    display: 'block',
-                  }}
-                />
-              </div>
-
-              {/* Clean professional wordmark — visible on all viewports */}
-              <div className="flex items-center gap-1.5 font-heading">
-                <span className="text-[15px] sm:text-[17px] font-extrabold text-white tracking-tight">
-                  AI Tutor
-                </span>
-                <span className="hidden sm:inline-flex text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-500/10 text-cyan-400 border border-cyan-500/25 tracking-wide font-mono">
-                  Platform
-                </span>
-              </div>
+              <Logo size={38} />
             </button>
 
             {/* ── Desktop Nav ── */}
