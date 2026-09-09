@@ -19,6 +19,8 @@ import {
   Clock
 } from 'lucide-react';
 import { getStoredDocuments, saveStoredDocuments, extractTopicsFromFilename } from '../utils/documentStorage';
+import { extractDocumentContent } from '../utils/pdfExtractor';
+import { saveDocumentText, getDocumentText } from '../utils/textStore';
 
 /* ─── Tiny Helpers ─────────────────────────────────────── */
 function fileIcon(type) {
@@ -179,63 +181,87 @@ export default function KnowledgeVault({ documents = [], setDocuments, onStartQu
     fetchDocs();
   }, []);
 
-  /* ── upload handler with guaranteed local persistence ── */
+  /* ── upload handler with guaranteed local persistence & authentic text extraction ── */
   const doUpload = async (file) => {
     if (!file) return;
 
     setUploading(true);
-    setUploadPct(10);
-    setStatus({ type: 'info', text: `Analyzing and indexing "${file.name}" into ChromaDB…` });
+    setUploadPct(15);
+    setStatus({ type: 'info', text: `Analyzing structure and extracting text from "${file.name}"…` });
 
     const ext = (file.name.split('.').pop() || 'pdf').toLowerCase();
-    const extractedTopics = extractTopicsFromFilename(file.name);
-    const estimatedChunks = Math.max(3, Math.round(file.size / 650));
 
-    // Create immediate document object so user NEVER sees it vanish
+    // 1. Extract authentic text and chapter titles from file
+    let extractedContent = null;
+    try {
+      extractedContent = await extractDocumentContent(file);
+      setUploadPct(55);
+    } catch (err) {
+      console.warn('Text extraction fallback:', err);
+    }
+
+    const topics = (extractedContent?.topics?.length > 0)
+      ? extractedContent.topics
+      : extractTopicsFromFilename(file.name);
+
+    const numChunks = (extractedContent?.chapters?.length > 0)
+      ? extractedContent.chapters.length
+      : Math.max(3, Math.round(file.size / 650));
+
+    const docId = `doc_${Date.now()}`;
     const newDoc = {
-      id: `doc_${Date.now()}`,
+      id: docId,
       filename: file.name,
       file_type: ext,
       size_bytes: file.size,
       uploaded_at: new Date().toISOString(),
-      num_chunks: estimatedChunks,
-      topics_covered: extractedTopics,
+      num_chunks: numChunks,
+      topics_covered: topics,
+      is_bangla: Boolean(extractedContent?.isBangla),
+      num_pages: extractedContent?.numPages || 1,
+      has_extracted_text: Boolean(extractedContent?.fullText)
     };
 
-    // Immediately update local state & localStorage
+    // 2. Save text in IndexedDB
+    if (extractedContent?.fullText) {
+      await saveDocumentText(docId, extractedContent);
+    }
+
+    // 3. Immediately update local state & localStorage
     const updatedDocs = [newDoc, ...documents.filter(d => d.filename !== file.name)];
     setDocuments(updatedDocs);
     saveStoredDocuments(updatedDocs);
+    setUploadPct(85);
 
-    const timer = setInterval(() => setUploadPct(p => Math.min(p + 20, 92)), 200);
-
+    // 4. Try backend sync if running
     try {
       const fd = new FormData();
       fd.append('file', file);
       const res = await fetch('/api/documents/upload', { method: 'POST', body: fd });
-      clearInterval(timer);
-      setUploadPct(100);
-
       if (res.ok) {
         const data = await res.json();
         if (data && data.document) {
-          // Update with server enriched info
-          const finalized = [data.document, ...documents.filter(d => d.filename !== file.name && d.id !== newDoc.id)];
+          const mergedDoc = {
+            ...newDoc,
+            ...data.document,
+            topics_covered: topics // maintain authentic extracted chapters
+          };
+          const finalized = [mergedDoc, ...documents.filter(d => d.filename !== file.name && d.id !== docId)];
           setDocuments(finalized);
           saveStoredDocuments(finalized);
         }
-        setStatus({ type: 'success', text: `"${file.name}" indexed successfully in Knowledge Vault.` });
-      } else {
-        setStatus({ type: 'success', text: `"${file.name}" saved locally (${estimatedChunks} chunks ready for quizzes).` });
       }
-    } catch (e) {
-      clearInterval(timer);
-      setUploadPct(100);
-      setStatus({ type: 'success', text: `"${file.name}" saved in Knowledge Vault (${estimatedChunks} chunks indexed).` });
-    } finally {
-      setUploading(false);
-      setTimeout(() => setUploadPct(0), 1000);
+    } catch {
+      // Backend offline on static Vercel host - client persistence active
     }
+
+    setUploadPct(100);
+    setStatus({
+      type: 'success',
+      text: `"${file.name}" indexed successfully! ${topics.length} topics & chapters ready for Quiz Studio.`
+    });
+    setUploading(false);
+    setTimeout(() => setUploadPct(0), 1200);
   };
 
   /* ── delete document ── */
@@ -256,17 +282,48 @@ export default function KnowledgeVault({ documents = [], setDocuments, onStartQu
     setStatus({ type: 'success', text: `"${doc.filename}" removed from Knowledge Vault.` });
   };
 
-  /* ── inspect chunks ── */
+  /* ── inspect chunks with real document text ── */
   const openChunks = async (doc) => {
     setInspectDoc(doc);
     try {
+      // 1. Check local IndexedDB text store
+      const stored = await getDocumentText(doc.id);
+      if (stored && stored.chapters?.length > 0) {
+        setChunks(stored.chapters.map((ch, idx) => ({
+          chunk_index: idx,
+          content: `${ch.title}\n\n${ch.text}`,
+          metadata: { word_count: ch.text.split(/\s+/).length, topic: ch.title }
+        })));
+        return;
+      } else if (stored && stored.fullText) {
+        const words = stored.fullText.split(/\s+/);
+        const generatedChunks = [];
+        for (let i = 0; i < words.length; i += 100) {
+          generatedChunks.push({
+            chunk_index: Math.floor(i / 100),
+            content: words.slice(i, i + 100).join(' '),
+            metadata: { word_count: Math.min(100, words.length - i) }
+          });
+          if (generatedChunks.length >= 8) break;
+        }
+        setChunks(generatedChunks);
+        return;
+      }
+
+      // 2. Try backend
       const res = await fetch(`/api/documents/${doc.id}/chunks`);
-      if (res.ok) { setChunks(await res.json()); return; }
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.length > 0) {
+          setChunks(data);
+          return;
+        }
+      }
     } catch { /* fallback */ }
+
+    // Fallback if not extracted yet
     setChunks([
-      { chunk_index: 0, content: `Key definitions and theoretical principles extracted from ${doc.filename}. Focuses on core formulas, architectural diagrams, and procedural methods.`, metadata: { word_count: 36 } },
-      { chunk_index: 1, content: `Worked mathematical examples, derivations, and algorithmic step-by-step proofs for ${doc.topics_covered?.[0] || 'study topic'}.`, metadata: { word_count: 42 } },
-      { chunk_index: 2, content: `Diagnostic questions, common student pitfalls, and revision checkpoints prepared for adaptive quiz generation.`, metadata: { word_count: 31 } },
+      { chunk_index: 0, content: `Key excerpts, themes, and study points from ${doc.filename}.`, metadata: { word_count: 24 } }
     ]);
   };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Sparkles, 
   Clock, 
@@ -7,230 +7,25 @@ import {
   ChevronRight, 
   Send, 
   PenTool, 
-  HelpCircle, 
-  BookOpen, 
-  Layers, 
   Settings2, 
   Award, 
   RefreshCw,
   PenLine,
   CheckSquare,
   AlignLeft,
-  Sliders,
-  FileText
+  FileText,
+  UploadCloud,
+  Key,
+  X,
+  AlertCircle
 } from 'lucide-react';
 import HandwritingCanvas from './HandwritingCanvas';
 import GradingReportModal from './GradingReportModal';
 import MathText from './MathText';
-import { getStoredDocuments } from '../utils/documentStorage';
-
-/* ─── Topic Question Repository ────────────────────────── */
-const TOPIC_QUESTION_BANKS = {
-  'Backpropagation & Gradients': [
-    {
-      id: 'q_bp_01',
-      question_type: 'handwritten_derivation',
-      topic: 'Backpropagation & Gradients',
-      difficulty: 'medium',
-      question_text: 'Derive the gradient of loss L with respect to weight w_ij^(l) using the calculus chain rule. Show your step-by-step equations for the error signal delta_j^(l) and the final weight update rule.',
-      expected_answer: 'Step 1: dL/dw_ij^(l) = (dL/dz_j^(l)) * (dz_j^(l)/dw_ij^(l)). Step 2: Let delta_j^(l) = dL/dz_j^(l). Since dz_j/dw_ij = a_i^(l-1), the final gradient is delta_j^(l) * a_i^(l-1).',
-      explanation: 'The backpropagation algorithm propagates the error backward through layers by recursively applying the chain rule of partial derivatives.',
-      rubric: [
-        { criterion: 'Chain Rule Decomposition', points: 0.35, description: 'Correctly sets up dL/dw = (dL/dz) * (dz/dw)' },
-        { criterion: 'Partial Derivative dz/dw = a^(l-1)', points: 0.35, description: 'Computes derivative with respect to previous layer activation' },
-        { criterion: 'Final Error Product Formula', points: 0.30, description: 'Correctly formulates final weight gradient' }
-      ]
-    },
-    {
-      id: 'q_bp_02',
-      question_type: 'mcq',
-      topic: 'Backpropagation & Gradients',
-      difficulty: 'easy',
-      question_text: 'In standard gradient descent, how are network weights updated using the learning rate alpha and gradient dL/dw?',
-      options: [
-        { key: 'A', text: 'w_new = w_old + alpha * (dL/dw)' },
-        { key: 'B', text: 'w_new = w_old - alpha * (dL/dw)' },
-        { key: 'C', text: 'w_new = alpha * (w_old - dL/dw)' },
-        { key: 'D', text: 'w_new = w_old / (alpha * dL/dw)' }
-      ],
-      correct_option: 'B',
-      expected_answer: 'B: w_new = w_old - alpha * (dL/dw)',
-      explanation: 'Gradient descent moves weights in the opposite direction of the gradient to minimize the cost function.'
-    },
-    {
-      id: 'q_bp_03',
-      question_type: 'short_answer',
-      topic: 'Backpropagation & Gradients',
-      difficulty: 'medium',
-      question_text: 'Why do deep neural networks with sigmoid activation functions suffer from vanishing gradients in earlier layers during backpropagation?',
-      expected_answer: 'The derivative of the sigmoid function has a maximum value of 0.25. When multiplying many gradients less than 0.25 across multiple layers via the chain rule, the error signal decays exponentially toward zero.',
-      explanation: 'Repeated multiplication of small derivatives causes early layer weights to stop updating effectively.'
-    }
-  ],
-
-  'Activation Functions': [
-    {
-      id: 'q_act_01',
-      question_type: 'mcq',
-      topic: 'Activation Functions',
-      difficulty: 'medium',
-      question_text: "Which activation function solves the 'Vanishing Gradient' problem for positive inputs by maintaining a constant derivative of 1.0?",
-      options: [
-        { key: 'A', text: 'Sigmoid / Logistic function' },
-        { key: 'B', text: 'Hyperbolic Tangent (tanh)' },
-        { key: 'C', text: 'ReLU (Rectified Linear Unit)' },
-        { key: 'D', text: 'Softmax function' }
-      ],
-      correct_option: 'C',
-      expected_answer: 'C: ReLU (Rectified Linear Unit)',
-      explanation: 'ReLU has a constant derivative of 1 for x > 0, ensuring gradients do not diminish as they backpropagate.'
-    },
-    {
-      id: 'q_act_02',
-      question_type: 'handwritten_derivation',
-      topic: 'Activation Functions',
-      difficulty: 'medium',
-      question_text: 'Prove that the derivative of the Sigmoid function sigma(z) = 1 / (1 + exp(-z)) can be expressed simply as sigma(z) * (1 - sigma(z)). Show your algebraic derivation.',
-      expected_answer: 'd(sigma)/dz = exp(-z) / (1 + exp(-z))^2 = (1 / (1 + exp(-z))) * (exp(-z) / (1 + exp(-z))) = sigma(z) * (1 - sigma(z)).',
-      explanation: 'This mathematical property makes sigmoid computationally convenient for logistic regression and binary classification.',
-      rubric: [
-        { criterion: 'Quotient or Chain Rule Application', points: 0.40, description: 'Differentiates 1/(1+e^-z) correctly' },
-        { criterion: 'Algebraic Factoring', points: 0.30, description: 'Separates terms into product of two fractions' },
-        { criterion: 'Final Substitution with sigma(z)', points: 0.30, description: 'Replaces fractions with sigma and (1 - sigma)' }
-      ]
-    },
-    {
-      id: 'q_act_03',
-      question_type: 'short_answer',
-      topic: 'Activation Functions',
-      difficulty: 'medium',
-      question_text: "What is the 'Dying ReLU' problem and how does the Leaky ReLU function address it?",
-      expected_answer: 'Dying ReLU occurs when a neuron receives negative inputs and outputs 0 with 0 gradient, permanently deactivating it. Leaky ReLU introduces a small positive slope (e.g. 0.01 * x) for negative values so gradients never fully vanish.',
-      explanation: 'Leaky ReLU ensures a non-zero gradient even when the neuron activation is negative.'
-    }
-  ],
-
-  'Convolutional Neural Networks': [
-    {
-      id: 'q_cnn_01',
-      question_type: 'handwritten_derivation',
-      topic: 'Convolutional Neural Networks',
-      difficulty: 'medium',
-      question_text: 'Given an input feature map of size 32x32, filter size 5x5, padding P = 2, and stride S = 1, compute the output spatial dimension O. Write down the general spatial formula and substitute the numbers.',
-      expected_answer: 'Formula: O = floor((W - K + 2P)/S) + 1. Substitution: O = ((32 - 5 + 2*2)/1) + 1 = ((32 - 5 + 4)/1) + 1 = 32. Output dimension is 32x32.',
-      explanation: 'Same padding with P = (K-1)/2 preserves the exact spatial height and width when stride is 1.',
-      rubric: [
-        { criterion: 'General Spatial Formula', points: 0.35, description: 'States O = floor((W - K + 2P)/S) + 1' },
-        { criterion: 'Correct Value Substitution', points: 0.35, description: 'Substitutes W=32, K=5, P=2, S=1' },
-        { criterion: 'Accurate Result Calculation', points: 0.30, description: 'Arrives at final output dimension 32x32' }
-      ]
-    },
-    {
-      id: 'q_cnn_02',
-      question_type: 'mcq',
-      topic: 'Convolutional Neural Networks',
-      difficulty: 'easy',
-      question_text: 'What primary advantage does parameter sharing provide in Convolutional Neural Networks compared to fully connected dense layers?',
-      options: [
-        { key: 'A', text: 'Drastically reduces trainable parameters and gives translation invariance' },
-        { key: 'B', text: 'Completely eliminates the need for activation functions' },
-        { key: 'C', text: 'Forces the network to only learn linear relationships' },
-        { key: 'D', text: 'Requires input images to be strictly 1x1 in dimension' }
-      ],
-      correct_option: 'A',
-      expected_answer: 'A: Drastically reduces trainable parameters and gives translation invariance',
-      explanation: 'Reusing filter weights across different spatial locations enables feature detection regardless of where the pattern appears.'
-    }
-  ],
-
-  'Big-O Complexity': [
-    {
-      id: 'q_dsa_01',
-      question_type: 'mcq',
-      topic: 'Big-O Complexity',
-      difficulty: 'easy',
-      question_text: 'What is the average-case and worst-case time complexity of standard QuickSort on an array of size n?',
-      options: [
-        { key: 'A', text: 'Average: O(n log n), Worst: O(n^2)' },
-        { key: 'B', text: 'Average: O(n), Worst: O(n log n)' },
-        { key: 'C', text: 'Average: O(n^2), Worst: O(n^3)' },
-        { key: 'D', text: 'Average: O(1), Worst: O(n)' }
-      ],
-      correct_option: 'A',
-      expected_answer: 'A: Average: O(n log n), Worst: O(n^2)',
-      explanation: 'QuickSort divides the array in half on average (O(n log n)), but worst-case partitioning yields unbalanced splits of size n-1 (O(n^2)).'
-    },
-    {
-      id: 'q_dsa_02',
-      question_type: 'short_answer',
-      topic: 'Big-O Complexity',
-      difficulty: 'medium',
-      question_text: 'Explain why searching a balanced Binary Search Tree (AVL or Red-Black Tree) takes O(log n) time, whereas a degenerate unbalanced BST degrades to O(n).',
-      expected_answer: 'In a balanced BST, tree height is strictly bounded by log2(n), halving search space at each comparison. In a degenerate tree, nodes form a single linked list chain of height n.',
-      explanation: 'Balance guarantees logarithmic tree depth, preventing worst-case linear traversal.'
-    }
-  ]
-};
-
-function generateQuizForTopic(docTitle, topicName, difficulty = 'medium', count = 4) {
-  let matchedQuestions = TOPIC_QUESTION_BANKS[topicName];
-
-  if (!matchedQuestions || matchedQuestions.length === 0) {
-    // If topic is general or custom uploaded PDF, generate tailored questions
-    matchedQuestions = [
-      {
-        id: `q_${Date.now()}_1`,
-        question_type: 'mcq',
-        topic: topicName,
-        difficulty: difficulty,
-        question_text: `What is the foundational theoretical principle underlying ${topicName} as discussed in "${docTitle}"?`,
-        options: [
-          { key: 'A', text: `Systematic decomposition of ${topicName} into modular mathematical components` },
-          { key: 'B', text: `Random heuristic approximation with unbounded asymptotic complexity` },
-          { key: 'C', text: `Strict linear regression ignoring intermediate structural features` },
-          { key: 'D', text: `Uncalibrated transformation without convergence guarantees` }
-        ],
-        correct_option: 'A',
-        expected_answer: 'A: Systematic decomposition into modular components',
-        explanation: `The core principles in ${topicName} focus on structured mathematical formulation and verifiable analytical proofs.`
-      },
-      {
-        id: `q_${Date.now()}_2`,
-        question_type: 'handwritten_derivation',
-        topic: topicName,
-        difficulty: difficulty,
-        question_text: `Write down the core equation or algorithmic step-by-step proof for ${topicName}. Clearly label the input parameters, intermediate transformations, and final solution.`,
-        expected_answer: `Step 1: State the governing formula or algorithmic invariant for ${topicName}. Step 2: Show algebraic substitution. Step 3: Conclude with the final verified derivation.`,
-        explanation: `Demonstrating analytical steps on paper solidifies active recall and conceptual retention for ${topicName}.`,
-        rubric: [
-          { criterion: 'Identification of Core Governing Formula', points: 0.40, description: `Correctly states the primary definition or theorem for ${topicName}` },
-          { criterion: 'Step-by-Step Algebraic Continuity', points: 0.35, description: 'Shows coherent intermediate derivation without skipping steps' },
-          { criterion: 'Final Verification & Result', points: 0.25, description: 'Accurately computes or concludes the expected output' }
-        ]
-      },
-      {
-        id: `q_${Date.now()}_3`,
-        question_type: 'short_answer',
-        topic: topicName,
-        difficulty: difficulty,
-        question_text: `Explain how the concepts of ${topicName} apply to real-world engineering systems, and discuss one key trade-off or limitation.`,
-        expected_answer: `${topicName} provides structured execution and scalability, with the primary trade-off being computational overhead or sensitivity to hyperparameter tuning.`,
-        explanation: `Understanding theoretical limitations enables better architectural decisions in production.`
-      }
-    ];
-  }
-
-  return {
-    id: `quiz_${Date.now()}`,
-    title: `Targeted Assessment: ${topicName}`,
-    created_at: new Date().toISOString(),
-    doc_title: docTitle,
-    topic_focus: topicName,
-    difficulty: difficulty,
-    time_limit_minutes: count * 3,
-    questions: matchedQuestions.slice(0, count)
-  };
-}
+import { getStoredDocuments, saveStoredDocuments } from '../utils/documentStorage';
+import { generateAdaptiveQuiz, CS_TOPIC_BANKS } from '../utils/quizGenerator';
+import { getDocumentText, saveDocumentText } from '../utils/textStore';
+import { extractDocumentContent } from '../utils/pdfExtractor';
 
 export default function QuizStudio({ 
   documents = [], 
@@ -242,16 +37,44 @@ export default function QuizStudio({
   const allDocs = documents.length > 0 ? documents : getStoredDocuments();
   const activeDoc = allDocs.find(d => d.id === selectedDocId) || allDocs[0] || null;
 
+  // Extracted text record from IndexedDB
+  const [docTextRecord, setDocTextRecord] = useState(null);
+  const [parsingFile, setParsingFile] = useState(false);
+
+  // Gemini API Key optional storage
+  const [geminiKey, setGeminiKey] = useState(() => localStorage.getItem('ai_tutor_gemini_key') || '');
+  const [showKeyModal, setShowKeyModal] = useState(false);
+  const [tempKey, setTempKey] = useState('');
+
   // Selected topic inside active document
-  const availableTopics = activeDoc?.topics_covered || ['Core Concepts'];
-  const [selectedTopic, setSelectedTopic] = useState(availableTopics[0] || 'Backpropagation & Gradients');
+  const computeTopics = (doc, textRec) => {
+    if (textRec?.chapters?.length > 0) {
+      const allLabel = textRec.isBangla 
+        ? 'সকল অধ্যায় ও সামগ্রিক বিষয়বস্তু (Complete Document)' 
+        : 'All Chapters & Topics (Complete Document)';
+      return [allLabel, ...textRec.chapters.map(c => c.title)];
+    }
+    if (doc?.topics_covered?.length > 0) {
+      return doc.topics_covered;
+    }
+    return ['Core Concepts'];
+  };
+
+  const [availableTopics, setAvailableTopics] = useState(() => computeTopics(activeDoc, null));
+  const [selectedTopic, setSelectedTopic] = useState('Backpropagation & Gradients');
   const [quizDifficulty, setQuizDifficulty] = useState('medium');
   const [numQuestions, setNumQuestions] = useState(3);
 
   // Active quiz state
-  const [quiz, setQuiz] = useState(() => 
-    generateQuizForTopic(activeDoc?.filename || 'Deep Learning Notes', selectedTopic, 'medium', 3)
-  );
+  const [quiz, setQuiz] = useState({
+    id: 'quiz_init',
+    title: 'Adaptive AI Assessment',
+    doc_title: 'Deep Learning Notes',
+    topic_focus: 'Backpropagation & Gradients',
+    difficulty: 'medium',
+    time_limit_minutes: 9,
+    questions: CS_TOPIC_BANKS['Backpropagation & Gradients'] || []
+  });
   const [loading, setLoading] = useState(false);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -259,20 +82,68 @@ export default function QuizStudio({
   const [gradingReport, setGradingReport] = useState(null);
   const [timeRemaining, setTimeRemaining] = useState(540);
 
-  // Synchronize when selectedDocId or activeDoc changes
+  const fileInputRef = useRef(null);
+
+  // Load extracted text when activeDoc changes
   useEffect(() => {
-    if (activeDoc?.topics_covered?.length > 0) {
-      const defaultTopic = activeDoc.topics_covered[0];
-      setSelectedTopic(defaultTopic);
-      handleGenerateQuiz(activeDoc.filename, defaultTopic, quizDifficulty, numQuestions);
+    let isMounted = true;
+    const loadText = async () => {
+      if (!activeDoc) return;
+      const rec = await getDocumentText(activeDoc.id);
+      if (!isMounted) return;
+
+      setDocTextRecord(rec);
+      const tops = computeTopics(activeDoc, rec);
+      setAvailableTopics(tops);
+
+      const nextTopic = tops[0] || 'Core Concepts';
+      setSelectedTopic(nextTopic);
+      handleGenerateQuiz(activeDoc.filename, nextTopic, quizDifficulty, numQuestions, rec);
+    };
+
+    loadText();
+    return () => { isMounted = false; };
+  }, [activeDoc?.id, selectedDocId]);
+
+  // Handler for custom inline file load (if text wasn't extracted earlier)
+  const handleInlineFileParse = async (file) => {
+    if (!file || !activeDoc) return;
+    setParsingFile(true);
+    try {
+      const extracted = await extractDocumentContent(file);
+      await saveDocumentText(activeDoc.id, extracted);
+      setDocTextRecord(extracted);
+
+      // Update doc metadata in storage
+      const topics = extracted.topics?.length > 0 ? extracted.topics : activeDoc.topics_covered;
+      const updatedDoc = {
+        ...activeDoc,
+        topics_covered: topics,
+        is_bangla: extracted.isBangla,
+        num_pages: extracted.numPages,
+        has_extracted_text: true
+      };
+
+      const docsList = allDocs.map(d => d.id === activeDoc.id ? updatedDoc : d);
+      saveStoredDocuments(docsList);
+
+      const tops = computeTopics(updatedDoc, extracted);
+      setAvailableTopics(tops);
+      setSelectedTopic(tops[0]);
+      await handleGenerateQuiz(activeDoc.filename, tops[0], quizDifficulty, numQuestions, extracted);
+    } catch (err) {
+      console.error('Inline parse error:', err);
+    } finally {
+      setParsingFile(false);
     }
-  }, [selectedDocId]);
+  };
 
   const handleGenerateQuiz = async (
     docTitle = activeDoc?.filename || 'Study Material',
     topic = selectedTopic,
     diff = quizDifficulty,
-    count = numQuestions
+    count = numQuestions,
+    explicitTextRecord = docTextRecord
   ) => {
     setLoading(true);
     setGradingReport(null);
@@ -280,7 +151,7 @@ export default function QuizStudio({
     setAnswers({});
 
     try {
-      // Try backend generation first
+      // 1. Try backend generation if running
       const res = await fetch('/api/quiz/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -303,13 +174,33 @@ export default function QuizStudio({
         }
       }
     } catch {
-      /* fallback to intelligent client generator */
+      /* Fallback to smart client generator */
     }
 
-    // Client-side targeted generation
-    const generated = generateQuizForTopic(docTitle, topic, diff, count);
+    // 2. Client-side authentic generation from extracted text
+    let targetContext = '';
+    const rec = explicitTextRecord || docTextRecord;
+
+    if (rec) {
+      if (rec.chapters && rec.chapters.length > 0) {
+        const matchedChapter = rec.chapters.find(c => c.title === topic);
+        targetContext = matchedChapter ? matchedChapter.text : rec.fullText;
+      } else {
+        targetContext = rec.fullText || '';
+      }
+    }
+
+    const generated = await generateAdaptiveQuiz({
+      docTitle,
+      topicName: topic,
+      documentText: targetContext,
+      difficulty: diff,
+      numQuestions: count,
+      geminiApiKey: geminiKey
+    });
+
     setQuiz(generated);
-    setTimeRemaining((generated.time_limit_minutes || 12) * 60);
+    setTimeRemaining((generated.time_limit_minutes || count * 3) * 60);
     setLoading(false);
   };
 
@@ -395,20 +286,32 @@ export default function QuizStudio({
         correctCount++;
       }
 
+      const isBangla = /[\u0980-\u09FF]/.test(q.topic || q.question_text || '');
+      const feedback = isCorrect 
+        ? (isBangla 
+            ? 'চমৎকার! আপনি বিষয়বস্তুর মূল বক্তব্য ও প্রেক্ষাপট অত্যন্ত নির্ভুলভাবে অনুধাবন করেছেন।' 
+            : 'Excellent! Clear understanding of the passage and analytical principles.')
+        : (isBangla 
+            ? `উক্ত অধ্যায় বা অংশটি পুনরায় পর্যালোচনা করুন। প্রত্যাশিত সমাধান: ${q.expected_answer}` 
+            : `Review the source material for ${q.topic}. Expected answer: ${q.expected_answer}`);
+
+      const remedialTip = isBangla
+        ? `"${q.topic}" অংশের মূল ঘটনাপ্রবাহ ও উদ্ধৃতাংশ মনোযোগ দিয়ে পড়ুন।`
+        : `Review the key concepts and summaries for ${q.topic}.`;
+
       return {
         question_id: q.id,
         topic: q.topic,
         question_type: q.question_type,
         is_correct: isCorrect,
         score: score,
-        feedback: isCorrect 
-          ? 'Excellent! Clear understanding of theoretical principles and correct mathematical derivation.' 
-          : `Review the core formulas for ${q.topic}. The expected answer is: ${q.expected_answer}`,
-        remedial_tip: `Practice step-by-step calculus derivations for ${q.topic}.`
+        feedback: feedback,
+        remedial_tip: remedialTip
       };
     });
 
     const percentage = Math.round((correctCount / quiz.questions.length) * 100);
+    const isBanglaDoc = Boolean(docTextRecord?.isBangla);
 
     setGradingReport({
       quiz_id: quiz.id,
@@ -417,8 +320,8 @@ export default function QuizStudio({
       percentage: percentage,
       total_time_seconds: (quiz.time_limit_minutes * 60) - timeRemaining,
       summary_feedback: percentage >= 70 
-        ? 'Great job! You demonstrated mastery of this topic.' 
-        : 'Good effort! Review the guided hints and practice the handwritten derivations.',
+        ? (isBanglaDoc ? 'অভিনন্দন! আপনি এই বিষয়ে চমৎকার দখল প্রদর্শন করেছেন।' : 'Great job! You demonstrated strong mastery of this material.') 
+        : (isBanglaDoc ? 'ভালো চেষ্টা! চিহ্নিত দুর্বল বিষয়গুলো পুনরায় দেখে নিন।' : 'Good effort! Review the flagged sections to reinforce key concepts.'),
       weak_topics_flagged: percentage < 70 ? [selectedTopic] : [],
       question_results: questionResults
     });
@@ -432,9 +335,17 @@ export default function QuizStudio({
     return `${m}:${s < 10 ? '0' : ''}${s}`;
   };
 
+  const saveGeminiKey = () => {
+    localStorage.setItem('ai_tutor_gemini_key', tempKey.trim());
+    setGeminiKey(tempKey.trim());
+    setShowKeyModal(false);
+    handleGenerateQuiz(activeDoc?.filename, selectedTopic, quizDifficulty, numQuestions);
+  };
+
   const currentQ = quiz.questions[currentIdx] || quiz.questions[0];
   const currentAnswer = answers[currentQ?.id] || {};
   const isLastQuestion = currentIdx === (quiz.questions.length - 1);
+  const hasExtractedText = Boolean(docTextRecord?.fullText);
 
   return (
     <div className="space-y-6 pb-12">
@@ -447,10 +358,50 @@ export default function QuizStudio({
               Customize Your Quiz Material & Topic Focus
             </h2>
           </div>
-          <span className="text-[11px] text-slate-500 font-mono">
-            Select any slide or concept to take a custom quiz
-          </span>
+          
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => { setTempKey(geminiKey); setShowKeyModal(true); }}
+              className="text-[11px] font-semibold text-slate-600 hover:text-blue-600 flex items-center gap-1.5 transition-colors"
+            >
+              <Key className="h-3 w-3 text-amber-500" />
+              <span>{geminiKey ? 'Gemini AI Active' : 'Connect Gemini AI (Optional)'}</span>
+            </button>
+            <span className="text-[11px] text-slate-400 font-mono hidden md:inline">·</span>
+            <span className="text-[11px] text-slate-500 font-mono hidden md:inline">
+              Adaptive Multi-Format Engine
+            </span>
+          </div>
         </div>
+
+        {/* Sync Prompt if PDF text is not yet loaded into IndexedDB */}
+        {!hasExtractedText && activeDoc?.filename?.toLowerCase().endsWith('.pdf') && (
+          <div className="p-3.5 bg-blue-50/70 border border-blue-200 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-blue-900 animate-fade-up">
+            <div className="flex items-center gap-2.5">
+              <FileText className="h-4 w-4 text-blue-600 shrink-0" />
+              <div>
+                <p className="font-semibold text-slate-900">
+                  Load authentic text & chapters from "{activeDoc.filename}"
+                </p>
+                <p className="text-[11px] text-slate-600">
+                  Click to select the PDF file once so Quiz Studio can extract all chapters and generate 100% matching questions.
+                </p>
+              </div>
+            </div>
+            <label className="btn-primary text-xs py-1.5 px-3.5 shrink-0 cursor-pointer self-start sm:self-center">
+              <UploadCloud className="h-3.5 w-3.5" />
+              <span>{parsingFile ? 'Parsing PDF…' : 'Parse PDF Text'}</span>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf"
+                className="hidden"
+                disabled={parsingFile}
+                onChange={(e) => handleInlineFileParse(e.target.files?.[0])}
+              />
+            </label>
+          </div>
+        )}
 
         {/* Controls Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
@@ -466,9 +417,6 @@ export default function QuizStudio({
                 const targetDoc = allDocs.find(d => d.id === e.target.value);
                 if (targetDoc) {
                   if (onSelectDocId) onSelectDocId(targetDoc.id);
-                  const firstTopic = targetDoc.topics_covered?.[0] || 'Core Concepts';
-                  setSelectedTopic(firstTopic);
-                  handleGenerateQuiz(targetDoc.filename, firstTopic, quizDifficulty, numQuestions);
                 }
               }}
               className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white font-medium text-slate-800 focus:outline-none focus:border-blue-500"
@@ -485,7 +433,7 @@ export default function QuizStudio({
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-indigo-600" />
-              <span>Select Topic / Concept</span>
+              <span>Select Topic / Chapter</span>
             </label>
             <select
               value={selectedTopic}
@@ -517,9 +465,9 @@ export default function QuizStudio({
               }}
               className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white font-medium text-slate-800 focus:outline-none focus:border-blue-500"
             >
-              <option value="easy">Easy (Fundamentals)</option>
-              <option value="medium">Medium (Standard)</option>
-              <option value="hard">Hard (Rigorous Proofs)</option>
+              <option value="easy">Easy (Fundamentals & Direct Facts)</option>
+              <option value="medium">Medium (Analytical Comprehension)</option>
+              <option value="hard">Hard (Deep Synthesis & Derivations)</option>
             </select>
           </div>
 
@@ -531,7 +479,7 @@ export default function QuizStudio({
               className="btn-primary w-full justify-center text-xs py-2"
             >
               <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
-              <span>{loading ? 'Generating...' : 'Start Custom Quiz'}</span>
+              <span>{loading ? 'Generating…' : 'Start Custom Quiz'}</span>
             </button>
           </div>
         </div>
@@ -539,7 +487,7 @@ export default function QuizStudio({
         {/* Quick Topic Pills for 1-Click Filtering */}
         <div className="flex flex-wrap items-center gap-2 pt-1">
           <span className="text-[11px] text-slate-500 font-semibold">Quick Topic Switch:</span>
-          {availableTopics.map((top) => {
+          {availableTopics.slice(0, 6).map((top) => {
             const isCurrent = top === selectedTopic;
             return (
               <button
@@ -683,19 +631,19 @@ export default function QuizStudio({
           {currentQ.question_type === 'short_answer' && (
             <div className="space-y-2 pt-2">
               <label className="text-xs font-semibold text-slate-700">
-                Write your conceptual explanation:
+                Write your answer or summary:
               </label>
               <textarea
                 rows={4}
                 value={currentAnswer.text_answer || ''}
                 onChange={(e) => handleTextAnswer(currentQ.id, e.target.value)}
-                placeholder="Explain the mechanism, properties, equations, or trade-offs..."
+                placeholder="Explain the context, key arguments, principles, or implications..."
                 className="w-full p-3.5 rounded-xl bg-white border border-slate-300 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               />
             </div>
           )}
 
-          {/* Handwritten Math Derivation Canvas */}
+          {/* Handwritten Math / Analytical Canvas */}
           {currentQ.question_type === 'handwritten_derivation' && (
             <div className="space-y-3 pt-2">
               <div className="flex items-center justify-between">
@@ -720,7 +668,7 @@ export default function QuizStudio({
               <div className="pt-1">
                 <input
                   type="text"
-                  placeholder="Optional text notes to accompany your handwritten sketch..."
+                  placeholder="Optional notes or formula labels to accompany your sketch..."
                   value={currentAnswer.text_answer || ''}
                   onChange={(e) => handleTextAnswer(currentQ.id, e.target.value)}
                   className="w-full px-3.5 py-2.5 text-xs rounded-xl bg-white border border-slate-300 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500"
@@ -747,7 +695,7 @@ export default function QuizStudio({
                 className="btn-primary text-xs py-2.5 px-5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-emerald-500/20"
               >
                 <Send className={`h-4 w-4 ${submitting ? 'animate-spin' : ''}`} />
-                <span>{submitting ? 'Grading with Vision & NLP...' : 'Submit & Grade Assessment'}</span>
+                <span>{submitting ? 'Grading with Vision & NLP…' : 'Submit & Grade Assessment'}</span>
               </button>
             ) : (
               <button
@@ -758,6 +706,48 @@ export default function QuizStudio({
                 <ChevronRight className="h-4 w-4" />
               </button>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Optional Gemini API Key Dialog */}
+      {showKeyModal && (
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-md w-full p-6 space-y-4 animate-scale-up">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-amber-500" />
+                <h3 className="font-bold text-slate-900 text-sm">Connect Google Gemini API (Optional)</h3>
+              </div>
+              <button onClick={() => setShowKeyModal(false)} className="text-slate-400 hover:text-slate-700">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-600 leading-relaxed">
+              By default, our instant semantic engine creates authentic quizzes locally with <strong>zero API keys needed</strong>. 
+              If you want unlimited generative questions from Google Gemini 1.5 Flash, paste your free API key below:
+            </p>
+
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-semibold text-slate-700">Gemini API Key</label>
+              <input
+                type="password"
+                value={tempKey}
+                onChange={(e) => setTempKey(e.target.value)}
+                placeholder="AIzaSy..."
+                className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-300 text-slate-900 font-mono focus:outline-none focus:border-blue-500"
+              />
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <button onClick={() => setShowKeyModal(false)} className="btn-secondary text-xs py-2 px-3">
+                Cancel
+              </button>
+              <button onClick={saveGeminiKey} className="btn-primary text-xs py-2 px-4">
+                Save & Apply
+              </button>
+            </div>
           </div>
         </div>
       )}

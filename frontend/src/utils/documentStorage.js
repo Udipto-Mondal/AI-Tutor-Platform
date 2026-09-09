@@ -11,8 +11,8 @@ export const DEFAULT_DOCS = [
     file_type: 'md',
     size_bytes: 2840,
     uploaded_at: new Date(Date.now() - 86400000).toISOString(),
-    num_chunks: 5,
-    topics_covered: ['Neural Networks', 'Backpropagation', 'Activation Functions', 'Gradient Descent'],
+    num_chunks: 4,
+    topics_covered: ['Neural Networks', 'Backpropagation & Gradients', 'Activation Functions', 'Gradient Descent'],
   },
   {
     id: 'doc_dsa',
@@ -32,6 +32,7 @@ export function getStoredDocuments() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_DOCS));
+      seedDefaultPreviews();
       return DEFAULT_DOCS;
     }
     const parsed = JSON.parse(raw);
@@ -46,10 +47,30 @@ export function getStoredDocuments() {
       });
       return merged;
     }
+    seedDefaultPreviews();
     return DEFAULT_DOCS;
   } catch (e) {
     console.warn('Storage read fallback:', e);
     return DEFAULT_DOCS;
+  }
+}
+
+function seedDefaultPreviews() {
+  try {
+    localStorage.setItem('ai_tutor_doc_prev_doc_deep_learning', JSON.stringify({
+      id: 'doc_deep_learning',
+      sample: 'Deep Learning & Neural Networks: Comprehensive Study Notes. Fundamentals of ANNs, Forward Propagation, Backpropagation chain rule dL/dw = delta * a, Activation Functions.',
+      topics: ['Neural Networks', 'Backpropagation & Gradients', 'Activation Functions', 'Gradient Descent'],
+      isBangla: false
+    }));
+    localStorage.setItem('ai_tutor_doc_prev_doc_dsa', JSON.stringify({
+      id: 'doc_dsa',
+      sample: 'Data Structures and Algorithms Essential Guide. Asymptotic Complexity and Big-O Notation, Trees and Graphs, Binary Search Trees, BFS and DFS.',
+      topics: ['Big-O Complexity', 'Trees & Graphs', 'Dynamic Programming'],
+      isBangla: false
+    }));
+  } catch {
+    // ignore
   }
 }
 
@@ -71,10 +92,19 @@ export function extractTopicsFromFilename(filename) {
     .replace(/[_-]+/g, ' ')
     .trim();
 
+  // If filename is in Bengali, provide natural Bengali topic pills
+  if (/[\u0980-\u09FF]/.test(cleanName)) {
+    return [
+      cleanName,
+      `মূল বক্তব্য ও চরিত্র বিশ্লেষণ (${cleanName})`,
+      'গুরুত্বপূর্ণ উদ্ধৃতি ও প্রেক্ষাপট'
+    ];
+  }
+
   // Split by common separators
   const words = cleanName.split(/\s+/);
   if (words.length <= 2) {
-    return [cleanName, 'Overview', 'Core Analysis'];
+    return [cleanName, 'Overview & Structure', 'Core Analysis'];
   }
 
   // Generate 3 nice distinct concept tags
