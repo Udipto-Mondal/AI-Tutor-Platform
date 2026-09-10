@@ -5,6 +5,7 @@ import QuizStudio       from './components/QuizStudio';
 import HandwritingCanvas from './components/HandwritingCanvas';
 import MasteryRadar     from './components/MasteryRadar';
 import StudyPlanView    from './components/StudyPlanView';
+import MLOpsHub         from './components/MLOpsHub';
 import SocraticTutorDrawer from './components/SocraticTutorDrawer';
 import { MessageSquare, X } from 'lucide-react';
 import { getStoredDocuments } from './utils/documentStorage';
@@ -85,6 +86,10 @@ export default function App() {
             onStartQuizWithTopic={handleStartQuizWithTopic}
             onOpenHandwritingLab={() => setActiveTab('canvas')}
           />
+        )}
+
+        {activeTab === 'mlops' && (
+          <MLOpsHub />
         )}
       </main>
 

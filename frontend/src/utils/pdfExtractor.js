@@ -23,12 +23,52 @@ if (typeof window !== 'undefined') {
  * @param {File} file 
  * @returns {Promise<{ fullText: string, topics: string[], chapters: Array<{title: string, text: string}>, isBangla: boolean, numPages: number }>}
  */
+/**
+ * Cleans and sanitizes raw PDF/Document text:
+ * Strips unicode replacement character (\uFFFD), unprintable chars,
+ * fixes broken ligatures and common OCR/PDF font mapping artifacts.
+ */
+export function sanitizeExtractedText(str) {
+  if (!str) return '';
+  return str
+    // Strip unicode replacement characters (\uFFFD -> '')
+    .replace(/\uFFFD+/g, ' ')
+    // Normalize zero-width, non-breaking spaces, and control chars
+    .replace(/[\u00A0\u2000-\u200B\u202F\u205F\uFEFF]/g, ' ')
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
+    // Fix common unicode ligatures
+    .replace(/\uFB00/g, 'ff')
+    .replace(/\uFB01/g, 'fi')
+    .replace(/\uFB02/g, 'fl')
+    .replace(/\uFB03/g, 'ffi')
+    .replace(/\uFB04/g, 'ffl')
+    .replace(/\uFB05/g, 'ft')
+    .replace(/\uFB06/g, 'st')
+    // Fix common OCR / textbook decoding anomalies
+    .replace(/\bQ!JESTIONS\b/gi, 'QUESTIONS')
+    .replace(/\bQ!UESTIONS\b/gi, 'QUESTIONS')
+    .replace(/\bAPP LE\b/gi, 'APPLE')
+    .replace(/\bMcDOWELL\b/gi, 'McDowell')
+    .replace(/the\s+[\uFFFD\.\·]+\s*CODING/gi, 'the CODING')
+    // Fix hyphenated line wraps (e.g. "com-\nplexity" -> "complexity")
+    .replace(/([a-zA-Z]{3,})-\s*\n\s*([a-zA-Z]{3,})/g, '$1$2')
+    // Collapse redundant spaces
+    .replace(/[ \t]{2,}/g, ' ')
+    .trim();
+}
+
+/**
+ * Extract full text and structure from an uploaded File (PDF, TXT, MD)
+ * @param {File} file 
+ * @returns {Promise<{ fullText: string, topics: string[], chapters: Array<{title: string, text: string}>, isBangla: boolean, numPages: number, pages?: Array<{pageNumber: number, text: string}> }>}
+ */
 export async function extractDocumentContent(file) {
   const ext = (file.name.split('.').pop() || '').toLowerCase();
 
   if (ext === 'txt' || ext === 'md' || ext === 'markdown') {
     const rawText = await file.text();
-    return processExtractedText(rawText, file.name, 1);
+    const sanitized = sanitizeExtractedText(rawText);
+    return processExtractedText(sanitized, file.name, 1, [{ pageNumber: 1, text: sanitized }]);
   }
 
   if (ext === 'pdf') {
@@ -43,7 +83,7 @@ export async function extractDocumentContent(file) {
 
       const pdf = await loadingTask.promise;
       const numPages = pdf.numPages;
-      const pagesText = [];
+      const pagesData = [];
 
       // Extract up to 60 pages to maintain speedy browser performance
       const maxPages = Math.min(numPages, 60);
@@ -51,29 +91,28 @@ export async function extractDocumentContent(file) {
         try {
           const page = await pdf.getPage(i);
           const content = await page.getTextContent();
-          const pageStr = content.items
+          const pageRaw = content.items
             .map((item) => item.str || '')
-            .join(' ')
-            .replace(/\s+/g, ' ')
-            .trim();
-          if (pageStr) {
-            pagesText.push(`\n--- Page ${i} ---\n${pageStr}`);
+            .join(' ');
+          const cleanedPage = sanitizeExtractedText(pageRaw);
+          if (cleanedPage && cleanedPage.length > 5) {
+            pagesData.push({ pageNumber: i, text: cleanedPage });
           }
         } catch (pageErr) {
           console.warn(`Error reading page ${i}:`, pageErr);
         }
       }
 
-      const fullText = pagesText.join('\n\n');
-      return processExtractedText(fullText, file.name, numPages);
+      const fullText = pagesData.map(p => p.text).join('\n\n');
+      return processExtractedText(fullText, file.name, numPages, pagesData);
     } catch (pdfErr) {
       console.error('PDF extraction failed, falling back to text stream:', pdfErr);
       // Fallback: try raw text decode in case it contains readable streams
       try {
         const raw = await file.text();
-        const readable = raw.replace(/[^\x20-\x7E\u0980-\u09FF\n\r\t]/g, ' ').replace(/\s+/g, ' ');
+        const readable = sanitizeExtractedText(raw.replace(/[^\x20-\x7E\u0980-\u09FF\n\r\t]/g, ' '));
         if (readable.length > 200) {
-          return processExtractedText(readable, file.name, 1);
+          return processExtractedText(readable, file.name, 1, [{ pageNumber: 1, text: readable }]);
         }
       } catch {
         // ignore
@@ -84,13 +123,14 @@ export async function extractDocumentContent(file) {
 
   // Fallback for other files
   const fallbackText = await file.text().catch(() => '');
-  return processExtractedText(fallbackText, file.name, 1);
+  const sanitizedFallback = sanitizeExtractedText(fallbackText);
+  return processExtractedText(sanitizedFallback, file.name, 1, [{ pageNumber: 1, text: sanitizedFallback }]);
 }
 
 /**
  * Process text, extract topics/chapters, and detect language
  */
-function processExtractedText(fullText, filename, numPages) {
+function processExtractedText(fullText, filename, numPages, pagesData = []) {
   const isBangla = /[\u0980-\u09FF]/.test(fullText);
 
   // Extract chapters / sections
@@ -117,7 +157,8 @@ function processExtractedText(fullText, filename, numPages) {
     topics: uniqueTopics,
     chapters,
     isBangla,
-    numPages
+    numPages,
+    pages: pagesData
   };
 }
 
@@ -202,13 +243,38 @@ export function cleanDocumentTitle(filename) {
     .replace(/\s+/g, ' ')
     .trim();
 
-  // Strip dangling trailing prepositions
-  clean = clean.replace(/[\s\-_–—]+(?:and|or|for|with|by|to|of|in|at)\s*$/i, '').trim();
+  // Strip dangling trailing prepositions & conjunctions
+  let prev = '';
+  while (prev !== clean) {
+    prev = clean;
+    clean = clean.replace(/[\s\-_–—,:;]+(?:and|or|for|with|by|to|of|in|at|&)\s*$/i, '').trim();
+    clean = clean.replace(/[\s\-_–—,:;]+$/i, '').trim();
+  }
 
   if (!clean || clean.length < 2) {
     clean = filename.replace(/\.[^/.]+$/, '').trim();
   }
   return clean;
+}
+
+export function cleanTopicString(str) {
+  if (!str) return 'Core Concepts';
+  let clean = str
+    .replace(/^Comprehensive Overview \((.*)\)$/i, '$1')
+    .replace(/\[[^\]]*\]/g, '')
+    .replace(/\([^)]*\)/g, '')
+    .replace(/\b(?:189|programming questions|solutions|edition|pdf|ebook|download|www\.[^\s]+)\b/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  // Strip dangling trailing prepositions & conjunctions
+  let prev = '';
+  while (prev !== clean) {
+    prev = clean;
+    clean = clean.replace(/[\s\-_–—,:;]+(?:and|or|for|with|by|to|of|in|at|&)\s*$/i, '').trim();
+    clean = clean.replace(/[\s\-_–—,:;]+$/i, '').trim();
+  }
+  return clean || 'Core Concepts';
 }
 
 function cleanHeading(str) {

@@ -29,13 +29,22 @@ import { extractDocumentContent, cleanDocumentTitle } from '../utils/pdfExtracto
 
 function cleanTopicString(str) {
   if (!str) return 'Core Concepts';
-  return str
+  let clean = str
     .replace(/^Comprehensive Overview \((.*)\)$/i, '$1')
     .replace(/\[[^\]]*\]/g, '')
     .replace(/\([^)]*\)/g, '')
     .replace(/\b(?:189|programming questions|solutions|edition|pdf|ebook|download|www\.[^\s]+)\b/gi, '')
     .replace(/\s+/g, ' ')
-    .trim() || 'Core Concepts';
+    .trim();
+
+  // Strip dangling trailing prepositions & conjunctions
+  let prev = '';
+  while (prev !== clean) {
+    prev = clean;
+    clean = clean.replace(/[\s\-_–—,:;]+(?:and|or|for|with|by|to|of|in|at|&)\s*$/i, '').trim();
+    clean = clean.replace(/[\s\-_–—,:;]+$/i, '').trim();
+  }
+  return clean || 'Core Concepts';
 }
 
 export default function QuizStudio({ 
@@ -515,8 +524,8 @@ export default function QuizStudio({
           </div>
         )}
 
-        {/* Controls Grid: Responsive 5 Columns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+        {/* Controls Grid: Responsive 4 Columns */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Document / Slide Selector */}
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
@@ -531,7 +540,7 @@ export default function QuizStudio({
                   onSelectDocId(targetDoc.id);
                 }
               }}
-              className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white font-medium text-slate-800 focus:outline-none focus:border-blue-500"
+              className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white font-medium text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-100 shadow-2xs"
             >
               {allDocs.length > 0 ? (
                 allDocs.map((d) => (
@@ -557,7 +566,7 @@ export default function QuizStudio({
                 setSelectedTopic(e.target.value);
                 handleGenerateQuiz(activeDoc?.filename, e.target.value, quizDifficulty, numQuestions);
               }}
-              className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white font-medium text-slate-800 focus:outline-none focus:border-blue-500"
+              className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white font-medium text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-100 shadow-2xs"
             >
               {availableTopics.map((top) => (
                 <option key={top} value={top}>
@@ -580,7 +589,7 @@ export default function QuizStudio({
                 setNumQuestions(cnt);
                 handleGenerateQuiz(activeDoc?.filename, selectedTopic, quizDifficulty, cnt);
               }}
-              className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white font-medium text-slate-800 focus:outline-none focus:border-blue-500"
+              className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white font-medium text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-100 shadow-2xs"
             >
               <option value={5}>5 Questions (Quick Check)</option>
               <option value={8}>8 Questions (Targeted Practice)</option>
@@ -602,50 +611,67 @@ export default function QuizStudio({
                 setQuizDifficulty(e.target.value);
                 handleGenerateQuiz(activeDoc?.filename, selectedTopic, e.target.value, numQuestions);
               }}
-              className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white font-medium text-slate-800 focus:outline-none focus:border-blue-500"
+              className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white font-medium text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-100 shadow-2xs"
             >
               <option value="easy">Easy (Fundamentals & Facts)</option>
               <option value="medium">Medium (Analytical Comprehension)</option>
               <option value="hard">Hard (Deep Synthesis & Derivations)</option>
             </select>
           </div>
+        </div>
 
-          {/* Generate Button */}
-          <div className="space-y-1.5 flex flex-col justify-end">
-            <button
-              onClick={() => handleGenerateQuiz(activeDoc?.filename, selectedTopic, quizDifficulty, numQuestions)}
-              disabled={loading}
-              className="btn-primary w-full justify-center text-xs py-2"
-            >
-              <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
-              <span>{loading ? 'Generating…' : 'Start Custom Quiz'}</span>
-            </button>
+        {/* Dedicated Action & Session Summary Bar */}
+        <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-slate-100">
+          <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 font-mono text-[11px] text-slate-700 font-semibold border border-slate-200/80">
+              <Clock className="h-3.5 w-3.5 text-blue-600" />
+              Est. ~{Math.round(numQuestions * 2.5)} mins
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 font-mono text-[11px] text-blue-700 font-semibold border border-blue-200/80">
+              <Layers className="h-3.5 w-3.5" />
+              {numQuestions} Questions
+            </span>
+            <span className="hidden md:inline text-slate-300">|</span>
+            <span className="text-[11px] text-slate-500 hidden md:inline">
+              Adaptive synthesis: MCQs, handwritten proofs & concept derivations
+            </span>
           </div>
+
+          <button
+            onClick={() => handleGenerateQuiz(activeDoc?.filename, selectedTopic, quizDifficulty, numQuestions)}
+            disabled={loading}
+            className="btn-primary text-xs py-2.5 px-5 justify-center sm:self-auto self-stretch font-semibold shadow-md shadow-blue-500/20 hover:shadow-blue-500/30 transition-all"
+          >
+            <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
+            <span>{loading ? 'Generating Assessment…' : 'Start Custom Quiz'}</span>
+          </button>
         </div>
 
         {/* Quick Topic Pills for 1-Click Filtering */}
-        <div className="flex flex-wrap items-center gap-2 pt-1">
-          <span className="text-[11px] text-slate-500 font-semibold">Quick Topic Switch:</span>
-          {availableTopics.slice(0, 5).map((top) => {
-            const isCurrent = top === selectedTopic;
-            const cleanPill = cleanTopicString(top);
-            return (
-              <button
-                key={top}
-                onClick={() => {
-                  setSelectedTopic(top);
-                  handleGenerateQuiz(activeDoc?.filename, top, quizDifficulty, numQuestions);
-                }}
-                className={`text-[11px] px-2.5 py-1 rounded-lg font-medium transition-all ${
-                  isCurrent
-                    ? 'bg-blue-600 text-white shadow-xs'
-                    : 'bg-slate-100 text-slate-700 hover:bg-blue-50 hover:text-blue-700 border border-slate-200'
-                }`}
-              >
-                {cleanPill}
-              </button>
-            );
-          })}
+        <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-100">
+          <span className="text-[11px] text-slate-500 font-semibold shrink-0">Quick Topic Switch:</span>
+          <div className="flex flex-wrap items-center gap-1.5">
+            {availableTopics.slice(0, 5).map((top) => {
+              const isCurrent = top === selectedTopic;
+              const cleanPill = cleanTopicString(top);
+              return (
+                <button
+                  key={top}
+                  onClick={() => {
+                    setSelectedTopic(top);
+                    handleGenerateQuiz(activeDoc?.filename, top, quizDifficulty, numQuestions);
+                  }}
+                  className={`text-[11px] px-3 py-1 rounded-lg font-medium transition-all ${
+                    isCurrent
+                      ? 'bg-blue-600 text-white shadow-xs ring-1 ring-blue-400'
+                      : 'bg-slate-100 text-slate-700 hover:bg-blue-50 hover:text-blue-700 border border-slate-200'
+                  }`}
+                >
+                  {cleanPill}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -717,28 +743,83 @@ export default function QuizStudio({
         </div>
       </div>
 
-      {/* ── Question Stepper Pills (Q1, Q2, Q3...) ── */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1">
-        {quiz.questions.map((q, idx) => {
-          const isAnswered = answers[q.id]?.selected_option || answers[q.id]?.text_answer || answers[q.id]?.handwritten_image_base64;
-          const isCurrent = idx === currentIdx;
-          return (
-            <button
-              key={q.id}
-              onClick={() => setCurrentIdx(idx)}
-              className={`flex-1 min-w-16 py-2 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all ${
-                isCurrent 
-                  ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25 ring-2 ring-blue-300'
-                  : isAnswered
-                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-300'
-                  : 'bg-white text-slate-700 border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 shadow-xs'
-              }`}
-            >
-              <span>Question {idx + 1}</span>
-              {isAnswered && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />}
-            </button>
-          );
-        })}
+      {/* ── State-of-the-Art Question Navigator & Progress ── */}
+      <div className="glass-panel p-3.5 sm:p-4 space-y-3 bg-white border border-slate-200 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="text-xs font-bold text-slate-900 font-mono">
+              Question {currentIdx + 1} of {quiz.questions.length}
+            </span>
+            <div className="h-2 w-28 sm:w-44 rounded-full bg-slate-100 border border-slate-200 overflow-hidden">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-blue-600 to-emerald-500 transition-all duration-300"
+                style={{ width: `${Math.round(((Object.values(answers).filter(a => a?.selected_option || a?.text_answer || a?.handwritten_image_base64).length) / quiz.questions.length) * 100)}%` }}
+              />
+            </div>
+            <span className="text-[11px] text-slate-500 font-mono font-medium">
+              {Object.values(answers).filter(a => a?.selected_option || a?.text_answer || a?.handwritten_image_base64).length}/{quiz.questions.length} answered ({Math.round(((Object.values(answers).filter(a => a?.selected_option || a?.text_answer || a?.handwritten_image_base64).length) / quiz.questions.length) * 100)}%)
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3 text-[10.5px] text-slate-500 font-mono self-start sm:self-center">
+            <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-blue-600 inline-block" /> Current</span>
+            <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-emerald-500 inline-block" /> Answered</span>
+            <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-slate-300 inline-block" /> Unanswered</span>
+            <span className="flex items-center gap-1">✍️ Handwritten</span>
+          </div>
+        </div>
+
+        {/* Stepper Pills with integrated Prev / Next controls */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-0.5 scrollbar-thin">
+          <button
+            onClick={() => setCurrentIdx(prev => Math.max(0, prev - 1))}
+            disabled={currentIdx === 0}
+            className="h-9 w-9 shrink-0 rounded-xl bg-slate-100 border border-slate-200 text-slate-600 hover:bg-slate-200 hover:text-slate-900 flex items-center justify-center disabled:opacity-30 disabled:pointer-events-none transition-colors"
+            title="Previous question"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+
+          {quiz.questions.map((q, idx) => {
+            const isAnswered = answers[q.id]?.selected_option || answers[q.id]?.text_answer || answers[q.id]?.handwritten_image_base64;
+            const hasHandwritten = Boolean(answers[q.id]?.handwritten_image_base64 && answers[q.id]?.handwritten_image_base64.length > 2000);
+            const isCurrent = idx === currentIdx;
+
+            return (
+              <button
+                key={q.id}
+                onClick={() => setCurrentIdx(idx)}
+                className={`h-9 w-9 sm:h-9.5 sm:w-9.5 shrink-0 rounded-xl font-mono text-xs font-bold relative flex items-center justify-center transition-all ${
+                  isCurrent 
+                    ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30 ring-2 ring-blue-300 scale-105 z-10'
+                    : isAnswered
+                    ? 'bg-emerald-50 text-emerald-800 border border-emerald-300 hover:bg-emerald-100 hover:border-emerald-400'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 shadow-2xs'
+                }`}
+                title={`Question ${idx + 1}${isAnswered ? ' (Answered)' : ''}`}
+              >
+                <span>{idx + 1}</span>
+                {isAnswered && !isCurrent && (
+                  <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
+                )}
+                {hasHandwritten && (
+                  <span className="absolute -bottom-1 -right-1 text-[9px] leading-none" title="Handwritten response attached">
+                    ✍️
+                  </span>
+                )}
+              </button>
+            );
+          })}
+
+          <button
+            onClick={() => setCurrentIdx(prev => Math.min(quiz.questions.length - 1, prev + 1))}
+            disabled={currentIdx === quiz.questions.length - 1}
+            className="h-9 w-9 shrink-0 rounded-xl bg-slate-100 border border-slate-200 text-slate-600 hover:bg-slate-200 hover:text-slate-900 flex items-center justify-center disabled:opacity-30 disabled:pointer-events-none transition-colors"
+            title="Next question"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
       {/* ── Main Question Interactive Card ── */}
