@@ -47,5 +47,6 @@ data/chroma_db/
 frontend/node_modules/
 frontend/dist/
 frontend/.env.local
+scratch/
 .DS_Store
 Thumbs.db

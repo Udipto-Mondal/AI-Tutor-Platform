@@ -1,0 +1,35 @@
+<svg width="64" height="64" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="logo-navy-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#09132e" />
+      <stop offset="100%" stop-color="#040918" />
+    </linearGradient>
+    <linearGradient id="logo-grad-primary" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#2563eb" />
+    </linearGradient>
+    <linearGradient id="logo-grad-stroke" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#1e3a8a" />
+    </linearGradient>
+    <linearGradient id="logo-grad-core" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+  </defs>
+
+  <!-- Outer Rounded Squircle Frame in Deep Obsidian Navy -->
+  <rect x="2" y="2" width="36" height="36" rx="10" fill="url(#logo-navy-bg)" stroke="url(#logo-grad-stroke)" stroke-width="1.8" />
+
+  <!-- Inner Geometric Neural Prism -->
+  <path d="M20 8.5L29.5 15V25L20 31.5L10.5 25V15L20 8.5Z" stroke="url(#logo-grad-primary)" stroke-width="2" stroke-linejoin="round" fill="rgba(56, 189, 248, 0.16)" />
+
+  <!-- Internal Cross Facets -->
+  <path d="M20 8.5V20M29.5 15L20 20M10.5 15L20 20M20 20V31.5M20 20L29.5 25M20 20L10.5 25" stroke="url(#logo-grad-core)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.95" />
+
+  <!-- Core Glowing Node -->
+  <circle cx="20" cy="20" r="3.2" fill="#38bdf8" />
+  <circle cx="20" cy="20" r="5.5" stroke="#38bdf8" stroke-width="1.2" opacity="0.5" />
+</svg>
