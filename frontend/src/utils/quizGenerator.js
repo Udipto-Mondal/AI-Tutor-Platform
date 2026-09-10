@@ -692,6 +692,23 @@ CS_TOPIC_BANKS['All Chapters & Topics'] = CS_TOPIC_BANKS['Core Concepts & Founda
 CS_TOPIC_BANKS['সকল অধ্যায় ও সামগ্রিক বিষয়বস্তু'] = CS_TOPIC_BANKS['Core Concepts & Foundations'];
 
 /**
+ * Clean, round academic exam minutes based on question count:
+ * 5 questions  -> 10 mins (10:00, clean 2 mins per question)
+ * 8 questions  -> 15 mins (15:00)
+ * 10 questions -> 20 mins (20:00)
+ * 15 questions -> 30 mins (30:00)
+ * 20 questions -> 45 mins (45:00)
+ */
+export function getStandardQuizMinutes(count) {
+  const n = parseInt(count, 10) || 5;
+  if (n <= 5) return 10;
+  if (n <= 8) return 15;
+  if (n <= 10) return 20;
+  if (n <= 15) return 30;
+  return 45;
+}
+
+/**
  * Main adaptive quiz generation entry point
  */
 export async function generateAdaptiveQuiz({
@@ -737,7 +754,7 @@ export async function generateAdaptiveQuiz({
       doc_title: cleanTitle,
       topic_focus: cleanTopic,
       difficulty,
-      time_limit_minutes: Math.max(5, Math.round(neededCount * 2.5)),
+      time_limit_minutes: getStandardQuizMinutes(neededCount),
       questions: randomizedQuestions.slice(0, neededCount)
     };
   }
@@ -761,7 +778,7 @@ export async function generateAdaptiveQuiz({
           doc_title: cleanTitle,
           topic_focus: cleanTopic,
           difficulty,
-          time_limit_minutes: Math.max(5, Math.round(neededCount * 2.5)),
+          time_limit_minutes: getStandardQuizMinutes(neededCount),
           questions: llmQuestions.slice(0, neededCount)
         };
       }
@@ -786,7 +803,7 @@ export async function generateAdaptiveQuiz({
     doc_title: cleanTitle,
     topic_focus: cleanTopic,
     difficulty,
-    time_limit_minutes: Math.max(5, Math.round(neededCount * 2.5)),
+    time_limit_minutes: getStandardQuizMinutes(neededCount),
     questions: generated
   };
 }

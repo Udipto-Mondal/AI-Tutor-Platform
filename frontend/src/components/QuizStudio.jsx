@@ -23,7 +23,7 @@ import HandwritingCanvas from './HandwritingCanvas';
 import GradingReportModal from './GradingReportModal';
 import MathText from './MathText';
 import { getStoredDocuments, saveStoredDocuments, extractTopicsFromFilename } from '../utils/documentStorage';
-import { generateAdaptiveQuiz, CS_TOPIC_BANKS } from '../utils/quizGenerator';
+import { generateAdaptiveQuiz, CS_TOPIC_BANKS, getStandardQuizMinutes } from '../utils/quizGenerator';
 import { getDocumentText, saveDocumentText } from '../utils/textStore';
 import { extractDocumentContent, cleanDocumentTitle } from '../utils/pdfExtractor';
 
@@ -116,7 +116,7 @@ export default function QuizStudio({
     doc_title: initialDocTitle,
     topic_focus: initialFocus,
     difficulty: 'medium',
-    time_limit_minutes: 15,
+    time_limit_minutes: 10,
     questions: []
   });
   const [loading, setLoading] = useState(false);
@@ -124,12 +124,12 @@ export default function QuizStudio({
   const [answers, setAnswers] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [gradingReport, setGradingReport] = useState(null);
-  const [timeRemaining, setTimeRemaining] = useState(900);
+  const [timeRemaining, setTimeRemaining] = useState(600);
   const [timerKey, setTimerKey] = useState(0);
   const [timerJustReset, setTimerJustReset] = useState(false);
 
   const getInitialSeconds = () => {
-    return (quiz?.time_limit_minutes || Math.max(5, Math.round(numQuestions * 2.5))) * 60;
+    return (quiz?.time_limit_minutes || getStandardQuizMinutes(numQuestions)) * 60;
   };
 
   const handleResetTimer = (customSeconds = null) => {
@@ -220,7 +220,7 @@ export default function QuizStudio({
     setGradingReport(null);
     setCurrentIdx(0);
     setAnswers({});
-    const initialSeconds = Math.max(5, Math.round(count * 2.5)) * 60;
+    const initialSeconds = getStandardQuizMinutes(count) * 60;
     setTimeRemaining(initialSeconds);
     setTimerKey((k) => k + 1);
 
@@ -242,7 +242,7 @@ export default function QuizStudio({
         const data = await res.json();
         if (data && data.questions && data.questions.length >= count) {
           setQuiz(data);
-          const limitSeconds = (data.time_limit_minutes || Math.round(count * 2.5)) * 60;
+          const limitSeconds = (data.time_limit_minutes || getStandardQuizMinutes(count)) * 60;
           setTimeRemaining(limitSeconds);
           setTimerKey((k) => k + 1);
           setLoading(false);
@@ -277,7 +277,7 @@ export default function QuizStudio({
     });
 
     setQuiz(generated);
-    const finalSeconds = (generated.time_limit_minutes || Math.round(count * 2.5)) * 60;
+    const finalSeconds = (generated.time_limit_minutes || getStandardQuizMinutes(count)) * 60;
     setTimeRemaining(finalSeconds);
     setTimerKey((k) => k + 1);
     setLoading(false);
@@ -661,7 +661,7 @@ export default function QuizStudio({
               title="Click to restart quiz timer from beginning"
             >
               <Clock className="h-3.5 w-3.5 text-blue-400" />
-              Est. ~{Math.round(numQuestions * 2.5)} mins
+              Est. {getStandardQuizMinutes(numQuestions)} mins
               <RotateCcw className="h-2.5 w-2.5 opacity-60 ml-0.5" />
             </button>
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-950/60 font-mono text-[11px] text-blue-300 font-semibold border border-blue-500/30">
