@@ -6,29 +6,177 @@ import {
   BookOpen,
   ChevronDown,
   Loader2,
-  Bot
+  Bot,
+  Sparkles,
+  KeyRound,
+  Check
 } from 'lucide-react';
-
-const QUICK_PROMPTS = [
-  'Why does Sigmoid cause vanishing gradients?',
-  'Explain the chain rule in backpropagation',
-  'How does Adam optimizer work?',
-  'What is dropout regularization?',
-];
+import { getStoredDocuments } from '../utils/documentStorage';
+import { getDocumentText } from '../utils/textStore';
+import { cleanDocumentTitle } from '../utils/pdfExtractor';
 
 const INITIAL_MSG = {
   role: 'assistant',
   content:
-    "Hello! I'm Leo, your AI Tutor. Ask me anything about your study material — I'll guide you step by step rather than just giving you the answer.",
+    "Hello! I'm Leo, your Socratic AI Tutor. Ask me anything about your uploaded study material — I'll guide you step by step through inquiry and hints rather than just giving you the answer.",
   citations: ['Knowledge Vault'],
 };
+
+async function callGeminiTutor(apiKey, userMsg, history, docContext, docTitle) {
+  const recentHistoryText = history
+    .slice(-5)
+    .map((m) => `${m.role === 'user' ? 'Student' : 'Leo'}: ${m.content}`)
+    .join('\n');
+
+  const prompt = `You are 'Leo', a world-class, encouraging Socratic AI Tutor on the AI Tutor Platform.
+Your goal is to guide the student to understand concepts on their own through guided inquiry, step-by-step reasoning, and progressive hints, rather than just giving away the answer.
+
+Grounding Context from Student's Uploaded Notes ("${docTitle}"):
+${(docContext || '').slice(0, 4500) || 'General academic concepts.'}
+
+Recent Conversation:
+${recentHistoryText}
+
+Student's Question:
+"${userMsg}"
+
+Instructions:
+1. If the student speaks Bengali, reply in natural, fluent Bengali. If English, reply in English.
+2. Ground your explanations in their uploaded document ("${docTitle}") whenever possible.
+3. Offer warm, encouraging Socratic guidance.
+4. Provide 2 distinct, progressive hints.
+5. Provide a thoughtful follow-up question.
+
+Return ONLY a valid JSON object matching this schema (no markdown fences):
+{
+  "reply": "Conversational Socratic guidance",
+  "hints": ["Hint 1", "Hint 2"],
+  "citations": ["${docTitle}"],
+  "follow_up": "Reflective follow-up question"
+}`;
+
+  const models = ['gemini-3.6-flash', 'gemini-flash-latest', 'gemini-2.5-flash', 'gemini-1.5-flash'];
+  let lastError = null;
+
+  for (const model of models) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }]
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        const cleanJson = rawText.replace(/```json\s*|```/g, '').trim();
+        try {
+          const parsed = JSON.parse(cleanJson);
+          if (parsed.reply) {
+            return {
+              reply: parsed.reply,
+              hints_provided: parsed.hints || [],
+              citations: parsed.citations || [docTitle],
+              follow_up_question: parsed.follow_up || null
+            };
+          }
+        } catch {
+          if (rawText.trim()) {
+            return {
+              reply: rawText.trim(),
+              hints_provided: ["Focus on the key relationships stated in your study notes."],
+              citations: [docTitle],
+              follow_up_question: "How does this align with your understanding?"
+            };
+          }
+        }
+      }
+    } catch (err) {
+      lastError = err;
+    }
+  }
+  throw lastError || new Error('Gemini API call failed');
+}
+
+function generateLocalSocraticReply(userMsg, docContext, docTitle) {
+  const isBangla = /[\u0980-\u09FF]/.test(userMsg);
+  let matchedExcerpt = '';
+  if (docContext) {
+    const sentences = docContext.split(/(?<=[.?!।\n])\s+/).filter(s => s.length > 15);
+    const words = userMsg.toLowerCase().split(/\s+/).filter(w => w.length > 2);
+    const best = sentences.find(s => words.some(w => s.toLowerCase().includes(w)));
+    matchedExcerpt = best ? best.slice(0, 240) : sentences[0]?.slice(0, 240) || '';
+  }
+
+  if (isBangla) {
+    return {
+      reply: `চমৎকার প্রশ্ন! আসুন আপনার "${docTitle}" স্টাডি নোটের আলোকে বিষয়টি ধাপে ধাপে বিশ্লেষণ করি।\n\n${matchedExcerpt ? `> *"${matchedExcerpt}..."*\n\n` : ''}মূল ধারণাটি বুঝতে হলে প্রথমে দেখতে হবে এই বিষয়ে আপনার নোটে কী প্রধান কারণ বা প্রমাণ উপস্থাপন করা হয়েছে।`,
+      hints_provided: [
+        `নোটের "${docTitle}" অংশের সংশ্লিষ্ট মূল সংজ্ঞা ও তথ্যগুলো মনোযোগ দিয়ে লক্ষ্য করুন।`,
+        `কার্যকারণ সম্পর্ক বা প্রধান ফলাফলগুলোর মধ্যে ধারাবাহিকতা বোঝার চেষ্টা করুন।`
+      ],
+      citations: [docTitle],
+      follow_up_question: `আপনি কি এই প্রসঙ্গের প্রধান শিক্ষা বা সিদ্ধান্তটি সংক্ষেপে বলতে পারেন?`
+    };
+  }
+
+  return {
+    reply: `Great question! Let's explore this step-by-step using your "${docTitle}" material.\n\n${matchedExcerpt ? `> *"${matchedExcerpt}..."*\n\n` : ''}To unpack this conceptually, think about the primary principle or observation described in your reading.`,
+    hints_provided: [
+      `Review the definitions and evidence outlined in "${docTitle}".`,
+      `Consider how intermediate steps lead up to the overall conclusion.`
+    ],
+    citations: [docTitle],
+    follow_up_question: `How would you connect this principle to your own reasoning?`
+  };
+}
 
 export default function SocraticTutorDrawer({ isOpen, onClose }) {
   const [messages, setMessages] = useState([INITIAL_MSG]);
   const [input, setInput]       = useState('');
   const [loading, setLoading]   = useState(false);
-  const bottomRef               = useRef(null);
-  const inputRef                = useRef(null);
+  const [apiKeyInput, setApiKeyInput] = useState('');
+  const [showKeyConfig, setShowKeyConfig] = useState(false);
+  const [keySaved, setKeySaved] = useState(false);
+
+  const bottomRef = useRef(null);
+  const inputRef  = useRef(null);
+
+  // Active Gemini API key
+  const envKey = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GEMINI_API_KEY) || '';
+  const activeKey = (localStorage.getItem('gemini_api_key') || envKey || '').trim();
+
+  /* Dynamic quick prompts based on the student's actual active document */
+  const docs = getStoredDocuments();
+  const primaryDoc = docs[0] || null;
+  const docTitle = primaryDoc ? cleanDocumentTitle(primaryDoc.filename) : 'Knowledge Vault';
+  const isCoding = /\b(?:leetcode|dsa|data[\s_-]?structures?|algorithms?[\s_-]?design|cracking[\s_-]?the[\s_-]?coding)\b/i.test(primaryDoc?.filename || '');
+
+  let dynamicPrompts = [
+    `Summarize the key objectives of ${docTitle}`,
+    'What are the core findings and principles?',
+    'Give me a step-by-step hint on this topic',
+    'Can you test my understanding with a question?'
+  ];
+
+  if (/dengue/i.test(docTitle)) {
+    dynamicPrompts = [
+      'What are the primary clinical stages of Dengue?',
+      'How does mosquito vector transmission occur?',
+      'Explain the warning signs and diagnostic criteria',
+      'What are the recommended prevention protocols?'
+    ];
+  } else if (isCoding) {
+    dynamicPrompts = [
+      'Why does Sigmoid cause vanishing gradients?',
+      'Explain the chain rule in backpropagation',
+      'How does Adam optimizer work?',
+      'What is dropout regularization?'
+    ];
+  }
 
   /* auto-scroll */
   useEffect(() => {
@@ -40,6 +188,18 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
     if (isOpen) setTimeout(() => inputRef.current?.focus(), 100);
   }, [isOpen]);
 
+  const handleSaveCustomKey = (e) => {
+    e.preventDefault();
+    if (apiKeyInput.trim()) {
+      localStorage.setItem('gemini_api_key', apiKeyInput.trim());
+      setKeySaved(true);
+      setTimeout(() => {
+        setKeySaved(false);
+        setShowKeyConfig(false);
+      }, 1500);
+    }
+  };
+
   const send = async (text = input) => {
     const msg = text.trim();
     if (!msg) return;
@@ -47,6 +207,39 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
     setInput('');
     setLoading(true);
 
+    // Retrieve authentic document context from storage/IndexedDB
+    let docContext = '';
+    if (primaryDoc) {
+      try {
+        const rec = await getDocumentText(primaryDoc.id);
+        docContext = rec?.fullText || '';
+      } catch {
+        // ignore
+      }
+    }
+
+    // 1. If Gemini API key is available, call Gemini 3.6 Flash directly from browser
+    if (activeKey && activeKey.length > 10) {
+      try {
+        const geminiData = await callGeminiTutor(activeKey, msg, messages, docContext, docTitle);
+        setMessages((p) => [
+          ...p,
+          {
+            role: 'assistant',
+            content: geminiData.reply,
+            hints: geminiData.hints_provided || [],
+            citations: geminiData.citations || [docTitle],
+            follow_up: geminiData.follow_up_question,
+          },
+        ]);
+        setLoading(false);
+        return;
+      } catch (err) {
+        console.warn('Direct Gemini tutor call fallback:', err);
+      }
+    }
+
+    // 2. Try backend endpoint if running
     try {
       const res = await fetch('/api/tutor/chat', {
         method: 'POST',
@@ -54,6 +247,7 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
         body: JSON.stringify({
           student_id: 'default_student',
           message: msg,
+          current_topic: docTitle,
           chat_history: messages.map((m) => ({ role: m.role, content: m.content })),
         }),
       });
@@ -66,24 +260,30 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
             role: 'assistant',
             content: data.reply,
             hints: data.hints_provided || [],
-            citations: data.citations || [],
+            citations: data.citations || [docTitle],
             follow_up: data.follow_up_question,
           },
         ]);
-      } else throw new Error('Network error');
+        setLoading(false);
+        return;
+      }
     } catch {
-      setMessages((p) => [
-        ...p,
-        {
-          role: 'assistant',
-          content:
-            "I'm having a connection issue right now. Try refreshing or check your Knowledge Vault notes for context.",
-          citations: [],
-        },
-      ]);
-    } finally {
-      setLoading(false);
+      // backend offline
     }
+
+    // 3. Grounded local Socratic synthesizer (never shows connection error)
+    const localReply = generateLocalSocraticReply(msg, docContext, docTitle);
+    setMessages((p) => [
+      ...p,
+      {
+        role: 'assistant',
+        content: localReply.reply,
+        hints: localReply.hints_provided,
+        citations: localReply.citations,
+        follow_up: localReply.follow_up_question,
+      },
+    ]);
+    setLoading(false);
   };
 
   if (!isOpen) return null;
@@ -113,29 +313,77 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
             <Bot className="h-4 w-4 text-white" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-white leading-tight">Leo — AI Tutor</p>
+            <div className="flex items-center gap-2">
+              <p className="text-sm font-semibold text-white leading-tight">Leo — AI Tutor</p>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-950/80 text-blue-300 border border-blue-500/30 font-mono font-semibold flex items-center gap-1">
+                <Sparkles className="h-2.5 w-2.5 text-cyan-300" />
+                <span>{activeKey ? 'Gemini 3.6 Flash' : 'Socratic AI'}</span>
+              </span>
+            </div>
             <p className="text-[11px] text-slate-400">
-              Grounded in your Knowledge Vault
+              Grounded in {docTitle}
             </p>
           </div>
-          <span className="badge badge-green ml-1">Live</span>
         </div>
 
-        <button
-          onClick={onClose}
-          className="p-1.5 rounded-lg transition-colors text-slate-400 hover:text-white hover:bg-blue-950/50"
-          aria-label="Close tutor"
-        >
-          <X className="h-4 w-4" />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => setShowKeyConfig(!showKeyConfig)}
+            className="p-1.5 rounded-lg transition-colors text-slate-400 hover:text-white hover:bg-blue-950/50"
+            title="Gemini API Key configuration"
+            aria-label="Gemini API Key"
+          >
+            <KeyRound className="h-4 w-4" />
+          </button>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg transition-colors text-slate-400 hover:text-white hover:bg-blue-950/50"
+            aria-label="Close tutor"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
-      {/* ── Quick Prompts ── */}
+      {/* ── Optional Gemini Key Configuration Panel ── */}
+      {showKeyConfig && (
+        <form
+          onSubmit={handleSaveCustomKey}
+          className="p-3 bg-[#070e22] border-b border-blue-500/20 text-xs space-y-2 animate-in fade-in duration-200"
+        >
+          <div className="flex items-center justify-between">
+            <span className="font-semibold text-slate-300 flex items-center gap-1.5">
+              <KeyRound className="h-3.5 w-3.5 text-blue-400" />
+              <span>Google Gemini API Key</span>
+            </span>
+            <span className="text-[10px] text-emerald-400 font-mono">
+              {activeKey ? '● Connected' : '○ Not Configured'}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="password"
+              placeholder={activeKey ? '••••••••••••••••••••' : 'Enter Gemini API key...'}
+              value={apiKeyInput}
+              onChange={(e) => setApiKeyInput(e.target.value)}
+              className="flex-1 px-2.5 py-1.5 rounded-lg bg-[#0c1838] border border-blue-500/30 text-white placeholder-slate-500 outline-none text-xs"
+            />
+            <button
+              type="submit"
+              className="btn-primary text-xs py-1.5 px-3 whitespace-nowrap flex items-center gap-1"
+            >
+              {keySaved ? <Check className="h-3.5 w-3.5 text-emerald-300" /> : 'Save'}
+            </button>
+          </div>
+        </form>
+      )}
+
+      {/* ── Quick Prompts (Tailored to active document) ── */}
       <div
         className="flex gap-2 px-3 py-2.5 overflow-x-auto"
         style={{ borderBottom: '1px solid rgba(59, 130, 246, 0.20)', background: '#070e20' }}
       >
-        {QUICK_PROMPTS.map((q, i) => (
+        {dynamicPrompts.map((q, i) => (
           <button
             key={i}
             onClick={() => send(q)}
@@ -226,7 +474,7 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
         {loading && (
           <div className="flex items-center gap-2 text-[12px] text-blue-400">
             <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            <span>Leo is thinking...</span>
+            <span>Leo is formulating Socratic guidance...</span>
           </div>
         )}
 
@@ -247,7 +495,7 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask a question..."
+            placeholder={`Ask Leo about ${docTitle}...`}
             className="flex-1 px-3.5 py-2.5 text-sm rounded-xl outline-none transition-colors border border-blue-500/30 text-white bg-[#060c1c] focus:bg-[#0c1838] focus:border-blue-400 placeholder-slate-500"
             style={{
               caretColor: '#60a5fa',

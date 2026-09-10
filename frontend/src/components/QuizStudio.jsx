@@ -16,7 +16,8 @@ import {
   FileText,
   UploadCloud,
   X,
-  Layers
+  Layers,
+  RotateCcw
 } from 'lucide-react';
 import HandwritingCanvas from './HandwritingCanvas';
 import GradingReportModal from './GradingReportModal';
@@ -65,19 +66,37 @@ export default function QuizStudio({
 
   // Selected topic inside active document - strictly document-specific
   const computeTopics = (doc, textRec) => {
+    const isCodingDoc = /\b(?:leetcode|dsa|data[\s_-]?structures?|algorithms?[\s_-]?design|cracking[\s_-]?the[\s_-]?coding)\b/i.test(doc?.filename || '');
+
+    let rawTopics = [];
     if (textRec?.chapters?.length > 0) {
       const allLabel = textRec.isBangla 
         ? 'সকল অধ্যায় ও সামগ্রিক বিষয়বস্তু' 
         : 'All Chapters & Topics';
-      return [allLabel, ...textRec.chapters.map(c => cleanTopicString(c.title))];
+      rawTopics = [allLabel, ...textRec.chapters.map(c => cleanTopicString(c.title))];
+    } else if (doc?.topics_covered?.length > 0) {
+      rawTopics = doc.topics_covered.map(t => cleanTopicString(t));
+    } else if (doc?.filename) {
+      rawTopics = extractTopicsFromFilename(doc.filename);
     }
-    if (doc?.topics_covered?.length > 0) {
-      return doc.topics_covered.map(t => cleanTopicString(t));
+
+    // Strictly purge any CS keywords if document is NOT a coding document
+    if (!isCodingDoc) {
+      rawTopics = rawTopics.filter(t => 
+        !/\b(?:data structures?|big-?o|trees?\s*&\s*graphs?|dynamic programming|sorting algorithms?)\b/i.test(t)
+      );
+      if (rawTopics.length === 0 && doc?.filename) {
+        rawTopics = extractTopicsFromFilename(doc.filename);
+      }
     }
-    if (doc?.filename) {
-      return extractTopicsFromFilename(doc.filename);
-    }
-    return ['Comprehensive Overview', 'Key Insights & Findings', 'Analytical Evaluation', 'Strategic Summary'];
+
+    const cleanTitle = cleanDocumentTitle(doc?.filename || 'Document');
+    return rawTopics.length > 0 ? rawTopics : [
+      `${cleanTitle}: Overview & Objectives`,
+      'Key Findings & Core Analysis',
+      'Methodologies, Evidence & Insights',
+      'Conclusions & Practical Takeaways'
+    ];
   };
 
   const initialTopics = computeTopics(activeDoc, null);
@@ -106,6 +125,12 @@ export default function QuizStudio({
   const [submitting, setSubmitting] = useState(false);
   const [gradingReport, setGradingReport] = useState(null);
   const [timeRemaining, setTimeRemaining] = useState(900);
+
+  const handleResetTimer = () => {
+    const initialSeconds = (quiz?.time_limit_minutes || Math.round(numQuestions * 2.5)) * 60;
+    setTimeRemaining(initialSeconds);
+    setToastMsg('Timer restarted from the beginning.');
+  };
 
   // Auto-dismiss toast after 4.5 seconds
   useEffect(() => {
@@ -186,6 +211,8 @@ export default function QuizStudio({
     setGradingReport(null);
     setCurrentIdx(0);
     setAnswers({});
+    const initialSeconds = Math.max(5, Math.round(count * 2.5)) * 60;
+    setTimeRemaining(initialSeconds);
 
     try {
       // 1. Try backend generation if running
@@ -701,22 +728,28 @@ export default function QuizStudio({
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
-          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-[#070e22] border border-blue-500/25 font-mono text-xs shadow-inner">
-            <Clock className={`h-4 w-4 ${timeRemaining < 120 ? 'text-rose-400 animate-pulse' : 'text-blue-400'}`} />
+          <button
+            onClick={handleResetTimer}
+            className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-[#070e22] hover:bg-[#0c1838] border border-blue-500/25 hover:border-blue-400 font-mono text-xs shadow-inner cursor-pointer transition-all group"
+            title="Click clock to restart timer from the beginning"
+          >
+            <Clock className={`h-4 w-4 transition-transform group-hover:rotate-45 ${timeRemaining < 120 ? 'text-rose-400 animate-pulse' : 'text-blue-400'}`} />
             <span className={timeRemaining < 120 ? 'text-rose-400 font-bold' : 'text-slate-200 font-semibold'}>
               {formatTimer(timeRemaining)}
             </span>
-          </div>
+            <RotateCcw className="h-3 w-3 text-slate-500 group-hover:text-blue-300 opacity-60 group-hover:opacity-100 transition-opacity ml-0.5" />
+          </button>
 
           <button
             onClick={() => {
               setAnswers({});
               setCurrentIdx(0);
-              setTimeRemaining((quiz.time_limit_minutes || Math.round(numQuestions * 2.5)) * 60);
-              setToastMsg('Cleared all responses. Assessment reset from Question 1.');
+              const initialSeconds = (quiz.time_limit_minutes || Math.round(numQuestions * 2.5)) * 60;
+              setTimeRemaining(initialSeconds);
+              setToastMsg('Cleared all responses. Assessment and timer reset from Question 1.');
             }}
             className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5 text-slate-300 hover:text-white border-blue-500/20 bg-[#0c1838]"
-            title="Clear all responses to re-attempt this quiz"
+            title="Clear all responses and restart timer from Question 1"
           >
             <span>Reset Answers</span>
           </button>
@@ -725,7 +758,7 @@ export default function QuizStudio({
             onClick={() => handleGenerateQuiz(activeDoc?.filename, selectedTopic, quizDifficulty, numQuestions)}
             disabled={loading}
             className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5 bg-blue-950/40 text-blue-300 border-blue-500/30 hover:bg-blue-900/50 font-semibold shadow-xs"
-            title="Generate fresh new randomized questions for this topic"
+            title="Generate fresh new randomized questions for this topic (resets timer)"
           >
             <RefreshCw className={`h-3.5 w-3.5 text-blue-400 ${loading ? 'animate-spin' : ''}`} />
             <span>{loading ? 'Regenerating…' : 'Regenerate Questions'}</span>

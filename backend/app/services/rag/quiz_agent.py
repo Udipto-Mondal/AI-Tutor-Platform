@@ -26,7 +26,10 @@ def generate_quiz_with_llm(context_text: str, request: QuizGenerationRequest) ->
     try:
         import google.generativeai as genai
         genai.configure(api_key=settings.GEMINI_API_KEY)
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        try:
+            model = genai.GenerativeModel("gemini-3.6-flash")
+        except Exception:
+            model = genai.GenerativeModel("gemini-1.5-flash")
         
         prompt = f"""You are an expert AI Tutor. Based on the following study materials, create an adaptive quiz with {request.num_questions} questions.
 Difficulty level: {request.difficulty.value}

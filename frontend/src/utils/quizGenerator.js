@@ -706,9 +706,9 @@ export async function generateAdaptiveQuiz({
   const cleanTopic = cleanTopicString(topicName);
   const neededCount = Math.max(1, parseInt(numQuestions, 10) || 5);
 
-  // Only use pre-baked CS banks if topic is explicitly in CS_TOPIC_BANKS and document relates to CS
+  // Only use pre-baked CS banks if topic is explicitly in CS_TOPIC_BANKS and document is strictly a coding document
+  const isCSMaterial = /\b(?:leetcode|dsa|data[\s_-]?structures?|algorithms?[\s_-]?design|cracking[\s_-]?the[\s_-]?coding)\b/i.test(docTitle);
   const isCSTopic = Boolean(CS_TOPIC_BANKS[cleanTopic]);
-  const isCSMaterial = /coding|program|interview|algorithm|data structure|deep_learning|neural/i.test(docTitle);
   const matchedBank = (!documentText && isCSTopic && isCSMaterial) ? CS_TOPIC_BANKS[cleanTopic] : null;
   
   if (matchedBank) {
@@ -1087,17 +1087,29 @@ Return a STRICT JSON array of question objects with this schema:
 ]
 Output ONLY raw JSON array. No markdown fences.`;
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: systemPrompt }] }]
-    })
-  });
+  const candidateModels = ['gemini-3.6-flash', 'gemini-flash-latest', 'gemini-2.5-flash', 'gemini-1.5-flash'];
+  let res = null;
+  for (const model of candidateModels) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      const attempt = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: systemPrompt }] }]
+        })
+      });
+      if (attempt.ok) {
+        res = attempt;
+        break;
+      }
+    } catch {
+      // try next model
+    }
+  }
 
-  if (!res.ok) {
-    throw new Error(`Gemini API returned status ${res.status}`);
+  if (!res || !res.ok) {
+    throw new Error(`Gemini API returned failure or unavailable model`);
   }
 
   const data = await res.json();

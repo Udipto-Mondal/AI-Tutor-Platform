@@ -25,7 +25,10 @@ def run_socratic_tutor(request: SocraticTutorRequest) -> SocraticTutorResponse:
         try:
             import google.generativeai as genai
             genai.configure(api_key=settings.GEMINI_API_KEY)
-            model = genai.GenerativeModel("gemini-1.5-flash")
+            try:
+                model = genai.GenerativeModel("gemini-3.6-flash")
+            except Exception:
+                model = genai.GenerativeModel("gemini-1.5-flash")
             
             history_text = "\n".join([f"{m.role}: {m.content}" for m in request.chat_history[-4:]])
             

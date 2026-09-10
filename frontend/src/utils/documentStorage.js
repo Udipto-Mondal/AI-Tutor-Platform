@@ -61,6 +61,10 @@ export function unmarkDocumentDeleted(filename) {
   }
 }
 
+export function isExplicitCodingDoc(filename) {
+  return /\b(?:leetcode|dsa|data[\s_-]?structures?|algorithms?[\s_-]?design|cracking[\s_-]?the[\s_-]?coding)\b/i.test(filename || '');
+}
+
 export function getStoredDocuments() {
   try {
     const isInit = localStorage.getItem(INITIALIZED_KEY);
@@ -81,8 +85,28 @@ export function getStoredDocuments() {
 
     const parsed = JSON.parse(raw);
     if (Array.isArray(parsed)) {
-      // Filter out any documents that the user explicitly deleted!
-      return parsed.filter(d => !deleted.has(d.filename) && !deleted.has(d.id));
+      // Filter out any documents that the user explicitly deleted
+      const active = parsed.filter(d => !deleted.has(d.filename) && !deleted.has(d.id));
+
+      // Auto-heal stale topics for non-coding documents
+      let needsSave = false;
+      const healed = active.map(doc => {
+        const isCoding = isExplicitCodingDoc(doc.filename);
+        if (!isCoding && doc.topics_covered && doc.topics_covered.some(t => /\b(?:data structures?|big-?o|trees?\s*&\s*graphs?|dynamic programming)\b/i.test(t))) {
+          needsSave = true;
+          return {
+            ...doc,
+            topics_covered: extractTopicsFromFilename(doc.filename)
+          };
+        }
+        return doc;
+      });
+
+      if (needsSave) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(healed));
+      }
+
+      return healed;
     }
     return [];
   } catch (e) {
