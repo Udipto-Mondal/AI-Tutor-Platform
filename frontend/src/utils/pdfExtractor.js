@@ -292,32 +292,37 @@ function cleanHeading(str) {
  */
 function generateFallbackTopics(text, filename, isBangla) {
   const sample = (text || '').toLowerCase();
+  const cleanTitle = cleanDocumentTitle(filename);
 
   if (isBangla) {
     return [
-      'মূল বিষয়বস্তু ও চরিত্র রূপায়ণ',
-      'প্রধান ঘটনাপ্রবাহ ও সংলাপ বিশ্লেষণ',
-      'উদ্ধৃতি ও প্রেক্ষাপট অনুধাবন',
-      'সারমর্ম ও সামগ্রিক মূল্যায়ন'
+      `${cleanTitle}: মূল বিষয়বস্তু ও ভূমিকা`,
+      'প্রধান ঘটনাপ্রবাহ ও তথ্য বিশ্লেষণ',
+      'উদ্ধৃতি, উপাত্ত ও প্রেক্ষাপট অনুধাবন',
+      'সারমর্ম, ফলাফল ও সামগ্রিক মূল্যায়ন'
     ];
   }
 
-  // Detect coding / algorithms content
-  const isCoding = /\b(?:algorithm|binary|tree|graph|array|string|complexity|big-?o|dynamic programming|data structure|stack|queue|sort|interview|pointer|recursion)\b/i.test(sample) ||
-    /coding|program|interview/i.test(filename);
+  // Detect explicit coding / CS algorithms content (strictly avoid false positives on words like 'graph' or 'complexity')
+  const isCoding = (
+    /\b(?:data structures?|binary search trees?|dynamic programming|asymptotic complexity|big-?o notation|hash maps?|linked lists?|breadth-first search|depth-first search|sorting algorithms?)\b/i.test(sample) ||
+    /\b(?:leetcode|cracking the coding|algorithms? and data structures?)\b/i.test(filename)
+  );
 
   if (isCoding) {
     return [
-      'Data Structures & Big-O Complexity',
+      'Data Structures & Asymptotic Analysis',
       'Algorithm Design & Edge Cases',
       'Problem Solving & Invariants',
-      'System Architecture & Scalability'
+      'System Architecture & Trade-offs'
     ];
   }
 
   // Detect machine learning / neural networks content
-  const isML = /\b(?:neural|gradient|weight|loss|activation|backpropagation|tensor|epoch|convolution)\b/i.test(sample) ||
-    /deep|learning|neural/i.test(filename);
+  const isML = (
+    /\b(?:neural networks?|gradient descent|loss function|backpropagation chain rule|convolutional neural|activation function)\b/i.test(sample) ||
+    /deep[\s_-]?learning|neural[\s_-]?network/i.test(filename)
+  );
 
   if (isML) {
     return [
@@ -328,11 +333,11 @@ function generateFallbackTopics(text, filename, isBangla) {
     ];
   }
 
-  // General academic
+  // General academic, medical, research or corporate document
   return [
-    'Core Concepts & Foundations',
-    'Methodologies & Structural Analysis',
-    'Analytical Evaluation & Findings',
-    'Critical Synthesis & Applications'
+    `${cleanTitle}: Overview & Objectives`,
+    'Key Findings & Data Analysis',
+    'Methodologies, Observations & Evidence',
+    'Conclusions, Impact & Recommendations'
   ];
 }

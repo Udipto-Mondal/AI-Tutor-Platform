@@ -98,8 +98,8 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
       <div
         className="flex items-center justify-between px-4 py-3.5"
         style={{
-          borderBottom: '1px solid rgba(186, 230, 253, 0.75)',
-          background: 'rgba(235, 245, 255, 0.90)',
+          borderBottom: '1px solid rgba(59, 130, 246, 0.25)',
+          background: '#09122a',
         }}
       >
         <div className="flex items-center gap-3">
@@ -113,8 +113,8 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
             <Bot className="h-4 w-4 text-white" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-slate-900 leading-tight">Leo — AI Tutor</p>
-            <p className="text-[11px] text-slate-500">
+            <p className="text-sm font-semibold text-white leading-tight">Leo — AI Tutor</p>
+            <p className="text-[11px] text-slate-400">
               Grounded in your Knowledge Vault
             </p>
           </div>
@@ -123,7 +123,7 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
 
         <button
           onClick={onClose}
-          className="p-1.5 rounded-lg transition-colors text-slate-500 hover:text-slate-800"
+          className="p-1.5 rounded-lg transition-colors text-slate-400 hover:text-white hover:bg-blue-950/50"
           aria-label="Close tutor"
         >
           <X className="h-4 w-4" />
@@ -133,17 +133,17 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
       {/* ── Quick Prompts ── */}
       <div
         className="flex gap-2 px-3 py-2.5 overflow-x-auto"
-        style={{ borderBottom: '1px solid rgba(186, 230, 253, 0.60)', background: 'rgba(248, 250, 252, 0.70)' }}
+        style={{ borderBottom: '1px solid rgba(59, 130, 246, 0.20)', background: '#070e20' }}
       >
         {QUICK_PROMPTS.map((q, i) => (
           <button
             key={i}
             onClick={() => send(q)}
-            className="shrink-0 text-[11px] px-2.5 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors"
+            className="shrink-0 text-[11px] px-2.5 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors hover:bg-blue-900/40"
             style={{
-              background: 'rgba(37,99,235,0.08)',
-              border: '1px solid rgba(37,99,235,0.22)',
-              color: '#1d4ed8',
+              background: 'rgba(37,99,235,0.15)',
+              border: '1px solid rgba(59,130,246,0.30)',
+              color: '#93c5fd',
             }}
           >
             {q}
@@ -152,7 +152,7 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
       </div>
 
       {/* ── Messages ── */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 bg-white/60">
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 bg-[#060c1c]">
         {messages.map((m, i) => (
           <div
             key={i}
@@ -169,11 +169,11 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
                       boxShadow: '0 2px 10px rgba(37,99,235,0.25)',
                     }
                   : {
-                      background: '#f8fafc',
-                      border: '1px solid rgba(203, 213, 225, 0.85)',
-                      color: '#0f172a',
+                      background: '#0c1838',
+                      border: '1px solid rgba(59, 130, 246, 0.25)',
+                      color: '#f1f5f9',
                       borderBottomLeftRadius: '4px',
-                      boxShadow: '0 1px 4px rgba(15, 23, 42, 0.04)',
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.30)',
                     }
               }
             >
@@ -183,13 +183,13 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
               {m.hints?.length > 0 && (
                 <div
                   className="mt-2.5 pt-2.5 space-y-1"
-                  style={{ borderTop: '1px solid rgba(203, 213, 225, 0.60)' }}
+                  style={{ borderTop: '1px solid rgba(59, 130, 246, 0.20)' }}
                 >
-                  <p className="text-[11px] font-semibold text-blue-700">
+                  <p className="text-[11px] font-semibold text-blue-400">
                     Guided hints:
                   </p>
                   {m.hints.map((h, hi) => (
-                    <p key={hi} className="text-[12px] text-slate-700">
+                    <p key={hi} className="text-[12px] text-slate-300">
                       {hi + 1}. {h}
                     </p>
                   ))}
@@ -200,10 +200,10 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
               {m.citations?.length > 0 && (
                 <div
                   className="flex items-center gap-1.5 mt-2 pt-2"
-                  style={{ borderTop: '1px solid rgba(203, 213, 225, 0.60)' }}
+                  style={{ borderTop: '1px solid rgba(59, 130, 246, 0.20)' }}
                 >
-                  <BookOpen className="h-3 w-3 shrink-0 text-blue-600" />
-                  <span className="text-[10.5px] text-slate-500">
+                  <BookOpen className="h-3 w-3 shrink-0 text-blue-400" />
+                  <span className="text-[10.5px] text-slate-400">
                     {m.citations.join(', ')}
                   </span>
                 </div>
@@ -213,7 +213,7 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
               {m.follow_up && (
                 <button
                   onClick={() => send(m.follow_up)}
-                  className="mt-2 flex items-center gap-1.5 text-[11px] font-medium transition-opacity hover:opacity-80 text-teal-700"
+                  className="mt-2 flex items-center gap-1.5 text-[11px] font-medium transition-opacity hover:opacity-80 text-cyan-400 hover:text-cyan-300"
                 >
                   <ChevronDown className="h-3 w-3" />
                   {m.follow_up}
@@ -224,7 +224,7 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
         ))}
 
         {loading && (
-          <div className="flex items-center gap-2 text-[12px] text-blue-600">
+          <div className="flex items-center gap-2 text-[12px] text-blue-400">
             <Loader2 className="h-3.5 w-3.5 animate-spin" />
             <span>Leo is thinking...</span>
           </div>
@@ -235,8 +235,8 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
 
       {/* ── Input ── */}
       <div
-        className="px-4 py-3 bg-white"
-        style={{ borderTop: '1px solid rgba(186, 230, 253, 0.70)' }}
+        className="px-4 py-3 bg-[#09122a]"
+        style={{ borderTop: '1px solid rgba(59, 130, 246, 0.25)' }}
       >
         <form
           onSubmit={(e) => { e.preventDefault(); send(); }}
@@ -248,9 +248,9 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask a question..."
-            className="flex-1 px-3.5 py-2.5 text-sm rounded-xl outline-none transition-colors border border-slate-300 text-slate-900 bg-slate-50 focus:bg-white"
+            className="flex-1 px-3.5 py-2.5 text-sm rounded-xl outline-none transition-colors border border-blue-500/30 text-white bg-[#060c1c] focus:bg-[#0c1838] focus:border-blue-400 placeholder-slate-500"
             style={{
-              caretColor: '#2563eb',
+              caretColor: '#60a5fa',
             }}
           />
           <button

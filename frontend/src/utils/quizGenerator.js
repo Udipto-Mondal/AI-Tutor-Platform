@@ -706,10 +706,12 @@ export async function generateAdaptiveQuiz({
   const cleanTopic = cleanTopicString(topicName);
   const neededCount = Math.max(1, parseInt(numQuestions, 10) || 5);
 
-  // If matched in curated CS banks and no custom text provided, use CS banks with dynamic shuffling
-  const matchedBank = CS_TOPIC_BANKS[cleanTopic] || (cleanTopic.includes('Data') || cleanTopic.includes('Algorithm') ? CS_TOPIC_BANKS['Data Structures & Big-O Complexity'] : CS_TOPIC_BANKS['Core Concepts & Foundations']);
+  // Only use pre-baked CS banks if topic is explicitly in CS_TOPIC_BANKS and document relates to CS
+  const isCSTopic = Boolean(CS_TOPIC_BANKS[cleanTopic]);
+  const isCSMaterial = /coding|program|interview|algorithm|data structure|deep_learning|neural/i.test(docTitle);
+  const matchedBank = (!documentText && isCSTopic && isCSMaterial) ? CS_TOPIC_BANKS[cleanTopic] : null;
   
-  if (!documentText && matchedBank) {
+  if (matchedBank) {
     const shuffledBank = [...matchedBank].sort(() => Math.random() - 0.5);
     const randomizedQuestions = [];
     
@@ -802,9 +804,15 @@ function generateLocalContextualQuiz({ docTitle, topicName, documentText, diffic
   const rawParagraphs = extractCleanParagraphs(cleanContext, isBangla);
 
   const sentences = rawSentences.length > 0 ? rawSentences : [
-    isBangla ? 'বিষয়বস্তুর মূল কাঠামো ও মৌলিক নীতি' : 'Core architectural design principles and invariants'
+    isBangla
+      ? `"${docTitle}" এর "${topicName}" অংশের সামগ্রিক বিবরণ, মূল বিশ্লেষণ ও প্রধান পর্যবেক্ষণসমূহ`
+      : `Core findings, observations, contextual evidence, and primary principles detailed in "${docTitle}" under ${topicName}`
   ];
-  const paragraphs = rawParagraphs.length > 0 ? rawParagraphs : [cleanContext || (isBangla ? 'অধ্যায়ের সামগ্রিক বিশ্লেষণ' : 'Comprehensive chapter review')];
+  const paragraphs = rawParagraphs.length > 0 ? rawParagraphs : [
+    cleanContext || (isBangla
+      ? `"${docTitle}" এর "${topicName}" বিষয়ক গভীর তাত্ত্বিক এবং বাস্তবিক প্রেক্ষাপট বিশ্লেষণ।`
+      : `Comprehensive analytical examination and documented outcomes for ${topicName} from "${docTitle}".`)
+  ];
 
   // Randomize offset on every call so repeated generations produce different questions!
   const shuffledSentences = [...sentences].sort(() => Math.random() - 0.5);

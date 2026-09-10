@@ -32,15 +32,15 @@ import {
   unmarkDocumentDeleted,
   getDeletedFilenames
 } from '../utils/documentStorage';
-import { extractDocumentContent, sanitizeExtractedText, cleanDocumentTitle } from '../utils/pdfExtractor';
+import { extractDocumentContent, sanitizeExtractedText, cleanDocumentTitle, cleanTopicString } from '../utils/pdfExtractor';
 import { saveDocumentText, getDocumentText } from '../utils/textStore';
 
 /* ─── Tiny Helpers ─────────────────────────────────────── */
 function fileIcon(type) {
   const t = (type || '').toLowerCase();
-  if (t === 'pdf')  return <FileText   className="h-5 w-5 text-blue-600" />;
-  if (t === 'md')   return <FileCode2  className="h-5 w-5 text-indigo-600" />;
-  return              <FileType    className="h-5 w-5 text-teal-600" />;
+  if (t === 'pdf')  return <FileText   className="h-5 w-5 text-blue-400" />;
+  if (t === 'md')   return <FileCode2  className="h-5 w-5 text-indigo-400" />;
+  return              <FileType    className="h-5 w-5 text-teal-400" />;
 }
 
 function formatSize(bytes) {
@@ -55,24 +55,24 @@ function DeleteModal({ doc, onConfirm, onCancel }) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background: 'rgba(15, 23, 42, 0.45)', backdropFilter: 'blur(6px)' }}
+      style={{ background: 'rgba(5, 11, 24, 0.75)', backdropFilter: 'blur(8px)' }}
     >
-      <div className="bg-white rounded-2xl w-full max-w-sm p-6 space-y-4 shadow-xl border border-slate-200 animate-fade-up">
+      <div className="bg-[#0a1329] rounded-2xl w-full max-w-sm p-6 space-y-4 shadow-2xl border border-blue-500/30 animate-fade-up">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-center shrink-0">
-            <Trash2 className="h-5 w-5 text-rose-600" />
+          <div className="h-10 w-10 rounded-xl bg-rose-950/60 border border-rose-500/30 flex items-center justify-center shrink-0">
+            <Trash2 className="h-5 w-5 text-rose-400" />
           </div>
           <div>
-            <p className="font-bold text-slate-900 text-sm">Delete Document</p>
-            <p className="text-xs text-slate-500 mt-0.5">This action cannot be undone</p>
+            <p className="font-bold text-slate-100 text-sm">Delete Document</p>
+            <p className="text-xs text-slate-400 mt-0.5">This action cannot be undone</p>
           </div>
         </div>
 
-        <div className="px-3 py-2 rounded-lg text-xs font-mono bg-slate-50 border border-slate-200 text-slate-700">
+        <div className="px-3 py-2 rounded-lg text-xs font-mono bg-[#060c1c] border border-blue-500/20 text-slate-300 truncate">
           {doc.filename}
         </div>
 
-        <p className="text-xs text-slate-600 leading-relaxed">
+        <p className="text-xs text-slate-400 leading-relaxed">
           Deleting this document will remove it from your Knowledge Vault and all vector memory.
         </p>
 
@@ -80,10 +80,10 @@ function DeleteModal({ doc, onConfirm, onCancel }) {
           <button onClick={onCancel} className="btn-secondary flex-1 justify-center">Cancel</button>
           <button
             onClick={onConfirm}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold bg-rose-600 hover:bg-rose-700 text-white transition-colors shadow-sm"
+            className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold bg-rose-600 hover:bg-rose-500 text-white transition-colors shadow-md shadow-rose-600/30"
           >
             <Trash2 className="h-4 w-4" />
-            Delete
+            <span>Delete</span>
           </button>
         </div>
       </div>
@@ -163,7 +163,7 @@ function ChunksModal({ doc, chunks, onClose, onStartQuiz }) {
         </div>
 
         {/* Toolbar & Search Bar */}
-        <div className="px-6 py-3 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div className="px-6 py-3 bg-[#070e24] border-b border-blue-900/40 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
             <input
@@ -171,12 +171,12 @@ function ChunksModal({ doc, chunks, onClose, onStartQuiz }) {
               placeholder="Search concepts, equations, or keywords in chunks…"
               value={filterQuery}
               onChange={(e) => setFilterQuery(e.target.value)}
-              className="w-full pl-8.5 pr-8 py-1.5 text-xs rounded-xl bg-white border border-slate-300 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-200"
+              className="w-full pl-8.5 pr-8 py-1.5 text-xs rounded-xl bg-[#060c1c] border border-blue-500/30 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-500/30"
             />
             {filterQuery && (
               <button 
                 onClick={() => setFilterQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
               >
                 <X className="h-3 w-3" />
               </button>
@@ -184,16 +184,16 @@ function ChunksModal({ doc, chunks, onClose, onStartQuiz }) {
           </div>
 
           <div className="flex items-center gap-2.5 justify-between sm:justify-end">
-            <span className="text-xs text-slate-500 font-medium">
-              Showing <strong className="text-slate-800 font-semibold">{filteredChunks.length}</strong> of {chunks.length} chunks
+            <span className="text-xs text-slate-400 font-medium">
+              Showing <strong className="text-slate-100 font-semibold">{filteredChunks.length}</strong> of {chunks.length} chunks
             </span>
-            <div className="flex items-center p-0.5 rounded-lg bg-slate-200 border border-slate-300 text-[11px] font-semibold">
+            <div className="flex items-center p-0.5 rounded-lg bg-[#0c1838] border border-blue-500/30 text-[11px] font-semibold">
               <button
                 onClick={() => setViewMode('formatted')}
                 className={`px-2.5 py-1 rounded-md transition-all ${
                   viewMode === 'formatted'
-                    ? 'bg-white text-blue-700 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
                 Formatted Text
@@ -202,8 +202,8 @@ function ChunksModal({ doc, chunks, onClose, onStartQuiz }) {
                 onClick={() => setViewMode('json')}
                 className={`px-2.5 py-1 rounded-md transition-all ${
                   viewMode === 'json'
-                    ? 'bg-white text-blue-700 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
                 Vector JSON
@@ -213,9 +213,9 @@ function ChunksModal({ doc, chunks, onClose, onStartQuiz }) {
         </div>
 
         {/* Chunks List */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-slate-100/60">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-[#060c18]">
           {filteredChunks.length === 0 ? (
-            <div className="p-8 text-center bg-white rounded-xl border border-slate-200 text-slate-500 text-xs">
+            <div className="p-8 text-center bg-[#0a1329] rounded-xl border border-blue-500/20 text-slate-400 text-xs">
               No vector chunks match your search query "{filterQuery}".
             </div>
           ) : (
@@ -229,38 +229,38 @@ function ChunksModal({ doc, chunks, onClose, onStartQuiz }) {
               return (
                 <div 
                   key={chunk.id || idx} 
-                  className="p-4 sm:p-5 rounded-xl bg-white border border-slate-200 shadow-xs hover:border-blue-300 transition-colors space-y-3"
+                  className="p-4 sm:p-5 rounded-xl bg-[#0c1838] border border-blue-500/20 shadow-md hover:border-blue-400 transition-colors space-y-3"
                 >
                   {/* Card Header */}
-                  <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-100 text-xs">
+                  <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-blue-900/30 text-xs">
                     <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center gap-1 font-mono font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-md text-[11px]">
+                      <span className="inline-flex items-center gap-1 font-mono font-bold text-blue-300 bg-blue-950/70 border border-blue-500/30 px-2 py-0.5 rounded-md text-[11px]">
                         <Hash className="h-3 w-3" />
                         Chunk {chunk.chunk_index}
                       </span>
-                      <span className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-slate-700 font-mono">
+                      <span className="text-[11px] px-2 py-0.5 rounded-md bg-[#070e24] border border-blue-500/20 text-slate-300 font-mono">
                         {pageLabel}
                       </span>
                       {topicName && (
-                        <span className="text-[11px] px-2 py-0.5 rounded-md bg-indigo-50 border border-indigo-200 text-indigo-700 font-medium">
+                        <span className="text-[11px] px-2 py-0.5 rounded-md bg-indigo-950/60 border border-indigo-500/30 text-indigo-300 font-medium">
                           {topicName}
                         </span>
                       )}
                     </div>
 
-                    <div className="flex items-center gap-2 text-[11px] font-mono text-slate-500">
+                    <div className="flex items-center gap-2 text-[11px] font-mono text-slate-400">
                       <span>{wordCount} words</span>
                       <span>·</span>
-                      <span className="text-slate-600 font-semibold">{tokenCount} tokens</span>
+                      <span className="text-slate-300 font-semibold">{tokenCount} tokens</span>
                       <span>·</span>
-                      <span className="text-emerald-700 font-semibold">Sim: {similarity}</span>
+                      <span className="text-emerald-400 font-semibold">Sim: {similarity}</span>
                       <button
                         onClick={() => handleCopy(chunk.content, idx)}
-                        className="ml-1 p-1 rounded-md text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                        className="ml-1 p-1 rounded-md text-slate-400 hover:text-blue-300 hover:bg-blue-950/50 transition-colors"
                         title="Copy chunk content"
                       >
                         {copiedIdx === idx ? (
-                          <Check className="h-3.5 w-3.5 text-emerald-600" />
+                          <Check className="h-3.5 w-3.5 text-emerald-400" />
                         ) : (
                           <Copy className="h-3.5 w-3.5" />
                         )}
@@ -270,11 +270,11 @@ function ChunksModal({ doc, chunks, onClose, onStartQuiz }) {
 
                   {/* Card Body */}
                   {viewMode === 'formatted' ? (
-                    <div className="text-xs sm:text-sm text-slate-700 leading-relaxed font-sans whitespace-pre-line space-y-2">
+                    <div className="text-xs sm:text-sm text-slate-200 leading-relaxed font-sans whitespace-pre-line space-y-2">
                       {chunk.content}
                     </div>
                   ) : (
-                    <pre className="p-3 rounded-lg bg-slate-900 text-emerald-400 font-mono text-[11px] overflow-x-auto leading-relaxed">
+                    <pre className="p-3 rounded-lg bg-[#050914] text-emerald-400 font-mono text-[11px] overflow-x-auto leading-relaxed border border-blue-950">
 {JSON.stringify({
   id: chunk.id || `chroma_${doc.id}_chk_${chunk.chunk_index}`,
   collection: 'tutor_knowledge_vault',
@@ -297,9 +297,9 @@ function ChunksModal({ doc, chunks, onClose, onStartQuiz }) {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3.5 border-t border-slate-200 bg-white flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-xs text-slate-500">
-            <FileCheck className="h-4 w-4 text-emerald-600" />
+        <div className="px-6 py-3.5 border-t border-blue-900/40 bg-[#070e24] flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-xs text-slate-400">
+            <FileCheck className="h-4 w-4 text-emerald-400" />
             <span>ChromaDB vector collection synced · Ready for RAG retrieval</span>
           </div>
 
@@ -714,53 +714,82 @@ export default function KnowledgeVault({ documents = [], setDocuments, onStartQu
 
   return (
     <div className="space-y-6 pb-8">
-      {/* ── Header Banner ── */}
-      <div className="glass-panel p-6 sm:p-7">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1.5 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold">
+      {/* ── Header Banner & Upload Hub ── */}
+      <div 
+        onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={onDrop}
+        className={`glass-panel p-6 sm:p-7 relative overflow-hidden transition-all duration-200 border ${
+          dragOver
+            ? 'border-blue-400 bg-[#0d1c44] shadow-2xl scale-[1.005]'
+            : 'border-blue-500/20 bg-[#0a1329]/95 shadow-xl'
+        }`}
+      >
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="space-y-2 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-semibold">
               <BookOpen className="h-3.5 w-3.5" />
               <span>RAG Knowledge Ingestion Engine</span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-100 tracking-tight">
               Your <span className="gradient-text-primary">Knowledge Vault</span>
             </h1>
-            <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-              Upload PDF textbooks, lecture slides, or markdown notes. Our engine chunks and indexes
-              embeddings into ChromaDB for personalized, topic-specific quizzes.
+            <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">
+              Upload PDF textbooks, lecture slides, or markdown notes. Our engine chunks, indexes,
+              and embeds vectors into ChromaDB for personalized, topic-specific quizzes.
             </p>
+
+            {/* Live Stats Pills */}
+            <div className="flex flex-wrap items-center gap-3 pt-1">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#0c1838] border border-blue-500/20 text-xs text-slate-300 font-mono">
+                <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                <strong className="text-white">{documents.length}</strong> Materials Ready
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#0c1838] border border-blue-500/20 text-xs text-slate-300 font-mono">
+                <Database className="h-3 w-3 text-blue-400" />
+                <strong className="text-white">{documents.reduce((acc, d) => acc + (d.num_chunks || 0), 0)}</strong> Indexed Chunks
+              </span>
+            </div>
           </div>
 
-          <div className="flex items-center gap-2.5 shrink-0 self-start sm:self-center">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0 self-stretch sm:self-start lg:self-center">
             <button
               onClick={fetchDocs}
-              className="btn-secondary text-xs"
+              className="btn-secondary text-xs py-2 px-3 justify-center"
               disabled={loading}
               title="Refresh document vault"
             >
-              <RefreshCw className={`h-3.5 w-3.5 text-blue-600 ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`h-3.5 w-3.5 text-blue-400 ${loading ? 'animate-spin' : ''}`} />
               <span>Refresh</span>
             </button>
-            <label className="btn-primary text-xs cursor-pointer">
-              <UploadCloud className="h-4 w-4" />
-              <span>{uploading ? 'Uploading…' : 'Upload Notes / PDF'}</span>
-              <input
-                ref={fileInputRef}
-                type="file"
-                className="hidden"
-                accept=".pdf,.txt,.md,.markdown"
-                onChange={e => doUpload(e.target.files?.[0])}
-                disabled={uploading}
-              />
-            </label>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="btn-primary text-xs cursor-pointer py-2.5 px-4.5 justify-center shadow-lg shadow-blue-500/25">
+                <UploadCloud className="h-4 w-4" />
+                <span>{uploading ? 'Processing Document…' : 'Upload Notes / PDF'}</span>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  className="hidden"
+                  accept=".pdf,.txt,.md,.markdown"
+                  onChange={e => doUpload(e.target.files?.[0])}
+                  disabled={uploading}
+                />
+              </label>
+              <div className="flex items-center justify-center gap-1.5 text-[10px] font-mono text-slate-400">
+                <span className="px-1.5 py-0.5 rounded bg-blue-500/10 border border-blue-500/20 text-blue-300">PDF</span>
+                <span className="px-1.5 py-0.5 rounded bg-blue-500/10 border border-blue-500/20 text-blue-300">MD</span>
+                <span className="px-1.5 py-0.5 rounded bg-blue-500/10 border border-blue-500/20 text-blue-300">TXT</span>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Upload progress bar */}
         {uploading && uploadPct > 0 && (
-          <div className="mt-4 h-1.5 rounded-full overflow-hidden bg-slate-100">
+          <div className="mt-4 h-1.5 rounded-full overflow-hidden bg-[#060c1a] border border-blue-500/20">
             <div
-              className="h-full rounded-full transition-all duration-300 bg-gradient-to-r from-blue-600 to-teal-500"
+              className="h-full rounded-full transition-all duration-300 bg-gradient-to-r from-blue-600 via-sky-400 to-teal-400"
               style={{ width: `${uploadPct}%` }}
             />
           </div>
@@ -769,52 +798,19 @@ export default function KnowledgeVault({ documents = [], setDocuments, onStartQu
         {/* Status banner */}
         {status && (
           <div className={`mt-4 flex items-center gap-2.5 px-4 py-3 rounded-xl text-xs animate-fade-up ${
-            status.type === 'success' ? 'bg-emerald-50 border border-emerald-200 text-emerald-800'
-            : status.type === 'error' ? 'bg-rose-50 border border-rose-200 text-rose-800'
-            : 'bg-blue-50 border border-blue-200 text-blue-800'
+            status.type === 'success' ? 'bg-emerald-950/70 border border-emerald-500/40 text-emerald-200'
+            : status.type === 'error' ? 'bg-rose-950/70 border border-rose-500/40 text-rose-200'
+            : 'bg-blue-950/70 border border-blue-500/40 text-blue-200'
           }`}>
             {status.type === 'success'
-              ? <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
-              : <AlertCircle  className="h-4 w-4 shrink-0 text-rose-600" />}
+              ? <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+              : <AlertCircle  className="h-4 w-4 shrink-0 text-rose-400" />}
             <span className="font-medium">{status.text}</span>
-            <button onClick={() => setStatus(null)} className="ml-auto text-slate-400 hover:text-slate-700">
+            <button onClick={() => setStatus(null)} className="ml-auto text-slate-400 hover:text-white">
               <X className="h-3.5 w-3.5" />
             </button>
           </div>
         )}
-      </div>
-
-      {/* ── Compact & Responsive Drag & Drop Zone ── */}
-      <div
-        onDragOver={e => { e.preventDefault(); setDragOver(true); }}
-        onDragLeave={() => setDragOver(false)}
-        onDrop={onDrop}
-        onClick={() => fileInputRef.current?.click()}
-        className={`relative rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 py-5 px-6 cursor-pointer transition-all duration-200 border-2 border-dashed ${
-          dragOver
-            ? 'border-blue-500 bg-blue-50 shadow-md scale-[1.005]'
-            : 'border-blue-200 bg-blue-50/40 hover:bg-blue-50/80 hover:border-blue-400 shadow-xs'
-        }`}
-      >
-        <div className="flex items-center gap-3.5">
-          <div className="h-10 w-10 rounded-xl bg-white border border-blue-200 flex items-center justify-center shrink-0 shadow-xs">
-            <UploadCloud className="h-5 w-5 text-blue-600" />
-          </div>
-          <div>
-            <p className="text-xs sm:text-sm font-semibold text-slate-900">
-              Drop lecture slides or PDF notes here, or <span className="text-blue-600 underline underline-offset-2">browse files</span>
-            </p>
-            <p className="text-[11px] text-slate-500 mt-0.5">
-              Supports PDF, Markdown (.md), and Text (.txt) — instant chunking and indexing
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-1.5 shrink-0 self-start sm:self-center">
-          <span className="text-[10.5px] px-2 py-0.5 rounded bg-white border border-slate-200 text-slate-600 font-mono font-medium">PDF</span>
-          <span className="text-[10.5px] px-2 py-0.5 rounded bg-white border border-slate-200 text-slate-600 font-mono font-medium">MD</span>
-          <span className="text-[10.5px] px-2 py-0.5 rounded bg-white border border-slate-200 text-slate-600 font-mono font-medium">TXT</span>
-        </div>
       </div>
 
       {/* ── Search & Document Count ── */}
@@ -826,21 +822,21 @@ export default function KnowledgeVault({ documents = [], setDocuments, onStartQu
             placeholder="Search documents or concepts…"
             value={searchQuery}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm rounded-xl outline-none"
+            className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm rounded-xl outline-none bg-[#060c1c] border border-blue-500/30 text-slate-100 placeholder-slate-500 focus:border-blue-400 shadow-inner"
           />
         </div>
-        <div className="flex items-center gap-2 text-xs text-slate-500 shrink-0">
-          <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-          <span className="font-semibold text-slate-700">{filtered.length}</span> documents ready for quizzing
+        <div className="flex items-center gap-2 text-xs text-slate-400 shrink-0">
+          <span className="inline-block h-2 w-2 rounded-full bg-emerald-400" />
+          <span className="font-semibold text-slate-200">{filtered.length}</span> documents ready for quizzing
         </div>
       </div>
 
       {/* ── Documents Grid (Fully Responsive) ── */}
       {filtered.length === 0 ? (
-        <div className="glass-panel p-12 flex flex-col items-center gap-3 text-center">
-          <BookOpen className="h-10 w-10 text-slate-400" />
-          <p className="font-bold text-slate-800">No documents found</p>
-          <p className="text-xs sm:text-sm text-slate-500">
+        <div className="glass-panel p-12 flex flex-col items-center gap-3 text-center bg-[#0a1329]/95 border-blue-500/20 shadow-xl">
+          <BookOpen className="h-10 w-10 text-slate-500" />
+          <p className="font-bold text-slate-100">No documents found</p>
+          <p className="text-xs sm:text-sm text-slate-400">
             Upload a PDF or markdown file to populate your Knowledge Vault.
           </p>
         </div>
@@ -849,31 +845,31 @@ export default function KnowledgeVault({ documents = [], setDocuments, onStartQu
           {filtered.map((doc, i) => (
             <div
               key={doc.id}
-              className="glass-panel glass-card-interactive flex flex-col justify-between gap-4 p-5 group animate-fade-up bg-white"
+              className="glass-panel glass-card-interactive flex flex-col justify-between gap-4 p-5 group animate-fade-up bg-[#0a1329]/95 border-blue-500/20 shadow-xl hover:border-blue-400 hover:shadow-blue-500/20"
               style={{ animationDelay: `${i * 50}ms` }}
             >
               {/* Top part */}
               <div className="space-y-3">
                 <div className="flex items-start justify-between gap-3">
-                  <div className="p-2.5 rounded-xl bg-blue-50 border border-blue-100 shrink-0">
+                  <div className="p-2.5 rounded-xl bg-blue-950/60 border border-blue-500/30 shrink-0">
                     {fileIcon(doc.file_type)}
                   </div>
-                  <span className="text-[10px] px-2 py-0.5 rounded-md font-mono font-bold uppercase bg-slate-100 text-slate-600 border border-slate-200">
+                  <span className="text-[10px] px-2 py-0.5 rounded-md font-mono font-bold uppercase bg-[#0c1838] text-blue-300 border border-blue-500/20">
                     {doc.file_type}
                   </span>
                 </div>
 
                 <div>
                   <h3
-                    className="text-sm font-bold text-slate-900 leading-snug break-words group-hover:text-blue-600 transition-colors"
+                    className="text-sm font-bold text-slate-100 leading-snug break-words group-hover:text-blue-400 transition-colors"
                     title={doc.filename}
                   >
-                    {doc.filename}
+                    {cleanDocumentTitle(doc.filename)}
                   </h3>
-                  <div className="flex items-center gap-2 mt-1.5 text-xs text-slate-500 font-mono">
+                  <div className="flex items-center gap-2 mt-1.5 text-xs text-slate-400 font-mono">
                     <span>{formatSize(doc.size_bytes)}</span>
                     <span>·</span>
-                    <span className="text-emerald-700 font-semibold">{doc.num_chunks} chunks</span>
+                    <span className="text-emerald-400 font-semibold">{doc.num_chunks} chunks</span>
                   </div>
                 </div>
 
@@ -883,13 +879,13 @@ export default function KnowledgeVault({ documents = [], setDocuments, onStartQu
                     {doc.topics_covered.slice(0, 3).map((t, ti) => (
                       <span
                         key={ti}
-                        className="text-[10.5px] px-2.5 py-0.5 rounded-full font-medium bg-blue-50 text-blue-700 border border-blue-200"
+                        className="text-[10.5px] px-2.5 py-0.5 rounded-full font-medium bg-[#0c1838] text-slate-300 border border-blue-500/20"
                       >
-                        {t}
+                        {cleanTopicString(t)}
                       </span>
                     ))}
                     {doc.topics_covered.length > 3 && (
-                      <span className="text-[10px] text-slate-500 font-mono self-center">
+                      <span className="text-[10px] text-slate-400 font-mono self-center">
                         +{doc.topics_covered.length - 3}
                       </span>
                     )}
@@ -898,19 +894,19 @@ export default function KnowledgeVault({ documents = [], setDocuments, onStartQu
               </div>
 
               {/* Actions Footer */}
-              <div className="flex items-center gap-2 pt-3 border-t border-slate-100">
+              <div className="flex items-center gap-2 pt-3 border-t border-blue-900/30">
                 <button
                   onClick={() => openChunks(doc)}
-                  className="flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                  className="flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-blue-300 hover:bg-blue-950/40 border border-blue-500/20 transition-colors"
                   title="Inspect vector chunks"
                 >
-                  <Eye className="h-3.5 w-3.5" />
+                  <Eye className="h-3.5 w-3.5 text-blue-400" />
                   <span>Inspect</span>
                 </button>
 
                 <button
                   onClick={() => setDeleteTarget(doc)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-950/40 border border-transparent hover:border-rose-500/30 transition-colors"
                   title="Delete document"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
@@ -923,7 +919,7 @@ export default function KnowledgeVault({ documents = [], setDocuments, onStartQu
                 >
                   <Zap className="h-3.5 w-3.5" />
                   <span>Quiz</span>
-                  <ChevronRight className="h-3 w-3 opacity-70" />
+                  <ChevronRight className="h-3 w-3 opacity-75" />
                 </button>
               </div>
             </div>

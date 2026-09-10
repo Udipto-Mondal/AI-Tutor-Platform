@@ -142,26 +142,21 @@ export function extractTopicsFromFilename(filename) {
     ];
   }
 
-  // Detect coding
-  if (/coding|program|interview|algo|data structure/i.test(cleanName)) {
+  // Detect explicit coding/DSA material
+  if (/\b(?:leetcode|dsa|data[\s_-]?structures?|algorithms?[\s_-]?design|cracking[\s_-]?the[\s_-]?coding)\b/i.test(cleanName)) {
     return [
-      'Data Structures & Big-O Complexity',
+      'Data Structures & Asymptotic Analysis',
       'Algorithm Design & Edge Cases',
       'Problem Solving & Invariants',
-      'System Architecture & Scalability'
+      'System Architecture & Trade-offs'
     ];
   }
 
-  // Split clean name into short, meaningful topics
-  const words = cleanName.split(/\s+/);
-  if (words.length <= 2) {
-    return [cleanName, 'Foundations & Architecture', 'Analytical Evaluation', 'Practical Applications'];
-  }
-
+  // Document-specific contextual topics for general documents
   return [
-    cleanName.slice(0, 30),
-    'Core Concepts & Foundations',
-    'Methodologies & Structural Analysis',
-    'Practical Synthesis & Trade-offs'
+    `${cleanName}: Overview & Objectives`,
+    'Key Findings & Data Analysis',
+    'Methodologies, Observations & Evidence',
+    'Strategic Conclusions & Recommendations'
   ];
 }

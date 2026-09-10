@@ -8,12 +8,12 @@
    Ultra-crisp contrast, glowing cyan & cobalt accents
 ───────────────────────────────────────────────────────── */
 :root {
-  --bg-deep:        #070d1e;
-  --bg-surface:     #0c1735;
-  --bg-card:        #0e1c3e;
-  --bg-card-hover:  #132552;
-  --bg-subtle:      #081226;
-  --border-subtle:  rgba(59, 130, 246, 0.18);
+  --bg-deep:        #050b18;
+  --bg-surface:     #09122a;
+  --bg-card:        #0c1736;
+  --bg-card-hover:  #11204a;
+  --bg-subtle:      #070e22;
+  --border-subtle:  rgba(59, 130, 246, 0.16);
   --border-navy:    rgba(59, 130, 246, 0.28);
   --border-active:  #38bdf8;
   --blue-primary:   #2563eb;
@@ -41,14 +41,14 @@ html {
 }
 
 body {
-  background-color: #070d1e;
+  background-color: #050b18;
   color: var(--text-primary);
   font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
   line-height: 1.6;
   background-image:
-    radial-gradient(1200px 900px at 50% -10%, #0e1e44 0%, #081229 45%, #050b18 100%);
+    radial-gradient(1300px 950px at 50% -10%, #0c1838 0%, #071024 45%, #040814 100%);
   background-attachment: fixed;
 }
 
