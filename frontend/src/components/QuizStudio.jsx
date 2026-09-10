@@ -15,7 +15,6 @@ import {
   AlignLeft,
   FileText,
   UploadCloud,
-  Key,
   X,
   Layers
 } from 'lucide-react';
@@ -61,10 +60,8 @@ export default function QuizStudio({
   const [docTextRecord, setDocTextRecord] = useState(null);
   const [parsingFile, setParsingFile] = useState(false);
 
-  // Gemini API Key optional storage
-  const [geminiKey, setGeminiKey] = useState(() => localStorage.getItem('ai_tutor_gemini_key') || '');
-  const [showKeyModal, setShowKeyModal] = useState(false);
-  const [tempKey, setTempKey] = useState('');
+  // Pre-configured Gemini API Key from environment
+  const GEMINI_CONFIGURED_KEY = import.meta.env?.VITE_GEMINI_API_KEY || '';
 
   // Selected topic inside active document
   const computeTopics = (doc, textRec) => {
@@ -229,7 +226,7 @@ export default function QuizStudio({
       documentText: targetContext,
       difficulty: diff,
       numQuestions: count,
-      geminiApiKey: geminiKey
+      geminiApiKey: GEMINI_CONFIGURED_KEY
     });
 
     setQuiz(generated);
@@ -453,13 +450,6 @@ export default function QuizStudio({
     return `${m}:${s < 10 ? '0' : ''}${s}`;
   };
 
-  const saveGeminiKey = () => {
-    localStorage.setItem('ai_tutor_gemini_key', tempKey.trim());
-    setGeminiKey(tempKey.trim());
-    setShowKeyModal(false);
-    handleGenerateQuiz(activeDoc?.filename, selectedTopic, quizDifficulty, numQuestions);
-  };
-
   const currentQ = quiz.questions[currentIdx] || quiz.questions[0];
   const currentAnswer = answers[currentQ?.id] || {};
   const isLastQuestion = currentIdx === (quiz.questions.length - 1);
@@ -480,17 +470,14 @@ export default function QuizStudio({
             </h2>
           </div>
           
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => { setTempKey(geminiKey); setShowKeyModal(true); }}
-              className="text-[11px] font-semibold text-slate-600 hover:text-blue-600 flex items-center gap-1.5 transition-colors"
-            >
-              <Key className="h-3 w-3 text-amber-500" />
-              <span>{geminiKey ? 'Gemini AI Active' : 'Connect Gemini AI (Optional)'}</span>
-            </button>
-            <span className="text-[11px] text-slate-400 font-mono hidden md:inline">·</span>
+          <div className="flex items-center gap-2.5">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-[11px] font-semibold font-mono">
+              <Sparkles className="h-3 w-3 text-blue-600 animate-pulse" />
+              Gemini 1.5 Flash AI Active
+            </span>
+            <span className="text-[11px] text-slate-300 font-mono hidden md:inline">·</span>
             <span className="text-[11px] text-slate-500 font-mono hidden md:inline">
-              Strict Grading & Verified Proofs
+              Strict Proof Rubrics
             </span>
           </div>
         </div>
@@ -959,48 +946,6 @@ export default function QuizStudio({
                 <ChevronRight className="h-4 w-4" />
               </button>
             )}
-          </div>
-        </div>
-      )}
-
-      {/* Optional Gemini API Key Dialog */}
-      {showKeyModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-md w-full p-6 space-y-4 animate-scale-up">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-amber-500" />
-                <h3 className="font-bold text-slate-900 text-sm">Connect Google Gemini API (Optional)</h3>
-              </div>
-              <button onClick={() => setShowKeyModal(false)} className="text-slate-400 hover:text-slate-700">
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-
-            <p className="text-xs text-slate-600 leading-relaxed">
-              By default, our local engine generates authentic quizzes locally with <strong>zero API keys needed</strong>. 
-              If you want custom generative questions from Google Gemini 1.5 Flash, paste your free API key below:
-            </p>
-
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-semibold text-slate-700">Gemini API Key</label>
-              <input
-                type="password"
-                value={tempKey}
-                onChange={(e) => setTempKey(e.target.value)}
-                placeholder="AIzaSy..."
-                className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-300 text-slate-900 font-mono focus:outline-none focus:border-blue-500"
-              />
-            </div>
-
-            <div className="flex items-center justify-end gap-2 pt-2">
-              <button onClick={() => setShowKeyModal(false)} className="btn-secondary text-xs py-2 px-3">
-                Cancel
-              </button>
-              <button onClick={saveGeminiKey} className="btn-primary text-xs py-2 px-4">
-                Save & Apply
-              </button>
-            </div>
           </div>
         </div>
       )}

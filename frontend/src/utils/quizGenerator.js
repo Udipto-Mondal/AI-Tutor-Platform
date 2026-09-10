@@ -700,7 +700,7 @@ export async function generateAdaptiveQuiz({
   documentText = '',
   difficulty = 'medium',
   numQuestions = 5,
-  geminiApiKey = ''
+  geminiApiKey = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GEMINI_API_KEY) || ''
 }) {
   const cleanTitle = cleanDocumentTitle(docTitle);
   const cleanTopic = cleanTopicString(topicName);
