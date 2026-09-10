@@ -18,9 +18,17 @@ import { cleanDocumentTitle } from '../utils/pdfExtractor';
 const INITIAL_MSG = {
   role: 'assistant',
   content:
-    "Hello! I'm Leo, your Socratic AI Tutor. Ask me anything about your uploaded study material — I'll guide you step by step through inquiry and hints rather than just giving you the answer.",
+    "Hello! I'm Leo, your Socratic AI Tutor. Ask me anything about your study material — I'll guide you step by step through inquiry and progressive hints rather than just giving you the answer.",
   citations: ['Knowledge Vault'],
 };
+
+function isGreetingMessage(str) {
+  const cleaned = (str || '').trim().toLowerCase().replace(/[^\w\s\u0980-\u09FF]/g, '');
+  return (
+    /^(?:hi|hello|hey|greetings|hola|good\s*(?:morning|afternoon|evening)|assalamu\s*alaikum|salam|sup|yo|হাই|হ্যালো|হে|সালাম|নমস্কার|কেমন\s*আছো|কেমন\s*আছেন)\b/i.test(cleaned) ||
+    cleaned.length <= 3
+  );
+}
 
 async function callGeminiTutor(apiKey, userMsg, history, docContext, docTitle) {
   const recentHistoryText = history
@@ -89,7 +97,7 @@ Return ONLY a valid JSON object matching this schema (no markdown fences):
               reply: rawText.trim(),
               hints_provided: ["Focus on the key relationships stated in your study notes."],
               citations: [docTitle],
-              follow_up_question: "How does this align with your understanding?"
+              follow_up_question: "How would you express this concept in your own words?"
             };
           }
         }
@@ -145,9 +153,19 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
   const bottomRef = useRef(null);
   const inputRef  = useRef(null);
 
-  // Active Gemini API key
+  // Active Gemini API key (loaded from .env via Vite or user-entered in drawer)
   const envKey = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GEMINI_API_KEY) || '';
   const activeKey = (localStorage.getItem('gemini_api_key') || envKey || '').trim();
+
+  useEffect(() => {
+    if (!localStorage.getItem('gemini_api_key') && envKey) {
+      try {
+        localStorage.setItem('gemini_api_key', envKey);
+      } catch {
+        // ignore
+      }
+    }
+  }, [envKey]);
 
   /* Dynamic quick prompts based on the student's actual active document */
   const docs = getStoredDocuments();
@@ -162,7 +180,14 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
     'Can you test my understanding with a question?'
   ];
 
-  if (/dengue/i.test(docTitle)) {
+  if (/blockchain/i.test(docTitle)) {
+    dynamicPrompts = [
+      'What are the primary evaluation criteria for Blockchain projects?',
+      'How does consensus mechanism impact scalability?',
+      'Explain smart contract security & architecture',
+      'What are the key requirements for the Olympiad submission?'
+    ];
+  } else if (/dengue/i.test(docTitle)) {
     dynamicPrompts = [
       'What are the primary clinical stages of Dengue?',
       'How does mosquito vector transmission occur?',
@@ -206,6 +231,30 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
     setMessages((p) => [...p, { role: 'user', content: msg }]);
     setInput('');
     setLoading(true);
+
+    // Natural greeting intent handling
+    if (isGreetingMessage(msg)) {
+      const isBangla = /[\u0980-\u09FF]/.test(msg);
+      const greetingReply = isBangla
+        ? `হ্যালো! আমি লিও, আপনার সোক্রেটিক এআই টিউটর।\n\nআমি দেখতে পাচ্ছি আপনার স্টাডি ম্যাটেরিয়াল হিসেবে **"${docTitle}"** সংযুক্ত রয়েছে।\n\nআজ আপনি এই ডকুমেন্টের কোন বিষয়টি নিয়ে আলোচনা করতে চান? যেকোনো প্রশ্ন করুন—আমি আপনাকে সরাসরি উত্তর না দিয়ে ধাপে ধাপে বিষয়টির মূল ধারণা বুঝিয়ে দেব!`
+        : `Hello! Great to have you here! I'm Leo, your Socratic AI Tutor.\n\nI see you have **"${docTitle}"** loaded in your workspace.\n\nWhat topic or question would you like to explore today? You can ask me to explain key principles, test your understanding, or work through a concept step by step!`;
+
+      setMessages((p) => [
+        ...p,
+        {
+          role: 'assistant',
+          content: greetingReply,
+          hints: [
+            isBangla ? 'ডকুমেন্টের মূল উদ্দেশ্য বা নির্দিষ্ট কোনো পরিচ্ছেদ নিয়ে প্রশ্ন করতে পারেন।' : 'Try asking about the main purpose or a specific section of this document.',
+            isBangla ? 'অথবা উপরের সাজেস্টেড প্রম্পট বাটনে ক্লিক করে দ্রুত শুরু করতে পারেন।' : 'Or click any of the suggested prompt buttons above to get started quickly.'
+          ],
+          citations: [docTitle],
+          follow_up: isBangla ? 'আজ কোন বিষয়টি দিয়ে শুরু করতে চান?' : 'Which part of the material should we explore first?'
+        }
+      ]);
+      setLoading(false);
+      return;
+    }
 
     // Retrieve authentic document context from storage/IndexedDB
     let docContext = '';
@@ -294,9 +343,9 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
       role="dialog"
       aria-label="Leo AI Tutor"
     >
-      {/* ── Header ── */}
+      {/* ── Header (Fixed, strictly non-overlapping) ── */}
       <div
-        className="flex items-center justify-between px-4 py-3.5"
+        className="flex items-center justify-between px-4 py-3.5 shrink-0 relative z-10"
         style={{
           borderBottom: '1px solid rgba(59, 130, 246, 0.25)',
           background: '#09122a',
@@ -320,7 +369,7 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
                 <span>{activeKey ? 'Gemini 3.6 Flash' : 'Socratic AI'}</span>
               </span>
             </div>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-slate-400 truncate max-w-[210px]" title={docTitle}>
               Grounded in {docTitle}
             </p>
           </div>
@@ -349,7 +398,7 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
       {showKeyConfig && (
         <form
           onSubmit={handleSaveCustomKey}
-          className="p-3 bg-[#070e22] border-b border-blue-500/20 text-xs space-y-2 animate-in fade-in duration-200"
+          className="p-3 bg-[#070e22] border-b border-blue-500/20 text-xs space-y-2 shrink-0 relative z-10 animate-in fade-in duration-200"
         >
           <div className="flex items-center justify-between">
             <span className="font-semibold text-slate-300 flex items-center gap-1.5">
@@ -378,16 +427,16 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
         </form>
       )}
 
-      {/* ── Quick Prompts (Tailored to active document) ── */}
+      {/* ── Quick Prompts (Fixed bar, horizontal scroll, no overlap) ── */}
       <div
-        className="flex gap-2 px-3 py-2.5 overflow-x-auto"
+        className="flex gap-2 px-3 py-2.5 overflow-x-auto shrink-0 relative z-10"
         style={{ borderBottom: '1px solid rgba(59, 130, 246, 0.20)', background: '#070e20' }}
       >
         {dynamicPrompts.map((q, i) => (
           <button
             key={i}
             onClick={() => send(q)}
-            className="shrink-0 text-[11px] px-2.5 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors hover:bg-blue-900/40"
+            className="shrink-0 text-[11px] px-2.5 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors hover:bg-blue-900/40 truncate max-w-xs"
             style={{
               background: 'rgba(37,99,235,0.15)',
               border: '1px solid rgba(59,130,246,0.30)',
@@ -399,8 +448,8 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
         ))}
       </div>
 
-      {/* ── Messages ── */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 bg-[#060c1c]">
+      {/* ── Messages (Strictly scrolling viewport with min-h-0) ── */}
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 py-4 space-y-4 bg-[#060c1c]">
         {messages.map((m, i) => (
           <div
             key={i}
@@ -481,9 +530,9 @@ export default function SocraticTutorDrawer({ isOpen, onClose }) {
         <div ref={bottomRef} />
       </div>
 
-      {/* ── Input ── */}
+      {/* ── Input Bar (Fixed at bottom) ── */}
       <div
-        className="px-4 py-3 bg-[#09122a]"
+        className="px-4 py-3 bg-[#09122a] shrink-0 relative z-10"
         style={{ borderTop: '1px solid rgba(59, 130, 246, 0.25)' }}
       >
         <form
