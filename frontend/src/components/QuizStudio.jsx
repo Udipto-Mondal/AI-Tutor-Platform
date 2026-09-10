@@ -125,11 +125,20 @@ export default function QuizStudio({
   const [submitting, setSubmitting] = useState(false);
   const [gradingReport, setGradingReport] = useState(null);
   const [timeRemaining, setTimeRemaining] = useState(900);
+  const [timerKey, setTimerKey] = useState(0);
+  const [timerJustReset, setTimerJustReset] = useState(false);
 
-  const handleResetTimer = () => {
-    const initialSeconds = (quiz?.time_limit_minutes || Math.round(numQuestions * 2.5)) * 60;
-    setTimeRemaining(initialSeconds);
-    setToastMsg('Timer restarted from the beginning.');
+  const getInitialSeconds = () => {
+    return (quiz?.time_limit_minutes || Math.max(5, Math.round(numQuestions * 2.5))) * 60;
+  };
+
+  const handleResetTimer = (customSeconds = null) => {
+    const seconds = customSeconds || getInitialSeconds();
+    setTimeRemaining(seconds);
+    setTimerKey((k) => k + 1);
+    setTimerJustReset(true);
+    setTimeout(() => setTimerJustReset(false), 1400);
+    setToastMsg(`Timer restarted from beginning (${formatTimer(seconds)}).`);
   };
 
   // Auto-dismiss toast after 4.5 seconds
@@ -213,6 +222,7 @@ export default function QuizStudio({
     setAnswers({});
     const initialSeconds = Math.max(5, Math.round(count * 2.5)) * 60;
     setTimeRemaining(initialSeconds);
+    setTimerKey((k) => k + 1);
 
     try {
       // 1. Try backend generation if running
@@ -232,7 +242,9 @@ export default function QuizStudio({
         const data = await res.json();
         if (data && data.questions && data.questions.length >= count) {
           setQuiz(data);
-          setTimeRemaining((data.time_limit_minutes || Math.round(count * 2.5)) * 60);
+          const limitSeconds = (data.time_limit_minutes || Math.round(count * 2.5)) * 60;
+          setTimeRemaining(limitSeconds);
+          setTimerKey((k) => k + 1);
           setLoading(false);
           setToastMsg(`Generated fresh assessment with ${data.questions.length} adaptive questions.`);
           return;
@@ -265,19 +277,21 @@ export default function QuizStudio({
     });
 
     setQuiz(generated);
-    setTimeRemaining((generated.time_limit_minutes || Math.round(count * 2.5)) * 60);
+    const finalSeconds = (generated.time_limit_minutes || Math.round(count * 2.5)) * 60;
+    setTimeRemaining(finalSeconds);
+    setTimerKey((k) => k + 1);
     setLoading(false);
     setToastMsg(`Generated fresh assessment with ${generated.questions.length} adaptive questions.`);
   };
 
-  // Timer countdown
+  // Timer countdown: restarts cleanly on timerKey, quiz, or grading state change
   useEffect(() => {
     if (!quiz || gradingReport) return;
     const timer = setInterval(() => {
       setTimeRemaining((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
     return () => clearInterval(timer);
-  }, [quiz, gradingReport]);
+  }, [quiz?.id, gradingReport, timerKey]);
 
   const handleSelectOption = (qId, optionKey) => {
     setAnswers((prev) => ({
@@ -640,10 +654,16 @@ export default function QuizStudio({
         {/* Dedicated Action & Session Summary Bar */}
         <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-blue-900/30">
           <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#0c1838] font-mono text-[11px] text-slate-300 font-semibold border border-blue-500/20">
+            <button
+              type="button"
+              onClick={() => handleResetTimer()}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#0c1838] hover:bg-[#12224d] font-mono text-[11px] text-slate-300 hover:text-blue-300 font-semibold border border-blue-500/20 hover:border-blue-400 transition-colors cursor-pointer select-none active:scale-95"
+              title="Click to restart quiz timer from beginning"
+            >
               <Clock className="h-3.5 w-3.5 text-blue-400" />
               Est. ~{Math.round(numQuestions * 2.5)} mins
-            </span>
+              <RotateCcw className="h-2.5 w-2.5 opacity-60 ml-0.5" />
+            </button>
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-950/60 font-mono text-[11px] text-blue-300 font-semibold border border-blue-500/30">
               <Layers className="h-3.5 w-3.5" />
               {numQuestions} Questions
@@ -729,35 +749,53 @@ export default function QuizStudio({
 
         <div className="flex flex-wrap items-center gap-2.5">
           <button
-            onClick={handleResetTimer}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-[#070e22] hover:bg-[#0c1838] border border-blue-500/25 hover:border-blue-400 font-mono text-xs shadow-inner cursor-pointer transition-all group"
-            title="Click clock to restart timer from the beginning"
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleResetTimer();
+            }}
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl font-mono text-xs shadow-inner cursor-pointer select-none transition-all active:scale-95 ${
+              timerJustReset
+                ? 'bg-emerald-950/90 border border-emerald-400 text-emerald-300 ring-2 ring-emerald-500/40 scale-105'
+                : 'bg-[#070e22] hover:bg-[#0c1838] border border-blue-500/25 hover:border-blue-400'
+            }`}
+            title="Click to restart countdown timer from the beginning"
           >
-            <Clock className={`h-4 w-4 transition-transform group-hover:rotate-45 ${timeRemaining < 120 ? 'text-rose-400 animate-pulse' : 'text-blue-400'}`} />
-            <span className={timeRemaining < 120 ? 'text-rose-400 font-bold' : 'text-slate-200 font-semibold'}>
+            <Clock className={`h-4 w-4 transition-transform ${timerJustReset ? 'rotate-180 text-emerald-400' : (timeRemaining < 120 ? 'text-rose-400 animate-pulse' : 'text-blue-400')}`} />
+            <span className={timerJustReset ? 'text-emerald-300 font-bold' : (timeRemaining < 120 ? 'text-rose-400 font-bold' : 'text-slate-200 font-semibold')}>
               {formatTimer(timeRemaining)}
             </span>
-            <RotateCcw className="h-3 w-3 text-slate-500 group-hover:text-blue-300 opacity-60 group-hover:opacity-100 transition-opacity ml-0.5" />
+            <RotateCcw className={`h-3 w-3 transition-all ml-0.5 ${timerJustReset ? 'text-emerald-400 rotate-180' : 'text-slate-500 hover:text-blue-300 opacity-70'}`} />
+            {timerJustReset && (
+              <span className="text-[10px] text-emerald-300 font-bold ml-1 animate-fade-in">✓ Restarted</span>
+            )}
           </button>
 
           <button
-            onClick={() => {
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
               setAnswers({});
               setCurrentIdx(0);
-              const initialSeconds = (quiz.time_limit_minutes || Math.round(numQuestions * 2.5)) * 60;
-              setTimeRemaining(initialSeconds);
-              setToastMsg('Cleared all responses. Assessment and timer reset from Question 1.');
+              handleResetTimer();
+              setToastMsg('Cleared all responses. Assessment and timer restarted from Question 1.');
             }}
-            className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5 text-slate-300 hover:text-white border-blue-500/20 bg-[#0c1838]"
+            className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5 text-slate-300 hover:text-white border-blue-500/20 bg-[#0c1838] active:scale-95"
             title="Clear all responses and restart timer from Question 1"
           >
+            <RotateCcw className="h-3 w-3 text-slate-400" />
             <span>Reset Answers</span>
           </button>
 
           <button
-            onClick={() => handleGenerateQuiz(activeDoc?.filename, selectedTopic, quizDifficulty, numQuestions)}
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              handleGenerateQuiz(activeDoc?.filename, selectedTopic, quizDifficulty, numQuestions);
+            }}
             disabled={loading}
-            className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5 bg-blue-950/40 text-blue-300 border-blue-500/30 hover:bg-blue-900/50 font-semibold shadow-xs"
+            className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5 bg-blue-950/40 text-blue-300 border-blue-500/30 hover:bg-blue-900/50 font-semibold shadow-xs active:scale-95"
             title="Generate fresh new randomized questions for this topic (resets timer)"
           >
             <RefreshCw className={`h-3.5 w-3.5 text-blue-400 ${loading ? 'animate-spin' : ''}`} />
