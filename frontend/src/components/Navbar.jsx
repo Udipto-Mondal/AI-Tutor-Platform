@@ -34,11 +34,11 @@ export default function Navbar({ activeTab, setActiveTab, onOpenTutor }) {
       <header
         className="sticky top-0 z-40 w-full transition-colors duration-300"
         style={{
-          background: 'rgba(235, 245, 255, 0.92)',
+          background: 'rgba(7, 13, 30, 0.90)',
           backdropFilter: 'blur(20px) saturate(180%)',
           WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-          borderBottom: '1px solid rgba(186, 230, 253, 0.75)',
-          boxShadow: '0 2px 16px rgba(37, 99, 235, 0.04)',
+          borderBottom: '1px solid rgba(59, 130, 246, 0.18)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.40)',
         }}
       >
         <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -71,12 +71,12 @@ export default function Navbar({ activeTab, setActiveTab, onOpenTutor }) {
                       alignItems: 'center',
                       gap: '7px',
                       transition: 'all 0.18s ease',
-                      color: active ? '#1d4ed8' : '#475569',
-                      background: active ? 'rgba(37,99,235,0.08)' : 'transparent',
-                      border: active ? '1px solid rgba(37,99,235,0.20)' : '1px solid transparent',
+                      color: active ? '#38bdf8' : '#94a3b8',
+                      background: active ? 'rgba(37,99,235,0.18)' : 'transparent',
+                      border: active ? '1px solid rgba(59,130,246,0.35)' : '1px solid transparent',
                     }}
                   >
-                    <Icon style={{ width: '14px', height: '14px', flexShrink: 0, color: active ? '#2563eb' : '#64748b' }} />
+                    <Icon style={{ width: '14px', height: '14px', flexShrink: 0, color: active ? '#38bdf8' : '#64748b' }} />
                     <span>{label}</span>
                     {active && (
                       <span style={{
@@ -87,7 +87,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenTutor }) {
                         height: '2px',
                         width: '28px',
                         borderRadius: '99px',
-                        background: 'linear-gradient(90deg,#2563eb,#0284c7)',
+                        background: 'linear-gradient(90deg, #38bdf8, #2563eb)',
                       }} />
                     )}
                   </button>
@@ -134,8 +134,8 @@ export default function Navbar({ activeTab, setActiveTab, onOpenTutor }) {
           <div
             className="lg:hidden animate-fade-up"
             style={{
-              borderTop: '1px solid rgba(186, 230, 253, 0.75)',
-              background: 'rgba(235, 245, 255, 0.98)',
+              borderTop: '1px solid rgba(59, 130, 246, 0.20)',
+              background: 'rgba(7, 13, 30, 0.98)',
               backdropFilter: 'blur(24px)',
             }}
           >
@@ -157,20 +157,20 @@ export default function Navbar({ activeTab, setActiveTab, onOpenTutor }) {
                       borderRadius: '12px',
                       textAlign: 'left',
                       transition: 'all 0.15s ease',
-                      background: active ? 'rgba(37,99,235,0.10)' : 'rgba(255,255,255,0.70)',
+                      background: active ? 'rgba(37,99,235,0.20)' : 'rgba(12,23,53,0.70)',
                       border: active
-                        ? '1px solid rgba(37,99,235,0.30)'
-                        : '1px solid rgba(186,230,253,0.50)',
-                      color: active ? '#1d4ed8' : '#475569',
+                        ? '1px solid rgba(59,130,246,0.40)'
+                        : '1px solid rgba(59,130,246,0.15)',
+                      color: active ? '#38bdf8' : '#cbd5e1',
                       cursor: 'pointer',
                     }}
                   >
-                    <Icon style={{ width: '15px', height: '15px', flexShrink: 0, color: active ? '#2563eb' : '#64748b' }} />
+                    <Icon style={{ width: '15px', height: '15px', flexShrink: 0, color: active ? '#38bdf8' : '#64748b' }} />
                     <div style={{ minWidth: 0 }}>
                       <p style={{ fontSize: '12.5px', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {label}
                       </p>
-                      <p style={{ fontSize: '10px', color: '#475569', marginTop: '2px' }}>
+                      <p style={{ fontSize: '10px', color: '#94a3b8', marginTop: '2px' }}>
                         {tag}
                       </p>
                     </div>

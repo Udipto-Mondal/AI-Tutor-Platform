@@ -95,11 +95,11 @@ export default function App() {
 
       {/* ── Footer ── */}
       <footer
-        className="py-5 text-center text-xs border-t border-slate-200/80 bg-white/70 backdrop-blur text-slate-500"
+        className="py-5 text-center text-xs border-t border-blue-900/30 bg-[#070d1e]/85 backdrop-blur text-slate-400"
       >
         <div className="max-w-screen-xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span className="font-medium text-slate-600">AI Tutor Platform — Personalized Adaptive Learning</span>
-          <div className="flex items-center gap-3 font-mono text-[11px] text-slate-500">
+          <span className="font-medium text-slate-300">AI Tutor Platform — Personalized Adaptive Learning</span>
+          <div className="flex items-center gap-3 font-mono text-[11px] text-slate-400">
             {['RAG Architecture', 'Vision / CNN', 'Knowledge Tracing', 'Adaptive Planner'].map((t, i) => (
               <React.Fragment key={t}>
                 {i > 0 && <span className="opacity-30">·</span>}

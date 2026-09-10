@@ -1,9 +1,9 @@
 import React from 'react';
 
 /**
- * Executive-grade Vector SVG Logo for AI Tutor Platform.
- * Crisp, modern geometric neural prism with electric blue & cyan gradient.
- * Zero pixelation on Retina/4K screens.
+ * Executive-grade Responsive Vector Logo for AI Tutor Platform.
+ * Deep Midnight Navy & Sapphire palette with cyan glowing neural core.
+ * Fluidly responsive across mobile, tablet, and 4K desktop screens.
  */
 export default function Logo({ size = 36, showWordmark = true, className = '' }) {
   return (
@@ -16,11 +16,11 @@ export default function Logo({ size = 36, showWordmark = true, className = '' })
           height: `${size}px`,
         }}
       >
-        {/* Ambient Glow */}
+        {/* Ambient Sapphire Glow */}
         <div
-          className="absolute inset-0 rounded-xl blur-md opacity-30 group-hover:opacity-60 transition-opacity duration-300"
+          className="absolute inset-0 rounded-xl blur-md opacity-40 group-hover:opacity-75 transition-opacity duration-300"
           style={{
-            background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 50%, #14b8a6 100%)',
+            background: 'linear-gradient(135deg, #1d4ed8 0%, #0284c7 50%, #06b6d4 100%)',
           }}
         />
 
@@ -31,32 +31,37 @@ export default function Logo({ size = 36, showWordmark = true, className = '' })
           viewBox="0 0 40 40"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="relative drop-shadow-[0_2px_10px_rgba(59,130,246,0.25)]"
+          className="relative drop-shadow-[0_2px_12px_rgba(37,99,235,0.45)]"
         >
           <defs>
+            <linearGradient id="logo-navy-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#0b1739" />
+              <stop offset="100%" stopColor="#070f26" />
+            </linearGradient>
             <linearGradient id="logo-grad-primary" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#2563eb" />
+              <stop offset="0%" stopColor="#38bdf8" />
               <stop offset="50%" stopColor="#3b82f6" />
-              <stop offset="100%" stopColor="#06b6d4" />
+              <stop offset="100%" stopColor="#2563eb" />
             </linearGradient>
             <linearGradient id="logo-grad-stroke" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="rgba(37,99,235,0.35)" />
-              <stop offset="100%" stopColor="rgba(6,182,212,0.20)" />
+              <stop offset="0%" stopColor="rgba(56, 189, 248, 0.70)" />
+              <stop offset="50%" stopColor="rgba(37, 99, 235, 0.45)" />
+              <stop offset="100%" stopColor="rgba(30, 58, 138, 0.35)" />
             </linearGradient>
             <linearGradient id="logo-grad-core" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#0284c7" />
-              <stop offset="100%" stopColor="#0d9488" />
+              <stop offset="0%" stopColor="#38bdf8" />
+              <stop offset="100%" stopColor="#0284c7" />
             </linearGradient>
           </defs>
 
-          {/* Outer Rounded Squircle Frame */}
+          {/* Outer Rounded Squircle Frame in Deep Navy */}
           <rect
             x="2"
             y="2"
             width="36"
             height="36"
             rx="11"
-            fill="#ffffff"
+            fill="url(#logo-navy-bg)"
             stroke="url(#logo-grad-stroke)"
             strokeWidth="1.5"
           />
@@ -67,7 +72,7 @@ export default function Logo({ size = 36, showWordmark = true, className = '' })
             stroke="url(#logo-grad-primary)"
             strokeWidth="1.75"
             strokeLinejoin="round"
-            fill="rgba(59,130,246,0.06)"
+            fill="rgba(56, 189, 248, 0.08)"
           />
 
           {/* Internal Cross Facets */}
@@ -77,20 +82,26 @@ export default function Logo({ size = 36, showWordmark = true, className = '' })
             strokeWidth="1.25"
             strokeLinecap="round"
             strokeLinejoin="round"
-            opacity="0.85"
+            opacity="0.9"
           />
 
           {/* Core Glowing Node */}
-          <circle cx="20" cy="20" r="2.5" fill="#2563eb" />
-          <circle cx="20" cy="20" r="4" stroke="#0284c7" strokeWidth="1" opacity="0.6" />
+          <circle cx="20" cy="20" r="2.5" fill="#38bdf8" />
+          <circle cx="20" cy="20" r="4.5" stroke="#38bdf8" strokeWidth="1" opacity="0.45" />
         </svg>
       </div>
 
-      {/* ── Wordmark (Clean & Minimalist without Studio) ── */}
+      {/* ── Wordmark (Responsive & Theme-Aligned) ── */}
       {showWordmark && (
-        <div className="flex items-center">
-          <span className="text-[17px] sm:text-[19px] font-extrabold tracking-tight text-slate-900 font-heading">
-            AI Tutor
+        <div className="flex items-center gap-1.5">
+          <span className="text-[17px] sm:text-[19px] font-black tracking-tight text-white font-heading">
+            AI
+          </span>
+          <span className="text-[17px] sm:text-[19px] font-bold tracking-tight bg-gradient-to-r from-blue-400 via-sky-300 to-cyan-300 bg-clip-text text-transparent font-heading">
+            Tutor
+          </span>
+          <span className="hidden sm:inline-flex ml-1.5 px-1.5 py-0.5 text-[9px] font-bold tracking-wider uppercase text-cyan-300 bg-blue-950/80 border border-cyan-500/30 rounded-md shadow-xs">
+            PLATFORM
           </span>
         </div>
       )}

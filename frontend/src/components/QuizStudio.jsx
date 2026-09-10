@@ -199,7 +199,7 @@ export default function QuizStudio({
           setQuiz(data);
           setTimeRemaining((data.time_limit_minutes || Math.round(count * 2.5)) * 60);
           setLoading(false);
-          setToastMsg(`✨ Generated fresh quiz with ${data.questions.length} questions!`);
+          setToastMsg(`Generated fresh assessment with ${data.questions.length} adaptive questions.`);
           return;
         }
       }
@@ -232,7 +232,7 @@ export default function QuizStudio({
     setQuiz(generated);
     setTimeRemaining((generated.time_limit_minutes || Math.round(count * 2.5)) * 60);
     setLoading(false);
-    setToastMsg(`✨ Generated fresh quiz with ${generated.questions.length} questions!`);
+    setToastMsg(`Generated fresh assessment with ${generated.questions.length} adaptive questions.`);
   };
 
   // Timer countdown
@@ -710,7 +710,7 @@ export default function QuizStudio({
               setAnswers({});
               setCurrentIdx(0);
               setTimeRemaining((quiz.time_limit_minutes || Math.round(numQuestions * 2.5)) * 60);
-              setToastMsg('🧹 Cleared all answers! Quiz reset for re-attempt from Question 1.');
+              setToastMsg('Cleared all responses. Assessment reset from Question 1.');
             }}
             className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5 text-slate-600 hover:text-slate-900 border-slate-200 hover:bg-slate-100 shadow-xs"
             title="Clear all responses to re-attempt this quiz"
@@ -752,7 +752,7 @@ export default function QuizStudio({
             <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-blue-600 inline-block" /> Current</span>
             <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-emerald-500 inline-block" /> Answered</span>
             <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-slate-300 inline-block" /> Unanswered</span>
-            <span className="flex items-center gap-1">✍️ Handwritten</span>
+            <span className="flex items-center gap-1.5"><PenLine className="h-3 w-3 text-blue-400" /> Handwritten</span>
           </div>
         </div>
 
@@ -790,8 +790,8 @@ export default function QuizStudio({
                   <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
                 )}
                 {hasHandwritten && (
-                  <span className="absolute -bottom-1 -right-1 text-[9px] leading-none" title="Handwritten response attached">
-                    ✍️
+                  <span className="absolute -bottom-1 -right-1 flex items-center justify-center h-3.5 w-3.5 rounded-full bg-blue-600 text-white shadow-xs" title="Handwritten response attached">
+                    <PenLine className="h-2 w-2" />
                   </span>
                 )}
               </button>
